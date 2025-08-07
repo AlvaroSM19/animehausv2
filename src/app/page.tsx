@@ -22,7 +22,7 @@ const games = [
     difficulty: 'Medium',
     players: '1 Player',
     time: '3-8 min',
-    status: 'coming-soon',
+    status: 'available',
     href: '/games/wordle',
     color: 'from-green-500 to-emerald-500'
   },
