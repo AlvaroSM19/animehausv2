@@ -87,7 +87,7 @@ export default function HomePage() {
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground">
                 Welcome to{' '}
                 <span className="bg-gradient-to-r from-blue-400 to-orange-500 bg-clip-text text-transparent">
-                  AnimeHaus
+                  AnimeHaus 🎩
                 </span>
               </h1>
               <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
