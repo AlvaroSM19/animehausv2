@@ -10,17 +10,17 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: 'AnimeHaus - Anime Mini-Games & Quizzes',
-    template: '%s | AnimeHaus'
+    default: 'AnimeHub - Anime Mini-Games & Quizzes',
+    template: '%s | AnimeHub'
   },
   description: 'Play anime mini-games and quizzes. Featuring One Piece characters with 168 characters available. Anime Grid, Wordle, Higher or Lower and more.',
   keywords: [
     'anime', 'one piece', 'quiz', 'games', 'trivia', 
     'wordle', 'grid', 'higher or lower', 'luffy', 'zoro'
   ],
-  authors: [{ name: 'AnimeHaus Team' }],
-  creator: 'AnimeHaus',
-  publisher: 'AnimeHaus',
+  authors: [{ name: 'AnimeHub Team' }],
+  creator: 'AnimeHub',
+  publisher: 'AnimeHub',
   formatDetection: {
     email: false,
     address: false,
@@ -34,15 +34,15 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://animehaus.vercel.app',
-    title: 'AnimeHaus - Anime Mini-Games & Quizzes',
+    title: 'AnimeHub - Anime Mini-Games & Quizzes',
     description: 'Play anime mini-games and quizzes with One Piece characters.',
-    siteName: 'AnimeHaus',
+    siteName: 'AnimeHub',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'AnimeHaus - Anime Games Platform',
+        alt: 'AnimeHub - Anime Games Platform',
       },
     ],
   },

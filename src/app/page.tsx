@@ -38,7 +38,28 @@ export default function HomePage() {
           <div className="text-center space-y-8">
             <div className="space-y-4">
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-wide">
-                <span className="block bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 bg-clip-text text-transparent drop-shadow">AnimeHaus</span>
+                <div className="flex items-center justify-center gap-4">
+                  {/* Sombrero de Paja One Piece */}
+                  <svg 
+                    className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20" 
+                    viewBox="0 0 100 100" 
+                    fill="none"
+                  >
+                    {/* Sombrero principal */}
+                    <ellipse cx="50" cy="70" rx="45" ry="8" fill="#D4A574" opacity="0.8"/>
+                    <ellipse cx="50" cy="40" rx="20" ry="25" fill="#E6C580"/>
+                    <ellipse cx="50" cy="35" rx="18" ry="20" fill="#F2D399"/>
+                    {/* Banda del sombrero */}
+                    <rect x="32" y="50" width="36" height="4" fill="#8B4513" rx="2"/>
+                    {/* Detalles de paja */}
+                    <line x1="40" y1="25" x2="42" y2="45" stroke="#D4A574" strokeWidth="1" opacity="0.6"/>
+                    <line x1="50" y1="20" x2="50" y2="50" stroke="#D4A574" strokeWidth="1" opacity="0.6"/>
+                    <line x1="60" y1="25" x2="58" y2="45" stroke="#D4A574" strokeWidth="1" opacity="0.6"/>
+                    <line x1="45" y1="30" x2="55" y2="35" stroke="#D4A574" strokeWidth="1" opacity="0.4"/>
+                    <line x1="43" y1="40" x2="57" y2="42" stroke="#D4A574" strokeWidth="1" opacity="0.4"/>
+                  </svg>
+                  <span className="bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 bg-clip-text text-transparent drop-shadow">AnimeHub</span>
+                </div>
                 <span className="mt-2 block text-base md:text-lg font-medium text-amber-300/70">One Piece Games</span>
               </h1>
               <p className="text-xl md:text-2xl text-amber-200/70 max-w-3xl mx-auto">
