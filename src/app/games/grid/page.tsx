@@ -150,7 +150,7 @@ export default function GridGamePage() {
                 <ArrowLeft className="w-5 h-5" />
                 Inicio
               </Link>
-              <h1 className="text-2xl font-extrabold tracking-wide bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent drop-shadow">Memory Match</h1>
+              <h1 className="text-2xl font-extrabold tracking-wide bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent drop-shadow">Memory Cards</h1>
             </div>
             <div className="flex gap-2">
               <button
@@ -207,27 +207,25 @@ export default function GridGamePage() {
               <div
                 key={character.id}
                 onClick={() => handleCardClick(character)}
-                className={`aspect-square rounded-xl cursor-pointer transition-all duration-300 transform ${
-                  character.isFlipped || character.isMatched ? 'rotate-0' : 'rotate-y-180'
-                } ${character.isMatched ? 'opacity-60' : ''}`}
+                className={`aspect-square rounded-xl cursor-pointer transition-transform duration-300 ${character.isMatched ? 'opacity-60' : ''}`}
                 style={{ perspective: '1000px' }}
               >
                 <div className={`relative w-full h-full transition-transform duration-500 transform-style-preserve-3d ${
-                  character.isFlipped || character.isMatched ? 'rotate-y-0' : 'rotate-y-180'
+                  character.isFlipped || character.isMatched ? 'rotate-y-180' : 'rotate-y-0'
                 }`}>
-                  {/* Front of card */}
-                  <div className={`absolute w-full h-full backface-hidden ${
-                    character.isFlipped || character.isMatched ? 'visible' : 'invisible'
-                  }`}>
+                  {/* Back (default visible face with ?) */}
+                  <div className="absolute w-full h-full backface-hidden flex items-center justify-center memory-card bg-gradient-to-br from-amber-500/10 to-transparent border border-dashed border-amber-500/30 rounded-xl">
+                    <span className="question-mark text-amber-300 drop-shadow-lg select-none">?</span>
+                  </div>
+                  {/* Front (image) */}
+                  <div className="absolute w-full h-full backface-hidden rotate-y-180">
                     <div className="w-full h-full bg-[#074860]/80 border border-amber-700/40 rounded-xl overflow-hidden hover:shadow-lg shadow shadow-black/40">
                       <div className="relative h-full">
                         <img
                           src={character.imageUrl}
                           alt={character.name}
                           className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.currentTarget.src = '/placeholder-character.jpg'
-                          }}
+                          onError={(e) => { e.currentTarget.src = '/placeholder-character.jpg' }}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
                         <div className="absolute bottom-0 left-0 right-0 p-3">
@@ -238,13 +236,6 @@ export default function GridGamePage() {
                         </div>
                       </div>
                     </div>
-                  </div>
-                  
-                  {/* Back of card */}
-                  <div className={`absolute w-full h-full backface-hidden memory-card flex items-center justify-center bg-gradient-to-br from-amber-500/10 to-transparent border border-dashed border-amber-500/30 rounded-xl ${
-                    character.isFlipped || character.isMatched ? 'invisible' : 'visible'
-                  }`}>
-                    <span className="question-mark text-amber-300 drop-shadow-lg">?</span>
                   </div>
                 </div>
               </div>

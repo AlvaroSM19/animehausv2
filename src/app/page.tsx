@@ -15,7 +15,7 @@ interface GameDef {
 }
 
 const games: GameDef[] = [
-  { id: 'grid', title: 'Character Grid', description: 'Classic 3x3 grid with One Piece characters', icon: Grid3X3, difficulty: 'Easy', players: '1 Player', time: '2-5 min', status: 'available', href: '/games/grid', color: 'from-blue-500 to-cyan-500' },
+  { id: 'grid', title: 'Memory Cards', description: 'Empareja las cartas 4x4 con personajes de One Piece', icon: Grid3X3, difficulty: 'Easy', players: '1 Player', time: '2-5 min', status: 'available', href: '/games/grid', color: 'from-blue-500 to-cyan-500' },
   { id: 'wordle', title: 'Anime Wordle', description: 'Guess the character name in 6 tries', icon: Brain, difficulty: 'Medium', players: '1 Player', time: '3-8 min', status: 'available', href: '/games/wordle', color: 'from-green-500 to-emerald-500' },
   { id: 'higher-lower', title: 'Higher or Lower', description: 'Guess if the next bounty is higher or lower', icon: TrendingUp, difficulty: 'Medium', players: '1 Player', time: '5-10 min', status: 'available', href: '/games/higher-lower', color: 'from-orange-500 to-red-500' },
   { id: 'guess-character', title: 'Guess the Character', description: 'Identify characters from silhouettes or hints', icon: Eye, difficulty: 'Hard', players: '1 Player', time: '3-7 min', status: 'coming-soon', href: '/games/guess-character', color: 'from-purple-500 to-pink-500' },
