@@ -26,16 +26,21 @@ export default function GridGamePage() {
   })
   
   const [score, setScore] = useState(0)
-  const [bestScore, setBestScore] = useState(() => {
-    const saved = localStorage.getItem('gridGameBestScore')
-    return saved ? parseInt(saved) : 0
-  })
+  const [bestScore, setBestScore] = useState(0)
   const [moves, setMoves] = useState(0)
   const [time, setTime] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
   const [firstChoice, setFirstChoice] = useState<GameCard | null>(null)
   const [secondChoice, setSecondChoice] = useState<GameCard | null>(null)
   const [canClick, setCanClick] = useState(true)
+
+  // Load best score from localStorage on client-side
+  useEffect(() => {
+    const saved = localStorage.getItem('gridGameBestScore')
+    if (saved) {
+      setBestScore(parseInt(saved))
+    }
+  }, [])
 
   useEffect(() => {
     let timer: ReturnType<typeof setInterval>
