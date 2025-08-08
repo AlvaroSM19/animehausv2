@@ -9,9 +9,10 @@ const nextConfig = {
       },
     ],
   },
-  experimental: {
-    typedRoutes: true,
-  },
+  // experimental features disabled to improve dev stability
+  // experimental: {
+  //   typedRoutes: true,
+  // },
   // Optimización para producción
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',

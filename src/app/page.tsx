@@ -231,7 +231,7 @@ export default function HomePage() {
               </h3>
               <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
                 Browse through detailed profiles including crews, bounties, haki abilities, devil fruits, and more. 
-                Use advanced filters to find exactly what you're looking for.
+                Use advanced filters to find exactly what you&apos;re looking for.
               </p>
               
               <div className="flex flex-wrap justify-center gap-4 mb-8 text-sm">
