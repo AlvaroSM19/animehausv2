@@ -236,10 +236,10 @@ export default function GridGamePage() {
                   </div>
                   
                   {/* Back of card */}
-                  <div className={`absolute w-full h-full backface-hidden bg-primary/10 border-2 border-primary rounded-xl flex items-center justify-center ${
+                  <div className={`absolute w-full h-full backface-hidden memory-card flex items-center justify-center ${
                     character.isFlipped || character.isMatched ? 'invisible' : 'visible'
                   }`}>
-                    <span className="text-4xl">❔</span>
+                    <span className="question-mark">?</span>
                   </div>
                 </div>
               </div>

@@ -23,3 +23,23 @@
 .invisible {
   visibility: hidden;
 }
+
+.memory-card {
+  background-color: #8B5CF6;
+  border: 2px solid #34D399;
+  box-shadow: 0 0 10px #34D399;
+  border-radius: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.memory-card:hover {
+  box-shadow: 0 0 15px #34D399;
+  transform: translateY(-2px);
+}
+
+.question-mark {
+  font-size: 2.5rem;
+  color: #FCD34D;
+  font-weight: bold;
+  text-shadow: 0 0 5px rgba(251, 191, 36, 0.5);
+}
