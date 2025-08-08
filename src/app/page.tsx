@@ -73,6 +73,18 @@ const games = [
     status: 'coming-soon',
     href: '/games/power-ranking',
     color: 'from-yellow-500 to-orange-500'
+  },
+  {
+    id: 'onepiecedle',
+    title: 'OnePiecedle',
+    description: 'Deduce el personaje por atributos (crew, origen, haki...)',
+    icon: Trophy,
+    difficulty: 'Medium',
+    players: '1 Player',
+    time: '3-8 min',
+    status: 'available',
+    href: '/games/onepiecedle',
+    color: 'from-purple-600 to-fuchsia-500'
   }
 ]
 
