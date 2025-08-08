@@ -292,8 +292,8 @@ export default function HigherLowerPage() {
             <div className="bg-card border border-border rounded-lg p-6 max-w-2xl mx-auto">
               <h3 className="text-lg font-semibold mb-2 text-foreground">How to Play</h3>
               <p className="text-muted-foreground">
-                Look at the current character's bounty, then guess if the next character's bounty is higher or lower. 
-                Get it wrong and the game ends! Characters won't repeat for 30 rounds.
+                Look at the current character&apos;s bounty, then guess if the next character&apos;s bounty is higher or lower. 
+                Get it wrong and the game ends! Characters won&apos;t repeat for 30 rounds.
               </p>
             </div>
           </div>

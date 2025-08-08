@@ -174,10 +174,15 @@ export default function CharactersPage() {
               className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 hover:scale-[1.02] character-card"
             >
               {/* Character Image */}
-              <div className="relative h-48 bg-gradient-to-br from-primary/20 to-secondary/20">
-                <div className="absolute inset-0 flex items-center justify-center text-6xl">
-                  👤
-                </div>
+              <div className="relative h-48 bg-gradient-to-br from-primary/20 to-secondary/20 overflow-hidden">
+                <img
+                  src={character.imageUrl}
+                  alt={character.name}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = '/images/characters/placeholder.svg'
+                  }}
+                />
                 {character.bounty && character.bounty > 0 && (
                   <div className="absolute top-2 right-2 bg-accent text-accent-foreground px-2 py-1 rounded-lg text-xs font-medium">
                     {formatBounty(character.bounty || null)}

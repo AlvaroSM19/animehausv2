@@ -265,9 +265,4 @@ export default function GridGamePage() {
       </div>
     </div>
   )
-          </div>
-        </div>
-      </div>
-    </div>
-  )
 }

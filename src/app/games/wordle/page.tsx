@@ -373,7 +373,7 @@ export default function WordlePage() {
             <div className="bg-card border border-border rounded-lg p-6">
               <h3 className="text-lg font-semibold mb-2 text-foreground">How to Play</h3>
               <div className="text-sm text-muted-foreground space-y-2">
-                <p>Guess the One Piece character's name in {MAX_GUESSES} tries.</p>
+                <p>Guess the One Piece character&apos;s name in {MAX_GUESSES} tries.</p>
                 <p>Each guess must be a valid 5-letter name.</p>
                 <div className="flex justify-center gap-4 mt-4">
                   <div className="flex items-center gap-2">
