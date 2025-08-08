@@ -321,15 +321,15 @@ export default function GridGamePage() {
               <h3 className="text-lg font-bold mb-3 text-amber-300 tracking-wide">Reglas de Emparejamiento</h3>
               <ul className="list-disc list-inside text-sm text-amber-200/80 space-y-1">
                 <li>Da la vuelta a dos cartas cada turno.</li>
-                <li>Hay 8 parejas totales (16 cartas).</li>
+                <li>Encuentra las 8 parejas ocultas en el tablero.</li>
               </ul>
               <ul className="mt-2 text-sm text-amber-100/90 space-y-1 pl-4 list-[square]">
-                <li>~4 parejas: mismo set exacto de Haki (45%).</li>
-                <li>2 parejas: misma crew (25%).</li>
-                <li>1 pareja: mismo origen (15%).</li>
-                <li>1 pareja: mismo personaje (15%).</li>
+                <li>Mismo personaje (carta duplicada).</li>
+                <li>Misma tripulación.</li>
+                <li>Mismo lugar de origen.</li>
+                <li>Mismo conjunto de tipos de Haki.</li>
               </ul>
-              <p className="text-xs text-amber-200/60 mt-3 leading-relaxed">Cada pareja es única y sólo hace match con su compañera designada (sin solapamientos), garantizando siempre solución.</p>
+              <p className="text-xs text-amber-200/60 mt-3 leading-relaxed">Cuando dos cartas cumplen alguna de estas condiciones se quedan descubiertas y sumas puntos. Intenta completar el tablero en el menor número de movimientos.</p>
             </div>
             <div className="bg-[#06394f]/50 border border-amber-700/30 rounded-xl p-4 text-xs text-amber-200/60">
               Consejo: Personajes de grandes crews o con pocos tipos de haki ofrecen más posibilidades de emparejarse.
