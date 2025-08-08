@@ -34,11 +34,19 @@ export default function OnePiecedlePage() {
     setTarget(t)
   }, [all])
 
+  // Build a set of already guessed character ids to avoid repeats
+  const guessedIds = useMemo(() => new Set(guesses.map(g => g.character.id)), [guesses])
+
   useEffect(() => {
     const term = input.trim().toLowerCase()
     if (!term) { setFiltered([]); return }
-    setFiltered(all.filter(c => c.name.toLowerCase().includes(term)).slice(0,8))
-  }, [input, all])
+    // Exclude already guessed characters
+    setFiltered(
+      all
+        .filter(c => !guessedIds.has(c.id) && c.name.toLowerCase().includes(term))
+        .slice(0,8)
+    )
+  }, [input, all, guessedIds])
 
   const evaluate = (guess: AnimeCharacter, target: AnimeCharacter): AttributeResult => {
     // Bounty direction relative to target bounty
@@ -78,15 +86,16 @@ export default function OnePiecedlePage() {
   }
 
   const submit = (c: AnimeCharacter) => {
-  if (!target || gameState !== 'playing') return
-  if (guesses.length >= MAX_ATTEMPTS) return
+    if (!target || gameState !== 'playing') return
+    if (guesses.length >= MAX_ATTEMPTS) return
+    if (guessedIds.has(c.id)) return // prevent duplicate guess
     const res = evaluate(c, target)
     const entry: GuessEntry = { character: c, result: res }
     setGuesses(g => [entry, ...g])
     setInput('')
     setFiltered([])
-  if (c.id === target.id) setGameState('won')
-  else if (guesses.length + 1 >= MAX_ATTEMPTS) setGameState('lost')
+    if (c.id === target.id) setGameState('won')
+    else if (guesses.length + 1 >= MAX_ATTEMPTS) setGameState('lost')
   }
 
   const reset = () => {
@@ -213,6 +222,31 @@ export default function OnePiecedlePage() {
             <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-red-600 inline-block"></span><span className="text-amber-200/80">Mal</span></div>
           </div>
         </div>
+
+        {/* Hints */}
+        {gameState === 'playing' && target && (
+          <div className="mb-4 flex flex-col gap-3">
+            {guesses.length >= 4 && (
+              <div className="relative w-40 h-40 mx-auto rounded-lg overflow-hidden ring-1 ring-amber-600/40">
+                <img
+                  src={target.imageUrl}
+                  alt="Pista personaje"
+                  className="w-full h-full object-cover filter blur-md brightness-75"
+                  style={{ WebkitFilter: 'blur(12px)' }}
+                />
+                <div className="absolute inset-0 flex items-center justify-center text-amber-200/60 text-xs font-medium bg-black/30">
+                  Pista (imagen borrosa)
+                </div>
+              </div>
+            )}
+            {guesses.length >= 8 && guesses.length < MAX_ATTEMPTS && (
+              <div className="px-3 py-2 text-center text-sm rounded-lg bg-[#06394f]/60 border border-amber-700/40 shadow shadow-black/30">
+                <span className="text-amber-200/80">Pista letra inicial: </span>
+                <span className="font-bold text-amber-300">{target.name.charAt(0).toUpperCase()}</span>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Input */}
         {gameState === 'playing' && guesses.length < MAX_ATTEMPTS && (

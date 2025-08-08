@@ -151,7 +151,7 @@ export default function HigherLowerPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-b from-[#0a141b] via-[#081018] to-[#050c12] text-foreground">
       {/* Header */}
       <div className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
         <div className="container mx-auto px-4 py-4">
@@ -164,7 +164,7 @@ export default function HigherLowerPage() {
                 <ArrowLeft className="w-5 h-5" />
                 Back to Home
               </Link>
-              <h1 className="text-2xl font-bold text-foreground">Higher or Lower</h1>
+              <h1 className="text-2xl font-extrabold tracking-wide bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 bg-clip-text text-transparent drop-shadow">Higher or Lower</h1>
             </div>
             <div className="flex items-center gap-6 text-sm">
               <div className="flex items-center gap-2">
@@ -185,115 +185,112 @@ export default function HigherLowerPage() {
       </div>
 
       {/* Game Area */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* Current Character */}
-            <div className="bg-card border border-border rounded-xl overflow-hidden">
-              <div className="relative h-64">
+      <div className="container mx-auto px-4 py-10">
+        <div className="max-w-6xl mx-auto flex flex-col gap-10">
+          <div className="flex flex-col md:flex-row items-stretch justify-center gap-8">
+            {/* Current Character Card */}
+            <div className="bg-[#101b24]/70 border border-amber-700/40 rounded-xl backdrop-blur-sm p-5 w-full md:w-72 lg:w-80 flex flex-col shadow-md shadow-black/50">
+              <div className="aspect-[3/4] w-full rounded-lg overflow-hidden bg-black/40 border border-amber-700/30 flex items-center justify-center">
                 {currentCharacter && (
-                  <>
-                    <img
-                      src={currentCharacter.imageUrl}
-                      alt={currentCharacter.name}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.currentTarget.src = '/placeholder-character.jpg'
-                      }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                    <div className="absolute bottom-4 left-4 right-4 text-white">
-                      <h3 className="text-xl font-bold">{currentCharacter.name}</h3>
-                      {currentCharacter.crew && (
-                        <p className="text-sm text-white/80">{currentCharacter.crew}</p>
-                      )}
-                    </div>
-                  </>
+                  <img
+                    src={currentCharacter.imageUrl}
+                    alt={currentCharacter.name}
+                    className="w-full h-full object-contain"
+                    onError={(e) => { e.currentTarget.src = '/placeholder-character.jpg' }}
+                  />
                 )}
               </div>
-              <div className="p-6 text-center">
-                <div className="text-3xl font-bold text-green-400 mb-2">
-                  {currentCharacter && formatBounty(currentCharacter.bounty)}
+              <div className="mt-4 text-center space-y-1">
+                <h3 className="text-lg font-bold text-amber-300 tracking-wide">{currentCharacter?.name}</h3>
+                {currentCharacter?.crew && (
+                  <p className="text-xs uppercase tracking-wider text-amber-500/70">{currentCharacter.crew}</p>
+                )}
+                <div className="pt-2">
+                  <div className="text-2xl font-extrabold text-emerald-400 drop-shadow">
+                    {currentCharacter && formatBounty(currentCharacter.bounty)}
+                  </div>
+                  <p className="text-[11px] mt-1 text-amber-200/60 tracking-wide">Bounty Actual</p>
                 </div>
-                <p className="text-muted-foreground">Current Bounty</p>
               </div>
             </div>
 
-            {/* Next Character */}
-            <div className="bg-card border border-border rounded-xl overflow-hidden relative">
-              <div className="relative h-64">
+            {/* Middle Choice Panel */}
+            <div className="flex flex-col justify-center items-center gap-6 px-4 md:px-2 w-full md:w-auto">
+              {!showResult && (
+                <>
+                  <div className="text-center max-w-xs">
+                    <p className="text-sm md:text-base text-amber-200/70 leading-relaxed">
+                      ¿La recompensa del siguiente pirata es <span className="text-emerald-400 font-semibold">más ALTA</span> o <span className="text-rose-400 font-semibold">más BAJA</span>?
+                    </p>
+                  </div>
+                  <div className="flex flex-col sm:flex-row gap-4 w-full">
+                    <button
+                      onClick={() => makeChoice('higher')}
+                      disabled={showResult}
+                      className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 text-black font-bold rounded-lg shadow-inner shadow-amber-900/40 hover:brightness-110 active:scale-[0.98] transition disabled:opacity-50"
+                    >
+                      <TrendingUp className="w-5 h-5" /> Higher
+                    </button>
+                    <button
+                      onClick={() => makeChoice('lower')}
+                      disabled={showResult}
+                      className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-br from-rose-600 via-red-600 to-rose-700 text-white font-bold rounded-lg shadow-inner shadow-rose-900/40 hover:brightness-110 active:scale-[0.98] transition disabled:opacity-50"
+                    >
+                      <TrendingDown className="w-5 h-5" /> Lower
+                    </button>
+                  </div>
+                </>
+              )}
+              {showResult && (
+                <div className="text-center space-y-4">
+                  <div className={`text-4xl font-extrabold ${isCorrect ? 'text-emerald-400' : 'text-rose-400'} drop-shadow`}> 
+                    {isCorrect ? '¡Correcto!' : '¡Fallaste!'}
+                  </div>
+                  <p className="text-sm text-amber-200/70">
+                    Elegiste <span className="font-semibold text-amber-300">{lastChoice}</span>
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Next Character Card */}
+            <div className="bg-[#101b24]/70 border border-amber-700/40 rounded-xl backdrop-blur-sm p-5 w-full md:w-72 lg:w-80 flex flex-col shadow-md shadow-black/50">
+              <div className="aspect-[3/4] w-full rounded-lg overflow-hidden bg-black/40 border border-amber-700/30 flex items-center justify-center">
                 {nextCharacter && (
-                  <>
-                    <img
-                      src={nextCharacter.imageUrl}
-                      alt={nextCharacter.name}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.currentTarget.src = '/placeholder-character.jpg'
-                      }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                    <div className="absolute bottom-4 left-4 right-4 text-white">
-                      <h3 className="text-xl font-bold">{nextCharacter.name}</h3>
-                      {nextCharacter.crew && (
-                        <p className="text-sm text-white/80">{nextCharacter.crew}</p>
-                      )}
-                    </div>
-                  </>
+                  <img
+                    src={nextCharacter.imageUrl}
+                    alt={nextCharacter.name}
+                    className="w-full h-full object-contain"
+                    onError={(e) => { e.currentTarget.src = '/placeholder-character.jpg' }}
+                  />
                 )}
               </div>
-              
-              <div className="p-6 text-center">
-                {showResult ? (
-                  <div className="space-y-4">
-                    <div className={`text-3xl font-bold mb-2 ${isCorrect ? 'text-green-400' : 'text-red-400'}`}>
+              <div className="mt-4 text-center space-y-1">
+                <h3 className="text-lg font-bold tracking-wide {showResult ? 'text-amber-300' : 'text-amber-300'}">{nextCharacter?.name}</h3>
+                {nextCharacter?.crew && (
+                  <p className="text-xs uppercase tracking-wider text-amber-500/70">{nextCharacter.crew}</p>
+                )}
+                <div className="pt-2 min-h-[62px] flex flex-col items-center justify-start">
+                  {!showResult && (
+                    <div className="text-3xl font-extrabold text-amber-300/30 tracking-widest">???</div>
+                  )}
+                  {showResult && (
+                    <div className={`text-2xl font-extrabold drop-shadow ${isCorrect ? 'text-emerald-400' : 'text-rose-400'}`}>
                       {nextCharacter && formatBounty(nextCharacter.bounty)}
                     </div>
-                    <div className={`text-lg font-semibold ${isCorrect ? 'text-green-400' : 'text-red-400'}`}>
-                      {isCorrect ? '✅ Correct!' : '❌ Wrong!'}
-                    </div>
-                    <p className="text-muted-foreground">
-                      You guessed {lastChoice}
-                    </p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    <div className="text-3xl font-bold text-muted-foreground mb-2">???</div>
-                    <p className="text-muted-foreground mb-6">
-                      Is this bounty higher or lower?
-                    </p>
-                    
-                    <div className="flex gap-4">
-                      <button
-                        onClick={() => makeChoice('higher')}
-                        disabled={showResult}
-                        className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold rounded-lg hover:opacity-90 transition-all duration-300 disabled:opacity-50"
-                      >
-                        <TrendingUp className="w-5 h-5" />
-                        Higher
-                      </button>
-                      <button
-                        onClick={() => makeChoice('lower')}
-                        disabled={showResult}
-                        className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold rounded-lg hover:opacity-90 transition-all duration-300 disabled:opacity-50"
-                      >
-                        <TrendingDown className="w-5 h-5" />
-                        Lower
-                      </button>
-                    </div>
-                  </div>
-                )}
+                  )}
+                  <p className="text-[11px] mt-1 text-amber-200/60 tracking-wide">Próxima Recompensa</p>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Instructions */}
-          <div className="mt-8 text-center">
-            <div className="bg-card border border-border rounded-lg p-6 max-w-2xl mx-auto">
-              <h3 className="text-lg font-semibold mb-2 text-foreground">How to Play</h3>
-              <p className="text-muted-foreground">
-                Look at the current character&apos;s bounty, then guess if the next character&apos;s bounty is higher or lower. 
-                Get it wrong and the game ends! Characters won&apos;t repeat for 30 rounds.
+          <div className="mt-2 text-center">
+            <div className="bg-[#101b24]/70 border border-amber-700/40 rounded-lg p-6 max-w-3xl mx-auto backdrop-blur-sm">
+              <h3 className="text-lg font-semibold mb-3 text-amber-300 tracking-wide">Cómo Jugar</h3>
+              <p className="text-sm text-amber-200/70 leading-relaxed">
+                Observa la recompensa (bounty) del pirata actual y decide si la del siguiente será más alta o más baja. Si fallas termina la partida. Igualdad cuenta como acierto. ¡Sigue la racha para subir tu puntuación!
               </p>
             </div>
           </div>
