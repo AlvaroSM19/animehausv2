@@ -26,12 +26,12 @@ const CATEGORIES = [
 
 export default function ImpostorGamePage() {
   const [score, setScore] = useState(0)
-  const [round, setRound] = useState(1)
+  const [streak, setStreak] = useState(0)
   const [time, setTime] = useState(15)
-  const [gameState, setGameState] = useState<'playing' | 'between-rounds' | 'game-over'>('playing')
+  const [gameState, setGameState] = useState<'playing' | 'game-over' | 'feedback'>('playing')
   const [currentRound, setCurrentRound] = useState<GameRound | null>(null)
-  const [gameHistory, setGameHistory] = useState<GameRound[]>([])
   const [bestScore, setBestScore] = useState(0)
+  const [lastAnswerCorrect, setLastAnswerCorrect] = useState<boolean | null>(null)
 
   const allCharacters = useMemo(() => getAllCharacters(), [])
 
@@ -50,8 +50,8 @@ export default function ImpostorGamePage() {
       timer = setInterval(() => {
         setTime(prev => {
           if (prev <= 1) {
-            // Time's up - mark as incorrect and move to next round
-            handleTimeUp()
+            // Time's up - game over
+            endGame()
             return 15
           }
           return prev - 1
@@ -96,53 +96,38 @@ export default function ImpostorGamePage() {
 
   const startNewGame = () => {
     setScore(0)
-    setRound(1)
+    setStreak(0)
     setTime(15)
     setGameState('playing')
-    setGameHistory([])
+    setLastAnswerCorrect(null)
     setCurrentRound(generateRound())
-  }
-
-  const handleTimeUp = () => {
-    if (!currentRound) return
-    
-    const completedRound = { ...currentRound, isCompleted: true, isCorrect: false }
-    setGameHistory(prev => [...prev, completedRound])
-    
-    if (round >= 10) {
-      endGame()
-    } else {
-      setRound(prev => prev + 1)
-      setGameState('between-rounds')
-      setTimeout(() => {
-        setCurrentRound(generateRound())
-        setTime(15)
-        setGameState('playing')
-      }, 2000)
-    }
   }
 
   const handleCharacterClick = (index: number) => {
     if (!currentRound || gameState !== 'playing') return
     
     const isCorrect = index === currentRound.impostorIndex
-    const completedRound = { ...currentRound, isCompleted: true, isCorrect }
+    setLastAnswerCorrect(isCorrect)
     
     if (isCorrect) {
-      setScore(prev => prev + Math.max(1, Math.floor(time / 3))) // Bonus for speed
-    }
-    
-    setGameHistory(prev => [...prev, completedRound])
-    
-    if (round >= 10) {
-      endGame()
-    } else {
-      setRound(prev => prev + 1)
-      setGameState('between-rounds')
+      // Correct answer - continue with next round
+      const points = Math.max(1, Math.floor(time / 3)) // Bonus for speed
+      setScore(prev => prev + points)
+      setStreak(prev => prev + 1)
+      setGameState('feedback')
+      
+      // Show feedback briefly then continue
       setTimeout(() => {
         setCurrentRound(generateRound())
         setTime(15)
         setGameState('playing')
+        setLastAnswerCorrect(null)
+      }, 1500)
+    } else {
+      // Wrong answer - game over
+      setGameState('feedback')
+      setTimeout(() => {
+        endGame()
       }, 2000)
     }
   }
@@ -205,8 +190,8 @@ export default function ImpostorGamePage() {
             </div>
             <div className="bg-[#06394f]/70 border border-amber-700/40 backdrop-blur-sm rounded-lg p-4 shadow shadow-black/40 text-center">
               <Target className="w-6 h-6 text-blue-500 mx-auto mb-2" />
-              <p className="text-xs uppercase tracking-wide text-amber-200/60">Round</p>
-              <p className="text-2xl font-bold">{round}</p>
+              <p className="text-xs uppercase tracking-wide text-amber-200/60">Streak</p>
+              <p className="text-2xl font-bold">{streak}</p>
             </div>
             <div className="bg-[#06394f]/70 border border-amber-700/40 backdrop-blur-sm rounded-lg p-4 shadow shadow-black/40 text-center">
               <Timer className="w-6 h-6 text-red-500 mx-auto mb-2" />
@@ -224,6 +209,7 @@ export default function ImpostorGamePage() {
             <div className="text-center bg-[#06394f]/70 border border-amber-700/40 rounded-xl p-8 shadow shadow-black/40">
               <h2 className="text-3xl font-extrabold mb-4 text-amber-300 drop-shadow">Game Over!</h2>
               <p className="text-xl text-amber-200/70 mb-2">Final Score: {score}</p>
+              <p className="text-lg text-amber-200/70 mb-2">Streak: {streak}</p>
               <p className="text-lg text-amber-200/70 mb-6">Best Score: {bestScore}</p>
               <button
                 onClick={startNewGame}
@@ -233,10 +219,19 @@ export default function ImpostorGamePage() {
                 Play Again
               </button>
             </div>
-          ) : gameState === 'between-rounds' ? (
+          ) : gameState === 'feedback' ? (
             <div className="text-center bg-[#06394f]/70 border border-amber-700/40 rounded-xl p-8 shadow shadow-black/40">
-              <h2 className="text-2xl font-bold mb-4 text-amber-300">Round {round - 1} Complete!</h2>
-              <p className="text-amber-200/70">Preparing next round...</p>
+              {lastAnswerCorrect ? (
+                <>
+                  <h2 className="text-3xl font-bold mb-4 text-green-400">¡Correcto! ✓</h2>
+                  <p className="text-amber-200/70">+{Math.max(1, Math.floor(time / 3))} puntos</p>
+                </>
+              ) : (
+                <>
+                  <h2 className="text-3xl font-bold mb-4 text-red-400">¡Incorrecto! ✗</h2>
+                  <p className="text-amber-200/70">Game Over</p>
+                </>
+              )}
             </div>
           ) : currentRound ? (
             <>
@@ -279,8 +274,11 @@ export default function ImpostorGamePage() {
 
               {/* Instructions */}
               <div className="mt-8 text-center">
-                <p className="text-amber-200/80 text-sm">
+                <p className="text-amber-200/80 text-sm mb-2">
                   Click on the character that doesn't belong to the group above!
+                </p>
+                <p className="text-amber-300/60 text-xs">
+                  ⚠️ One wrong answer and the game ends! Try to get the highest streak possible.
                 </p>
               </div>
             </>

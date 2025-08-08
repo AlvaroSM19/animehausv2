@@ -38,7 +38,7 @@ export default function HomePage() {
             <div className="space-y-4">
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-wide">
                 <span className="block bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 bg-clip-text text-transparent drop-shadow">AnimeHaus</span>
-                <span className="mt-2 block text-base md:text-lg font-medium text-amber-300/70">Mini Juegos Piratas</span>
+                <span className="mt-2 block text-base md:text-lg font-medium text-amber-300/70">One Piece Games</span>
               </h1>
               <p className="text-xl md:text-2xl text-amber-200/70 max-w-3xl mx-auto">
                 Experiencia One Piece con retos, adivinanzas y rankings. ¿Listo para la aventura?
