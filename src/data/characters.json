@@ -90,7 +90,6 @@
 {"id":"op-lafitte","name":"Lafitte","crew":"Blackbeard Pirates","imageUrl":"/images/characters/op-lafitte.webp","haki":true,"bounty":42200000,"origin":"West Blue","hakiTypes":["Observation"],"devilFruit":"Unknown"},
 {"id":"op-law","name":"Law","crew":"Heart Pirates","imageUrl":"/images/characters/op-law.webp","haki":true,"bounty":3000000000,"origin":"Flevance","hakiTypes":["Armament","Observation"],"devilFruit":"Op-Op Fruit"},
 {"id":"op-leo","name":"Leo","crew":"Tontatta Pirates","imageUrl":"/images/characters/op-leo.webp","haki":false,"bounty":null,"origin":"Tontatta Kingdom","hakiTypes":[],"devilFruit":null},
-{"id":"op-lola","name":"Lola","crew":"Big Mom Pirates","imageUrl":"/images/characters/op-lola.webp","haki":false,"bounty":24000000,"origin":"Totto Land","hakiTypes":[],"devilFruit":null},
 {"id":"op-lucci","name":"Rob Lucci","crew":"World Government","imageUrl":"/images/characters/op-lucci.webp","haki":true,"bounty":null,"origin":"East Blue","hakiTypes":["Armament","Observation"],"devilFruit":"Neko Neko no Mi Model Leopard"},
 {"id":"op-luckyroux","name":"Lucky Roux","crew":"Red Hair Pirates","imageUrl":"/images/characters/op-luckyroux.webp","haki":true,"bounty":null,"origin":"East Blue","hakiTypes":["Armament","Observation"],"devilFruit":null},
 {"id":"op-luffy","name":"Luffy","crew":"Straw Hat Pirates","imageUrl":"/images/characters/op-luffy.webp","haki":true,"bounty":3000000000,"origin":"Foosha Village","hakiTypes":["Armament","Observation","Conqueror"],"devilFruit":"Hito Hito no Mi Model Nika"},

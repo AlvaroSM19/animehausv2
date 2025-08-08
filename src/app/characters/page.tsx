@@ -22,31 +22,66 @@ export default function CharactersPage() {
   const origins = getAllOrigins()
 
   const filteredCharacters = useMemo(() => {
-    let filtered = characters.filter(character => {
-      const nameMatch = character.name.toLowerCase().includes(searchQuery.toLowerCase())
-      const crewMatch = selectedCrew === 'all' || character.crew === selectedCrew
-      const originMatch = selectedOrigin === 'all' || character.origin === selectedOrigin
-      
-      return nameMatch && crewMatch && originMatch
-    })
-
-    // Sort characters
-    filtered.sort((a, b) => {
-      switch (sortBy) {
-        case 'name':
-          return a.name.localeCompare(b.name)
-        case 'bounty':
-          const bountyA = a.bounty || 0
-          const bountyB = b.bounty || 0
-          return bountyB - bountyA
-        case 'crew':
-          return (a.crew || '').localeCompare(b.crew || '')
-        default:
-          return 0
-      }
-    })
-
-    return filtered
+    const query = searchQuery.toLowerCase().trim()
+    
+    // First get unique characters
+    let results = Array.from(new Map(characters.map(char => [char.id, char])).values())
+    
+    // Apply filters first to reduce the search space
+    if (selectedCrew !== 'all') {
+      results = results.filter(char => char.crew === selectedCrew)
+    }
+    
+    if (selectedOrigin !== 'all') {
+      results = results.filter(char => char.origin === selectedOrigin)
+    }
+    
+    // Then apply search query
+    if (query) {
+      results = results.filter(char => {
+        const name = char.name.toLowerCase()
+        const isExactMatch = name === query
+        const isStartMatch = name.startsWith(query)
+        const isContainMatch = name.includes(query)
+        
+        // Only return true for actual matches
+        return isExactMatch || isStartMatch || isContainMatch
+      }).sort((a, b) => {
+        const nameA = a.name.toLowerCase()
+        const nameB = b.name.toLowerCase()
+        
+        // Exact matches first
+        if (nameA === query && nameB !== query) return -1
+        if (nameB === query && nameA !== query) return 1
+        
+        // Then starts with matches
+        if (nameA.startsWith(query) && !nameB.startsWith(query)) return -1
+        if (nameB.startsWith(query) && !nameA.startsWith(query)) return 1
+        
+        // Then alphabetical
+        return nameA.localeCompare(nameB)
+      })
+    }
+    
+    // Final sort by selected criteria
+    if (!query || sortBy !== 'name') {
+      results.sort((a, b) => {
+        switch (sortBy) {
+          case 'name':
+            return a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+          case 'bounty':
+            const bountyA = a.bounty || 0
+            const bountyB = b.bounty || 0
+            return bountyB - bountyA
+          case 'crew':
+            return (a.crew || '').localeCompare(b.crew || '')
+          default:
+            return 0
+        }
+      })
+    }
+    
+    return results
   }, [characters, searchQuery, selectedCrew, selectedOrigin, sortBy])
 
   return (

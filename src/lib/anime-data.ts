@@ -13,8 +13,7 @@ export interface AnimeCharacter {
   features?: string[]; // Made optional since not all characters have this
 }
 
-// One Piece Characters - First 20 from Database
-export const ANIME_CHARACTERS: AnimeCharacter[] = [
+const ANIME_CHARACTERS: AnimeCharacter[] = [
 {"id":"op-absalom","name":"Absalom","crew":"Thriller Bark Pirates","imageUrl":"/images/characters/op-absalom.webp","haki":false,"bounty":null,"origin":"Grand Line","hakiTypes":[],"devilFruit":"Clear-Clear Fruit","features":["animal-theme"]},
 {"id":"op-ace","name":"Ace","crew":"Whitebeard Pirates","imageUrl":"/images/characters/op-ace.webp","haki":true,"bounty":550000000,"origin":"Baterilla","hakiTypes":["Armament","Observation","Conqueror"],"devilFruit":"Flame-Flame Fruit","features":["wears-hat","black-hair","scars"]},
 {"id":"op-akainu","name":"Akainu","crew":"Marines","imageUrl":"/images/characters/op-akainu.webp","haki":true,"bounty":null,"origin":"North Blue","hakiTypes":["Armament","Observation"],"devilFruit":"Magma-Magma Fruit","features":["black-hair","scars"]},
@@ -106,7 +105,7 @@ export const ANIME_CHARACTERS: AnimeCharacter[] = [
 {"id":"op-lafitte","name":"Lafitte","crew":"Blackbeard Pirates","imageUrl":"/images/characters/op-lafitte.webp","haki":true,"bounty":42200000,"origin":"West Blue","hakiTypes":["Observation"],"devilFruit":"Unknown"},
 {"id":"op-law","name":"Law","crew":"Heart Pirates","imageUrl":"/images/characters/op-law.webp","haki":true,"bounty":3000000000,"origin":"Flevance","hakiTypes":["Armament","Observation"],"devilFruit":"Op-Op Fruit"},
 {"id":"op-leo","name":"Leo","crew":"Tontatta Pirates","imageUrl":"/images/characters/op-leo.webp","haki":false,"bounty":null,"origin":"Tontatta Kingdom","hakiTypes":[],"devilFruit":null},
-{"id":"op-lola","name":"Lola","crew":"Big Mom Pirates","imageUrl":"/images/characters/op-lola.webp","haki":false,"bounty":24000000,"origin":"Totto Land","hakiTypes":[],"devilFruit":null},
+{"id":"op-lola","name":"Charlotte Lola","crew":"Big Mom Pirates","imageUrl":"/images/characters/op-lola.webp","haki":false,"bounty":null,"origin":"Totto Land","hakiTypes":[],"devilFruit":null,"features":["pink-haired"]},
 {"id":"op-lucci","name":"Rob Lucci","crew":"World Government","imageUrl":"/images/characters/op-lucci.webp","haki":true,"bounty":null,"origin":"East Blue","hakiTypes":["Armament","Observation"],"devilFruit":"Neko Neko no Mi Model Leopard"},
 {"id":"op-luckyroux","name":"Lucky Roux","crew":"Red Hair Pirates","imageUrl":"/images/characters/op-luckyroux.webp","haki":true,"bounty":null,"origin":"East Blue","hakiTypes":["Armament","Observation"],"devilFruit":null},
 {"id":"op-luffy","name":"Luffy","crew":"Straw Hat Pirates","imageUrl":"/images/characters/op-luffy.webp","haki":true,"bounty":3000000000,"origin":"Foosha Village","hakiTypes":["Armament","Observation","Conqueror"],"devilFruit":"Hito Hito no Mi Model Nika"},
@@ -251,7 +250,7 @@ export const ANIME_CHARACTERS: AnimeCharacter[] = [
 {"id":"op-sunbell","name":"Sunbell","crew":null,"imageUrl":"/images/characters/op-sunbell.webp","haki":false,"bounty":null,"origin":null,"hakiTypes":[],"devilFruit":null,"features":["former‑roger"]},
 {"id":"op-taro","name":"Taro","crew":null,"imageUrl":"/images/characters/op-taro.webp","haki":false,"bounty":null,"origin":null,"hakiTypes":[],"devilFruit":null,"features":["former‑roger"]},
 {"id":"op-douglasbullet","name":"Douglas Bullet","crew":null,"imageUrl":"/images/characters/op-douglasbullet.webp","haki":null,"bounty":null,"origin":null,"hakiTypes":[],"devilFruit":null,"features":["former‑roger"]},
-{"id":"op-toki","name":"Toki","crew":null,"imageUrl":"/images/characters/op-toki.webp","haki":false,"bounty":null,"origin":"Wano","hakiTypes":[],"devilFruit":"Toki‑Toki Fruit","features":["former‑roger"]},
+{"id":"op-toki","name":"Toki","crew":null,"imageUrl":"/images/characters/op-toki.webp","haki":false,"bounty":null,"origin":"Wano","hakiTypes":[],"devilFruit":"Time-Time Fruit","features":["black-haired"]},
 {"id":"op-milletpine","name":"Milletpine","crew":null,"imageUrl":"/images/characters/op-milletpine.webp","haki":false,"bounty":null,"origin":null,"hakiTypes":[],"devilFruit":null,"features":["former‑roger"]},
 {"id":"op-doringo","name":"Doringo","crew":null,"imageUrl":"/images/characters/op-doringo.webp","haki":false,"bounty":null,"origin":null,"hakiTypes":[],"devilFruit":null,"features":["former‑roger"]},
 {"id":"op-moonisaacjr","name":"Moon Isaac Jr","crew":null,"imageUrl":"/images/characters/op-moonisaacjr.webp","haki":false,"bounty":null,"origin":null,"hakiTypes":[],"devilFruit":null,"features":["former‑roger"]},
