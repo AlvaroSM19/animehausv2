@@ -34,16 +34,6 @@ export default function GridGamePage() {
       usedChars.add(a.id); usedChars.add(b.id); tagsUsed.add(tag)
     }
 
-    // 1) Character identical pairs (choose 2 distinct characters and duplicate each)
-    const charsPool = shuffle([...all])
-    let charPairs = 0
-    for (const c of charsPool) {
-      if (charPairs >= 2) break
-      if (usedChars.has(c.id)) continue
-      pushPair(c, c, `char:${c.id}`)
-      charPairs++
-    }
-
     // Helper for attribute pairs (crew/origin/haki)
     const buildAttributePairs = (count: number, keyFn: (c: AnimeCharacter)=>string|null, prefix: string) => {
       const groups = new Map<string, AnimeCharacter[]>()
@@ -65,12 +55,23 @@ export default function GridGamePage() {
       }
     }
 
-    // 2) Crew pairs
+    // Distribution: 45% haki (3.6→4), 25% crew (2), 15% origin (1.2→1), 15% identical (1.2→1)
+    // 1) Haki pairs (45% = ~4 pairs)
+    buildAttributePairs(4, c => c.hakiTypes.length ? c.hakiTypes.slice().sort().join('|') : null, 'haki')
+    // 2) Crew pairs (25% = 2 pairs)
     buildAttributePairs(2, c => c.crew, 'crew')
-    // 3) Origin pairs
-    buildAttributePairs(2, c => c.origin, 'origin')
-    // 4) Haki pairs (exact same set, ignore empty)
-    buildAttributePairs(2, c => c.hakiTypes.length ? c.hakiTypes.slice().sort().join('|') : null, 'haki')
+    // 3) Origin pairs (15% = ~1 pair)
+    buildAttributePairs(1, c => c.origin, 'origin')
+    
+    // 4) Character identical pairs (15% = ~1 pair)
+    const charsPool = shuffle([...all])
+    let charPairs = 0
+    for (const c of charsPool) {
+      if (charPairs >= 1) break
+      if (usedChars.has(c.id)) continue
+      pushPair(c, c, `char:${c.id}`)
+      charPairs++
+    }
 
     // Fallback fill with random duplicate character pairs if not enough
     const fillNeeded = 16 - deck.length
@@ -323,10 +324,10 @@ export default function GridGamePage() {
                 <li>Hay 8 parejas totales (16 cartas).</li>
               </ul>
               <ul className="mt-2 text-sm text-amber-100/90 space-y-1 pl-4 list-[square]">
-                <li>2 parejas: mismo personaje (carta duplicada).</li>
-                <li>2 parejas: misma crew.</li>
-                <li>2 parejas: mismo origen.</li>
-                <li>2 parejas: mismo set exacto de Haki.</li>
+                <li>~4 parejas: mismo set exacto de Haki (45%).</li>
+                <li>2 parejas: misma crew (25%).</li>
+                <li>1 pareja: mismo origen (15%).</li>
+                <li>1 pareja: mismo personaje (15%).</li>
               </ul>
               <p className="text-xs text-amber-200/60 mt-3 leading-relaxed">Cada pareja es única y sólo hace match con su compañera designada (sin solapamientos), garantizando siempre solución.</p>
             </div>
