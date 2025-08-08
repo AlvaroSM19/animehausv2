@@ -178,47 +178,47 @@ export default function OnePiecedlePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-zinc-950 to-indigo-950 text-white flex flex-col">
-      <div className="border-b border-white/10 bg-black/40 backdrop-blur-sm sticky top-0 z-40">
+    <div className="min-h-screen bg-gradient-to-b from-[#05344d] via-[#065e7c] to-[#f5d9a5] text-amber-100 flex flex-col">
+      <div className="border-b border-amber-700/40 bg-[#042836]/70 backdrop-blur-sm sticky top-0 z-40 shadow shadow-black/40">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link href="/" className="text-sm flex items-center gap-1 text-indigo-300 hover:text-white transition-colors">
+            <Link href="/" className="text-sm flex items-center gap-1 text-amber-300/80 hover:text-amber-100 transition-colors">
               <ArrowLeft className="w-4 h-4"/> Home
             </Link>
-            <h1 className="text-lg font-semibold tracking-wide">OnePiecedle</h1>
+            <h1 className="text-lg font-extrabold tracking-wide bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent">OnePiecedle</h1>
           </div>
           <div className="flex items-center gap-3 text-xs">
-            <button onClick={reset} className="px-3 py-1 rounded bg-indigo-600 hover:bg-indigo-500 text-white inline-flex items-center gap-1"><RotateCcw className="w-3 h-3"/>Reset</button>
-            <button onClick={() => setShowHelp(s=>!s)} className="p-1 rounded hover:bg-white/10"><HelpCircle className="w-5 h-5"/></button>
+            <button onClick={reset} className="px-3 py-1 rounded bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 text-black font-semibold shadow shadow-black/40 hover:brightness-110 inline-flex items-center gap-1"><RotateCcw className="w-3 h-3"/>Reset</button>
+            <button onClick={() => setShowHelp(s=>!s)} className="p-1 rounded hover:bg-amber-300/10"><HelpCircle className="w-5 h-5"/></button>
           </div>
         </div>
       </div>
 
       <div className="w-full max-w-3xl mx-auto p-4 flex-1 flex flex-col">
         {showHelp && (
-          <div className="mb-6 p-4 rounded-lg bg-white/5 border border-white/10 text-sm leading-relaxed">
+          <div className="mb-6 p-4 rounded-lg bg-[#06394f]/60 border border-amber-700/40 text-sm leading-relaxed shadow shadow-black/40">
             Adivina el personaje en máximo {MAX_ATTEMPTS} intentos. Verde = atributo coincide, Rojo = no coincide. En Bounty la cifra muestra el bounty del personaje que adivinaste y la flecha indica si el personaje objetivo tiene un bounty superior (flecha verde ↑), inferior (flecha roja ↓) o igual (✓). Si aciertas el personaje ganas inmediatamente.
           </div>
         )}
 
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 text-xs uppercase tracking-wide text-zinc-300">
+  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 text-[11px] uppercase tracking-wide text-amber-200/70">
           <div className="flex items-center gap-3 flex-wrap">
             <span>Intentos: {guesses.length} / {MAX_ATTEMPTS}</span>
             {gameState === 'won' && <span className="text-green-400 font-semibold">¡Ganaste!</span>}
             {gameState === 'lost' && target && <span className="text-red-400 font-semibold">Perdiste - Era {target.name}</span>}
           </div>
           <div className="flex items-center gap-2 flex-wrap text-[10px] normal-case">
-            <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-green-600 inline-block"></span><span className="text-zinc-300">Bien</span></div>
-            <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-orange-500 inline-block"></span><span className="text-zinc-300">Parcial</span></div>
-            <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-red-600 inline-block"></span><span className="text-zinc-300">Mal</span></div>
+            <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-green-600 inline-block"></span><span className="text-amber-200/80">Bien</span></div>
+            <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-orange-500 inline-block"></span><span className="text-amber-200/80">Parcial</span></div>
+            <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-red-600 inline-block"></span><span className="text-amber-200/80">Mal</span></div>
           </div>
         </div>
 
         {/* Input */}
         {gameState === 'playing' && guesses.length < MAX_ATTEMPTS && (
           <div className="mb-6 relative">
-            <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-lg px-3 py-2">
-              <Search className="w-5 h-5 text-indigo-300"/>
+            <div className="flex items-center gap-2 bg-[#06394f]/60 border border-amber-700/40 rounded-lg px-3 py-2 shadow shadow-black/30">
+              <Search className="w-5 h-5 text-amber-300/80"/>
               <input
                 value={input}
                 onChange={e => setInput(e.target.value)}
@@ -227,9 +227,9 @@ export default function OnePiecedlePage() {
               />
             </div>
             {filtered.length > 0 && (
-              <div className="absolute z-10 mt-1 w-full bg-zinc-900/95 backdrop-blur border border-white/10 rounded-lg shadow-lg max-h-60 overflow-auto">
+              <div className="absolute z-10 mt-1 w-full bg-[#042836]/95 backdrop-blur border border-amber-700/40 rounded-lg shadow-lg max-h-60 overflow-auto">
                 {filtered.map(c => (
-                  <button key={c.id} onClick={() => submit(c)} className="w-full text-left px-3 py-2 text-sm hover:bg-white/10 flex items-center gap-3">
+                  <button key={c.id} onClick={() => submit(c)} className="w-full text-left px-3 py-2 text-sm hover:bg-amber-300/10 flex items-center gap-3">
                     <img src={c.imageUrl} alt={c.name} className="w-8 h-8 object-cover rounded"/>
                     <span>{c.name}</span>
                     {c.crew && <span className="ml-auto text-xs text-zinc-400">{c.crew}</span>}
@@ -243,12 +243,12 @@ export default function OnePiecedlePage() {
         {/* Guesses table */}
         <div className="space-y-3 flex-1 overflow-y-auto pb-6">
           {guesses.map(g => (
-            <div key={g.character.id} className="p-4 rounded-lg bg-white/5 border border-white/10 flex flex-col gap-3">
+            <div key={g.character.id} className="p-4 rounded-lg bg-[#06394f]/55 border border-amber-700/40 flex flex-col gap-3 shadow shadow-black/30">
               <div className="flex items-center gap-3">
-                <img src={g.character.imageUrl} alt={g.character.name} className="w-14 h-14 object-cover rounded"/>
+                <img src={g.character.imageUrl} alt={g.character.name} className="w-14 h-14 object-cover rounded ring-1 ring-amber-600/40"/>
                 <div className="flex flex-col">
                   <p className="font-semibold text-sm leading-tight">{g.character.name}</p>
-                  {g.character.crew && <p className="text-[10px] text-zinc-400">{g.character.crew}</p>}
+                  {g.character.crew && <p className="text-[10px] text-amber-300/60 uppercase tracking-wide">{g.character.crew}</p>}
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -263,13 +263,13 @@ export default function OnePiecedlePage() {
         </div>
 
         {gameState === 'won' && target && (
-          <div className="mt-8 p-6 rounded-lg bg-green-600/10 border border-green-600/30 text-center space-y-4">
+          <div className="mt-8 p-6 rounded-lg bg-emerald-500/15 border border-emerald-500/40 text-center space-y-4 shadow shadow-black/40">
             <h2 className="text-xl font-bold text-green-400">¡Correcto! {target.name}</h2>
             <button onClick={reset} className="px-4 py-2 rounded bg-indigo-600 hover:bg-indigo-500 text-white text-sm inline-flex items-center gap-2"><RotateCcw className="w-4 h-4"/> Jugar de nuevo</button>
           </div>
         )}
         {gameState === 'lost' && target && (
-          <div className="mt-8 p-6 rounded-lg bg-red-600/10 border border-red-600/30 text-center space-y-4">
+          <div className="mt-8 p-6 rounded-lg bg-rose-500/15 border border-rose-500/40 text-center space-y-4 shadow shadow-black/40">
             <h2 className="text-xl font-bold text-red-400">Era {target.name}</h2>
             <button onClick={reset} className="px-4 py-2 rounded bg-indigo-600 hover:bg-indigo-500 text-white text-sm inline-flex items-center gap-2"><RotateCcw className="w-4 h-4"/> Reintentar</button>
           </div>

@@ -137,9 +137,9 @@ export default function GridGamePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+  <div className="min-h-screen bg-gradient-to-b from-[#05344d] via-[#065e7c] to-[#f5d9a5] text-amber-100">
       {/* Header */}
-      <div className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
+  <div className="border-b border-amber-700/40 bg-[#042836]/70 backdrop-blur-sm sticky top-0 z-40 shadow-lg shadow-black/40">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -148,14 +148,14 @@ export default function GridGamePage() {
                 className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
-                Back to Home
+                Inicio
               </Link>
-              <h1 className="text-2xl font-bold text-foreground">Memory Match Game</h1>
+              <h1 className="text-2xl font-extrabold tracking-wide bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent drop-shadow">Memory Match</h1>
             </div>
             <div className="flex gap-2">
               <button
                 onClick={startNewGame}
-                className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 text-black font-semibold shadow shadow-black/40 hover:brightness-110 transition"
               >
                 <RotateCcw className="w-4 h-4" />
                 New Game
@@ -166,32 +166,32 @@ export default function GridGamePage() {
       </div>
 
       {/* Game Stats */}
-      <div className="container mx-auto px-4 py-4">
+  <div className="container mx-auto px-4 py-4">
         <div className="max-w-4xl mx-auto">
-          <div className="flex justify-between items-center bg-card rounded-lg p-4 mb-8">
+          <div className="flex justify-between items-center bg-[#06394f]/70 border border-amber-700/40 backdrop-blur-sm rounded-lg p-4 mb-8 shadow shadow-black/40">
             <div className="flex items-center gap-8">
               <div className="flex items-center gap-2">
                 <Trophy className="w-5 h-5 text-yellow-500" />
                 <div>
-                  <p className="text-sm text-muted-foreground">Best Score</p>
+                    <p className="text-xs uppercase tracking-wide text-amber-200/60">Mejor</p>
                   <p className="font-bold">{bestScore}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <Timer className="w-5 h-5 text-blue-500" />
                 <div>
-                  <p className="text-sm text-muted-foreground">Time</p>
+                    <p className="text-xs uppercase tracking-wide text-amber-200/60">Tiempo</p>
                   <p className="font-bold">{formatTime(time)}</p>
                 </div>
               </div>
             </div>
             <div className="flex items-center gap-8">
               <div>
-                <p className="text-sm text-muted-foreground">Moves</p>
+                <p className="text-xs uppercase tracking-wide text-amber-200/60">Movs</p>
                 <p className="font-bold">{moves}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Score</p>
+                <p className="text-xs uppercase tracking-wide text-amber-200/60">Puntos</p>
                 <p className="font-bold">{score}</p>
               </div>
             </div>
@@ -219,7 +219,7 @@ export default function GridGamePage() {
                   <div className={`absolute w-full h-full backface-hidden ${
                     character.isFlipped || character.isMatched ? 'visible' : 'invisible'
                   }`}>
-                    <div className="w-full h-full bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg">
+                    <div className="w-full h-full bg-[#074860]/80 border border-amber-700/40 rounded-xl overflow-hidden hover:shadow-lg shadow shadow-black/40">
                       <div className="relative h-full">
                         <img
                           src={character.imageUrl}
@@ -229,11 +229,11 @@ export default function GridGamePage() {
                             e.currentTarget.src = '/placeholder-character.jpg'
                           }}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
                         <div className="absolute bottom-0 left-0 right-0 p-3">
-                          <h3 className="text-white font-semibold text-sm">{character.name}</h3>
+                          <h3 className="text-amber-100 font-semibold text-sm drop-shadow">{character.name}</h3>
                           {character.crew && (
-                            <p className="text-white/80 text-xs">{character.crew}</p>
+                            <p className="text-amber-200/70 text-[10px] uppercase tracking-wide">{character.crew}</p>
                           )}
                         </div>
                       </div>
@@ -241,10 +241,10 @@ export default function GridGamePage() {
                   </div>
                   
                   {/* Back of card */}
-                  <div className={`absolute w-full h-full backface-hidden memory-card flex items-center justify-center ${
+                  <div className={`absolute w-full h-full backface-hidden memory-card flex items-center justify-center bg-gradient-to-br from-amber-500/10 to-transparent border border-dashed border-amber-500/30 rounded-xl ${
                     character.isFlipped || character.isMatched ? 'invisible' : 'visible'
                   }`}>
-                    <span className="question-mark">?</span>
+                    <span className="question-mark text-amber-300 drop-shadow-lg">?</span>
                   </div>
                 </div>
               </div>
@@ -252,14 +252,14 @@ export default function GridGamePage() {
           </div>
 
           {!isPlaying && characters.every(card => card.isMatched) && (
-            <div className="text-center">
-              <h2 className="text-2xl font-bold mb-4">¡Felicidades! 🎉</h2>
-              <p className="text-muted-foreground mb-4">
-                Has completado el juego en {formatTime(time)} con {moves} movimientos y una puntuación de {score} puntos.
+            <div className="text-center bg-[#06394f]/70 border border-amber-700/40 rounded-xl p-8 shadow shadow-black/40">
+              <h2 className="text-2xl font-extrabold mb-4 text-amber-300 drop-shadow">¡Felicidades! 🎉</h2>
+              <p className="text-amber-200/70 mb-4 text-sm">
+                Tiempo {formatTime(time)} · Movimientos {moves} · Puntuación {score}
               </p>
               <button
                 onClick={startNewGame}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 text-black font-semibold shadow shadow-black/40 hover:brightness-110 transition"
               >
                 <RotateCcw className="w-5 h-5" />
                 Jugar otra vez

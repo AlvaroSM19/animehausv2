@@ -139,21 +139,21 @@ export default function DeductionGamePage() {
   )
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
+    <div className="min-h-screen bg-gradient-to-b from-[#05344d] via-[#065e7c] to-[#f5d9a5] text-amber-100">
+      <div className="border-b border-amber-700/40 bg-[#042836]/70 backdrop-blur-sm sticky top-0 z-40 shadow shadow-black/40">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Link href="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+              <Link href="/" className="flex items-center gap-2 text-amber-300/70 hover:text-amber-100 transition-colors">
                 <ArrowLeft className="w-5 h-5" />
                 Home
               </Link>
-              <h1 className="text-2xl font-bold">Character Deduction</h1>
+              <h1 className="text-2xl font-extrabold tracking-wide bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent">Character Deduction</h1>
             </div>
             <div className="flex items-center gap-6 text-sm">
-              <div className="flex items-center gap-2"><Trophy className="w-4 h-4 text-yellow-400" /><span>Best: {bestAttempts ?? '—'}</span></div>
-              <div className="flex items-center gap-2"><Target className="w-4 h-4 text-blue-400" /><span>Guesses: {guesses.length}</span></div>
-              <button onClick={startNew} className="flex items-center gap-2 px-3 py-1 bg-muted rounded hover:bg-muted/80 text-sm font-medium">
+              <div className="flex items-center gap-2"><Trophy className="w-4 h-4 text-amber-300" /><span>Best: {bestAttempts ?? '—'}</span></div>
+              <div className="flex items-center gap-2"><Target className="w-4 h-4 text-emerald-300" /><span>Guesses: {guesses.length}</span></div>
+              <button onClick={startNew} className="flex items-center gap-2 px-3 py-1 rounded bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 text-black font-semibold shadow shadow-black/40 hover:brightness-110 text-sm">
                 <RotateCcw className="w-4 h-4" /> Reset
               </button>
             </div>
@@ -161,19 +161,19 @@ export default function DeductionGamePage() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
+  <div className="container mx-auto px-4 py-8">
         <div className="max-w-5xl mx-auto space-y-6">
             {gameState === 'playing' && (
               <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-end">
                 <div className="flex-1">
-                  <label className="text-sm font-medium mb-1 block">Selecciona un personaje</label>
+                  <label className="text-sm font-medium mb-1 block text-amber-200/80">Selecciona un personaje</label>
                   <div className="relative">
-                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-amber-300/60" />
                     <input
                       value={query}
                       onChange={(e) => setQuery(e.target.value)}
                       placeholder="Escribe para filtrar..."
-                      className="w-full pl-9 pr-3 py-2 rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/40"
+                      className="w-full pl-9 pr-3 py-2 rounded-lg border border-amber-700/40 bg-[#06394f]/60 focus:outline-none focus:ring-2 focus:ring-amber-400/40 backdrop-blur-sm"
                       list="characters-datalist"
                     />
                     <datalist id="characters-datalist">
@@ -183,7 +183,7 @@ export default function DeductionGamePage() {
                     </datalist>
                   </div>
                   <select
-                    className="mt-2 w-full rounded-lg border border-border bg-card px-3 py-2 text-sm"
+                    className="mt-2 w-full rounded-lg border border-amber-700/40 bg-[#06394f]/60 backdrop-blur-sm px-3 py-2 text-sm"
                     value={selectedId}
                     onChange={(e) => setSelectedId(e.target.value)}
                   >
@@ -196,7 +196,7 @@ export default function DeductionGamePage() {
                 <button
                   onClick={submitGuess}
                   disabled={!selectedId}
-                  className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-semibold disabled:opacity-40"
+                  className="px-6 py-3 rounded-lg bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 text-black font-semibold disabled:opacity-40 shadow shadow-black/40 hover:brightness-110"
                 >
                   Adivinar
                 </button>
@@ -209,10 +209,10 @@ export default function DeductionGamePage() {
             {legendItem('bg-red-500/20 border border-red-500', 'Incorrecto')}
           </div>
 
-          <div className="overflow-x-auto border border-border rounded-lg bg-card">
+          <div className="overflow-x-auto border border-amber-700/40 rounded-lg bg-[#06394f]/40 backdrop-blur-sm shadow shadow-black/40">
             <table className="w-full text-sm">
               <thead className="bg-muted/40">
-                <tr className="text-left">
+                <tr className="text-left text-amber-200/80">
                   <th className="px-4 py-2 font-medium">Personaje</th>
                   <th className="px-4 py-2 font-medium">Crew</th>
                   <th className="px-4 py-2 font-medium">Origen</th>
@@ -224,7 +224,7 @@ export default function DeductionGamePage() {
               <tbody>
                 {guesses.map(g => (
                   <tr key={g.character.id} className={g.isTarget ? 'ring-2 ring-green-500/60' : ''}>
-                    <td className="px-4 py-2 font-medium text-foreground whitespace-nowrap flex items-center gap-2">
+                    <td className="px-4 py-2 font-medium whitespace-nowrap flex items-center gap-2 text-amber-100">
                       <img src={g.character.imageUrl} alt={g.character.name} className="w-10 h-10 object-cover rounded" onError={(e)=>{(e.currentTarget as HTMLImageElement).src='/images/characters/placeholder.svg'}} />
                       {g.character.name}
                     </td>
@@ -245,10 +245,10 @@ export default function DeductionGamePage() {
           </div>
 
           {gameState === 'won' && target && (
-            <div className="p-6 bg-card border border-border rounded-lg text-center space-y-4">
-              <h2 className="text-2xl font-bold text-green-400">¡Correcto! {target.name}</h2>
+            <div className="p-6 bg-[#06394f]/60 border border-emerald-600/40 rounded-lg text-center space-y-4 shadow shadow-black/40">
+              <h2 className="text-2xl font-extrabold text-emerald-300 drop-shadow">¡Correcto! {target.name}</h2>
               <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                <img src={target.imageUrl} alt={target.name} className="w-40 h-40 object-cover rounded-lg border border-border" onError={(e)=>{(e.currentTarget as HTMLImageElement).src='/images/characters/placeholder.svg'}} />
+                <img src={target.imageUrl} alt={target.name} className="w-40 h-40 object-cover rounded-lg border border-emerald-500/40 ring-1 ring-emerald-400/30" onError={(e)=>{(e.currentTarget as HTMLImageElement).src='/images/characters/placeholder.svg'}} />
                 <div className="text-left space-y-2 text-sm">
                   {target.crew && <p><span className="text-muted-foreground">Crew:</span> {target.crew}</p>}
                   {target.origin && <p><span className="text-muted-foreground">Origen:</span> {target.origin}</p>}
@@ -259,16 +259,16 @@ export default function DeductionGamePage() {
                 </div>
               </div>
               <div className="flex gap-4 justify-center">
-                <button onClick={startNew} className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-semibold">Jugar de nuevo</button>
-                <Link href="/" className="px-6 py-3 rounded-lg bg-secondary text-secondary-foreground font-semibold">Inicio</Link>
+                <button onClick={startNew} className="px-6 py-3 rounded-lg bg-gradient-to-br from-emerald-500 via-green-500 to-emerald-600 text-black font-semibold shadow shadow-black/40 hover:brightness-110">Jugar de nuevo</button>
+                <Link href="/" className="px-6 py-3 rounded-lg bg-[#042836]/70 border border-amber-700/40 text-amber-200/90 font-semibold hover:brightness-110">Inicio</Link>
               </div>
               <p className="text-xs text-muted-foreground">Intentos: {guesses.length}{bestAttempts && bestAttempts === guesses.length && ' (Nuevo récord)'}</p>
             </div>
           )}
 
-          <div className="p-6 bg-card border border-border rounded-lg text-sm space-y-3">
-            <h3 className="font-semibold text-foreground">Cómo jugar</h3>
-            <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+          <div className="p-6 bg-[#06394f]/50 border border-amber-700/40 rounded-lg text-sm space-y-3 backdrop-blur-sm shadow shadow-black/30">
+            <h3 className="font-semibold text-amber-200 tracking-wide">Cómo jugar</h3>
+            <ul className="list-disc list-inside space-y-1 text-amber-200/70">
               <li>Selecciona un personaje por intento.</li>
               <li>Las celdas verdes son coincidencias exactas.</li>
               <li>Amarillo indica cercanía (por ejemplo tier de bounty adyacente o fruta distinta pero ambos tienen).</li>

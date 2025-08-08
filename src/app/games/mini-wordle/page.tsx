@@ -115,20 +115,20 @@ export default function MiniWordlePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-indigo-950 to-zinc-950 text-white">
-      <div className="border-b border-white/10 bg-black/30 backdrop-blur-sm sticky top-0 z-40">
+    <div className="min-h-screen bg-gradient-to-b from-[#05344d] via-[#065e7c] to-[#f5d9a5] text-amber-100">
+      <div className="border-b border-amber-700/40 bg-[#042836]/70 backdrop-blur-sm sticky top-0 z-40 shadow shadow-black/40">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link href="/" className="text-sm flex items-center gap-1 text-indigo-300 hover:text-white transition-colors">
+            <Link href="/" className="text-sm flex items-center gap-1 text-amber-300/80 hover:text-amber-100 transition-colors">
               <ArrowLeft className="w-4 h-4"/> Home
             </Link>
-            <h1 className="text-lg font-semibold tracking-wide">Mini Wordle</h1>
+            <h1 className="text-lg font-extrabold tracking-wide bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent">Mini Wordle</h1>
           </div>
           <div className="flex items-center gap-4 text-xs">
-            <button onClick={pickWord} className="px-3 py-1 rounded bg-indigo-600 hover:bg-indigo-500 text-white text-xs inline-flex items-center gap-1">
+            <button onClick={pickWord} className="px-3 py-1 rounded bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 text-black font-semibold shadow shadow-black/40 hover:brightness-110 text-xs inline-flex items-center gap-1">
               <RotateCcw className="w-3 h-3"/> Reset
             </button>
-            <button onClick={() => setShowHelp(s => !s)} className="p-1 rounded hover:bg-white/10">
+            <button onClick={() => setShowHelp(s => !s)} className="p-1 rounded hover:bg-amber-300/10">
               <HelpCircle className="w-5 h-5"/>
             </button>
           </div>
@@ -137,7 +137,7 @@ export default function MiniWordlePage() {
 
       <div className="max-w-4xl mx-auto p-4">
         {showHelp && (
-          <div className="mb-6 p-4 rounded-lg bg-white/5 border border-white/10 text-sm leading-relaxed">
+          <div className="mb-6 p-4 rounded-lg bg-[#06394f]/60 border border-amber-700/40 text-sm leading-relaxed shadow shadow-black/40">
             Adivina el nombre del personaje (5 letras). Tienes {MAX_GUESSES} intentos.
             Verde = letra correcta en posición correcta. Amarillo = letra existe en otra posición.
           </div>
@@ -151,7 +151,7 @@ export default function MiniWordlePage() {
               let letter = row[c]?.letter || (r === rowIndex ? currentGuess[c] : '') || ''
               let state: LetterState = row[c]?.state || 'empty'
               return (
-                <div key={r+'-'+c} className={`w-12 h-12 flex items-center justify-center font-semibold uppercase rounded border text-lg tracking-wide select-none transition-colors ${getBg(state)}`}>
+                <div key={r+'-'+c} className={`w-12 h-12 flex items-center justify-center font-semibold uppercase rounded border text-lg tracking-wide select-none transition-colors ${getBg(state)} shadow shadow-black/30` }>
                   {letter}
                 </div>
               )
@@ -166,13 +166,13 @@ export default function MiniWordlePage() {
               {row.split('').map(ch => {
                 const u = usedLetters.get(ch)
                 return (
-                  <button key={ch} onClick={() => onVirtualKey(ch)} className={`px-3 py-2 rounded text-sm font-medium uppercase transition-colors border ${getBg(u || 'empty')} hover:brightness-110`}>{ch}</button>
+                  <button key={ch} onClick={() => onVirtualKey(ch)} className={`px-3 py-2 rounded text-sm font-medium uppercase transition-colors border ${getBg(u || 'empty')} hover:brightness-110 shadow shadow-black/30`}>{ch}</button>
                 )
               })}
               {row === 'zxcvbnm' && (
                 <>
-                  <button onClick={() => onVirtualKey('Backspace')} className="px-3 py-2 rounded text-sm font-medium uppercase bg-zinc-700 border border-zinc-600 hover:bg-zinc-600">⌫</button>
-                  <button onClick={() => onVirtualKey('Enter')} className="px-3 py-2 rounded text-sm font-medium uppercase bg-indigo-600 border border-indigo-500 hover:bg-indigo-500">Enter</button>
+                  <button onClick={() => onVirtualKey('Backspace')} className="px-3 py-2 rounded text-sm font-medium uppercase bg-[#06394f] border border-amber-700/40 hover:brightness-110 shadow shadow-black/30">⌫</button>
+                  <button onClick={() => onVirtualKey('Enter')} className="px-3 py-2 rounded text-sm font-medium uppercase bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 text-black font-semibold shadow shadow-black/40 hover:brightness-110">Enter</button>
                 </>
               )}
             </div>
@@ -181,11 +181,11 @@ export default function MiniWordlePage() {
 
         {/* Result */}
         {gameState !== 'playing' && targetCharacter && (
-          <div className="mt-10 p-6 rounded-lg bg-white/5 border border-white/10 text-center space-y-4">
+          <div className="mt-10 p-6 rounded-lg bg-[#06394f]/60 border border-amber-700/40 text-center space-y-4 shadow shadow-black/40">
             {gameState === 'won' ? (
-              <div className="text-green-400 font-semibold text-lg flex items-center justify-center gap-2"><Trophy className="w-5 h-5"/> ¡Correcto!</div>
+              <div className="text-emerald-300 font-semibold text-lg flex items-center justify-center gap-2"><Trophy className="w-5 h-5"/> ¡Correcto!</div>
             ) : (
-              <div className="text-red-400 font-semibold text-lg">Perdiste</div>
+              <div className="text-rose-300 font-semibold text-lg">Perdiste</div>
             )}
             <div className="flex items-center gap-4 justify-center">
               <img src={targetCharacter.imageUrl} alt={targetCharacter.name} className="w-20 h-20 object-cover rounded"/>
@@ -194,7 +194,7 @@ export default function MiniWordlePage() {
                 {targetCharacter.crew && <p className="text-xs text-zinc-400">{targetCharacter.crew}</p>}
               </div>
             </div>
-            <button onClick={pickWord} className="px-4 py-2 rounded bg-indigo-600 hover:bg-indigo-500 text-white text-sm inline-flex items-center gap-2"><RotateCcw className="w-4 h-4"/> Jugar de nuevo</button>
+            <button onClick={pickWord} className="px-4 py-2 rounded bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 text-black font-semibold text-sm inline-flex items-center gap-2 shadow shadow-black/40 hover:brightness-110"><RotateCcw className="w-4 h-4"/> Jugar de nuevo</button>
           </div>
         )}
       </div>

@@ -86,7 +86,9 @@ export default function RootLayout({
         <meta name="theme-color" content="#1e3a8a" />
         <meta name="msapplication-TileColor" content="#1e3a8a" />
       </head>
-      <body className={`${inter.variable} antialiased min-h-screen bg-background`}>
+      <body className={`${inter.variable} antialiased min-h-screen bg-gradient-to-b from-[#041c2c] via-[#064663] to-[#f2d8a7] text-amber-100 relative overflow-x-hidden`}>        
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(255,225,150,0.15),transparent_60%)]"/>
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_70%,rgba(255,180,80,0.12),transparent_55%)]"/>
         <div className="relative flex min-h-screen flex-col">
           <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container flex h-14 items-center">
