@@ -10,72 +10,79 @@ interface GameCard extends AnimeCharacter {
   id: string;
   isFlipped: boolean;
   isMatched: boolean;
+  matchTag: string; // unique identifier for its matching pair
 }
 
 export default function GridGamePage() {
-  // Build a deck with 8 pairs: 2 identical, 2 same crew, 2 same origin, 2 same exact haki types
+  // Build a solvable deck with 8 disjoint pairs: 2 per category (character, crew, origin, haki set).
+  // Each pair gets a unique matchTag and matching only occurs when tags are equal.
   const buildDeck = (): GameCard[] => {
     const all = getAllCharacters()
     const shuffle = <T,>(arr: T[]) => arr.sort(() => Math.random() - 0.5)
-    const usedIds = new Set<string>()
-    const pairs: AnimeCharacter[][] = []
+    const usedChars = new Set<string>()
+    const tagsUsed = new Set<string>()
+    const deck: GameCard[] = []
 
-    // Helper to safely pick N pairs by predicate and equality function
-    const pickPairs = (count: number, groupFn: (c: AnimeCharacter) => string | null, distinctCharacters: boolean) => {
+    const pushPair = (a: AnimeCharacter, b: AnimeCharacter, tag: string) => {
+      [a,b].forEach((c, i) => deck.push({
+        ...c,
+        id: `${c.id}-${tag}-${i}-${Math.random().toString(36).slice(2,6)}`,
+        isFlipped: false,
+        isMatched: false,
+        matchTag: tag
+      }))
+      usedChars.add(a.id); usedChars.add(b.id); tagsUsed.add(tag)
+    }
+
+    // 1) Character identical pairs (choose 2 distinct characters and duplicate each)
+    const charsPool = shuffle([...all])
+    let charPairs = 0
+    for (const c of charsPool) {
+      if (charPairs >= 2) break
+      if (usedChars.has(c.id)) continue
+      pushPair(c, c, `char:${c.id}`)
+      charPairs++
+    }
+
+    // Helper for attribute pairs (crew/origin/haki)
+    const buildAttributePairs = (count: number, keyFn: (c: AnimeCharacter)=>string|null, prefix: string) => {
       const groups = new Map<string, AnimeCharacter[]>()
-      for (const c of shuffle([...all])) {
-        const key = groupFn(c)
-        if (!key) continue
-        if (!groups.has(key)) groups.set(key, [])
-        groups.get(key)!.push(c)
-      }
-      const groupEntries = shuffle(Array.from(groups.entries()).filter(([_, list]) => list.length >= 2))
-      for (const [_, list] of groupEntries) {
-        if (pairs.length >= 8) break
+      all.forEach((c) => {
+        if (usedChars.has(c.id)) return
+        const k = keyFn(c)
+        if (!k) return
+        if (!groups.has(k)) groups.set(k, [])
+        groups.get(k)!.push(c)
+      })
+      const ordered: [string, AnimeCharacter[]][] = shuffle(Array.from(groups.entries()).filter(([, list]) => list.length >= 2))
+      for (const [k, list] of ordered) {
         if (count <= 0) break
-        const pool = shuffle(list.filter(c => !usedIds.has(c.id)))
-        if (pool.length < 2) continue
-        const a = pool[0]
-        const b = pool[1]
-        if (distinctCharacters && a.id === b.id) continue
-        pairs.push([a, b])
-        usedIds.add(a.id)
-        usedIds.add(b.id)
+        if (tagsUsed.has(`${prefix}:${k}`)) continue
+        const avail: AnimeCharacter[] = shuffle(list.filter(c => !usedChars.has(c.id)))
+        if (avail.length < 2) continue
+        pushPair(avail[0], avail[1], `${prefix}:${k}`)
         count--
       }
-      return count
     }
 
-    // 1) Two identical character pairs
-    let remainingIdentical = 2
-    const poolForIdentical = shuffle([...all])
-    for (const c of poolForIdentical) {
-      if (remainingIdentical <= 0) break
-      pairs.push([c, c])
-      remainingIdentical--
+    // 2) Crew pairs
+    buildAttributePairs(2, c => c.crew, 'crew')
+    // 3) Origin pairs
+    buildAttributePairs(2, c => c.origin, 'origin')
+    // 4) Haki pairs (exact same set, ignore empty)
+    buildAttributePairs(2, c => c.hakiTypes.length ? c.hakiTypes.slice().sort().join('|') : null, 'haki')
+
+    // Fallback fill with random duplicate character pairs if not enough
+    const fillNeeded = 16 - deck.length
+    if (fillNeeded > 0) {
+      const pool = shuffle(all.filter(c => !usedChars.has(c.id)))
+      for (let i=0; i<fillNeeded; i+=2) {
+        const c = pool[i/2 % pool.length]
+        pushPair(c, c, `char-extra:${c.id}:${i}`)
+      }
     }
 
-    // 2) Two crew pairs
-    pickPairs(2, c => c.crew, true)
-    // 3) Two origin pairs
-    pickPairs(2, c => c.origin, true)
-    // 4) Two haki exact type pairs
-    // Group by sorted haki types string (ignore empty)
-    pickPairs(2, c => c.hakiTypes.length ? c.hakiTypes.slice().sort().join('|') : null, true)
-
-    // Fallback: if we still don't have 8 pairs, fill with random identicals
-    while (pairs.length < 8) {
-      const c = all[Math.floor(Math.random() * all.length)]
-      pairs.push([c, c])
-    }
-
-    const flat = shuffle(pairs).flat()
-    return flat.map((char, index) => ({
-      ...char,
-      id: `${char.id}-${index}-${Math.random().toString(36).slice(2,7)}`,
-      isFlipped: false,
-      isMatched: false
-    }))
+    return shuffle(deck)
   }
 
   const [characters, setCharacters] = useState<GameCard[]>(() => buildDeck())
@@ -136,19 +143,8 @@ export default function GridGamePage() {
       setCanClick(false)
       setMoves(prev => prev + 1)
 
-      // Helper to compare haki types exact set equality
-      const sameHaki = (a: AnimeCharacter, b: AnimeCharacter) => {
-        if (a.hakiTypes.length !== b.hakiTypes.length) return false
-        const setA = new Set(a.hakiTypes)
-        for (const t of b.hakiTypes) if (!setA.has(t)) return false
-        return true
-      }
-      const isMatch = (
-        firstChoice.name === clickedCard.name ||
-        (!!firstChoice.crew && firstChoice.crew === clickedCard.crew) ||
-        (firstChoice.origin && firstChoice.origin === clickedCard.origin) ||
-        sameHaki(firstChoice, clickedCard)
-      )
+  // Match only if they share the same matchTag (ensures solvable unique pairing)
+  const isMatch = firstChoice.matchTag === clickedCard.matchTag
 
       if (isMatch) {
         setScore(prev => prev + 10)
@@ -324,15 +320,15 @@ export default function GridGamePage() {
               <h3 className="text-lg font-bold mb-3 text-amber-300 tracking-wide">Reglas de Emparejamiento</h3>
               <ul className="list-disc list-inside text-sm text-amber-200/80 space-y-1">
                 <li>Da la vuelta a dos cartas cada turno.</li>
-                <li>Se consideran pareja si se cumple AL MENOS una condición:</li>
+                <li>Hay 8 parejas totales (16 cartas).</li>
               </ul>
               <ul className="mt-2 text-sm text-amber-100/90 space-y-1 pl-4 list-[square]">
-                <li>Mismo personaje.</li>
-                <li>Misma crew.</li>
-                <li>Mismo origen.</li>
-                <li>Exactamente los mismos tipos de Haki.</li>
+                <li>2 parejas: mismo personaje (carta duplicada).</li>
+                <li>2 parejas: misma crew.</li>
+                <li>2 parejas: mismo origen.</li>
+                <li>2 parejas: mismo set exacto de Haki.</li>
               </ul>
-              <p className="text-xs text-amber-200/60 mt-3 leading-relaxed">Cuando cumplen una de las condiciones se quedan descubiertas y sumas puntos. Intenta lograrlo en el menor número de movimientos.</p>
+              <p className="text-xs text-amber-200/60 mt-3 leading-relaxed">Cada pareja es única y sólo hace match con su compañera designada (sin solapamientos), garantizando siempre solución.</p>
             </div>
             <div className="bg-[#06394f]/50 border border-amber-700/30 rounded-xl p-4 text-xs text-amber-200/60">
               Consejo: Personajes de grandes crews o con pocos tipos de haki ofrecen más posibilidades de emparejarse.
