@@ -38,3 +38,6 @@ next-env.d.ts
 
 # Backup files
 src/lib-backup/
+
+# Analysis scripts
+analyze-characters.js
