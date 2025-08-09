@@ -86,13 +86,204 @@ const ALL_ROW_CONDITIONS: GridCondition[] = [
       char.name.toLowerCase().includes('hancock') ||
       char.name.toLowerCase().includes('mihawk')
     )
+  },
+  {
+    id: 'yonko',
+    name: 'Yonko',
+    description: 'Emperador del mar',
+    check: (char) => Boolean(
+      char.crew?.toLowerCase().includes('yonko') ||
+      char.crew?.toLowerCase().includes('emperor') ||
+      char.name.toLowerCase().includes('luffy') ||
+      char.name.toLowerCase().includes('shanks') ||
+      char.name.toLowerCase().includes('kaido') ||
+      char.name.toLowerCase().includes('bigmom') ||
+      char.name.toLowerCase().includes('whitebeard') ||
+      char.name.toLowerCase().includes('blackbeard')
+    )
+  },
+  {
+    id: 'revolutionary',
+    name: 'Revolucionario',
+    description: 'Ejército Revolucionario',
+    check: (char) => Boolean(
+      char.crew?.toLowerCase().includes('revolutionary') ||
+      char.name.toLowerCase().includes('dragon') ||
+      char.name.toLowerCase().includes('sabo') ||
+      char.name.toLowerCase().includes('ivankov') ||
+      char.name.toLowerCase().includes('kuma')
+    )
+  },
+  {
+    id: 'shichibukai',
+    name: 'Shichibukai',
+    description: 'Ex o actual Shichibukai',
+    check: (char) => Boolean(
+      char.crew?.toLowerCase().includes('shichibukai') ||
+      char.crew?.toLowerCase().includes('warlord') ||
+      char.name.toLowerCase().includes('mihawk') ||
+      char.name.toLowerCase().includes('hancock') ||
+      char.name.toLowerCase().includes('crocodile') ||
+      char.name.toLowerCase().includes('jinbe') ||
+      char.name.toLowerCase().includes('moria') ||
+      char.name.toLowerCase().includes('kuma') ||
+      char.name.toLowerCase().includes('doflamingo')
+    )
+  },
+  {
+    id: 'supernova',
+    name: 'Supernova',
+    description: 'Peor Generación',
+    check: (char) => Boolean(
+      char.name.toLowerCase().includes('luffy') ||
+      char.name.toLowerCase().includes('zoro') ||
+      char.name.toLowerCase().includes('law') ||
+      char.name.toLowerCase().includes('kid') ||
+      char.name.toLowerCase().includes('killer') ||
+      char.name.toLowerCase().includes('hawkins') ||
+      char.name.toLowerCase().includes('drake') ||
+      char.name.toLowerCase().includes('apoo') ||
+      char.name.toLowerCase().includes('bonney') ||
+      char.name.toLowerCase().includes('capone') ||
+      char.name.toLowerCase().includes('urouge')
+    )
+  },
+  {
+    id: 'cp9',
+    name: 'CP9/Gov',
+    description: 'Gobierno Mundial',
+    check: (char) => Boolean(
+      char.crew?.toLowerCase().includes('cp9') ||
+      char.crew?.toLowerCase().includes('cipher pol') ||
+      char.crew?.toLowerCase().includes('world government') ||
+      char.name.toLowerCase().includes('lucci') ||
+      char.name.toLowerCase().includes('kaku') ||
+      char.name.toLowerCase().includes('kalifa') ||
+      char.name.toLowerCase().includes('jabra') ||
+      char.name.toLowerCase().includes('blueno') ||
+      char.name.toLowerCase().includes('fukurou') ||
+      char.name.toLowerCase().includes('kumadori') ||
+      char.name.toLowerCase().includes('spandam')
+    )
+  },
+  {
+    id: 'fishman',
+    name: 'Hombre Pez',
+    description: 'Tritón o Sirena',
+    check: (char) => Boolean(
+      char.crew?.toLowerCase().includes('fishman') ||
+      char.crew?.toLowerCase().includes('fish-man') ||
+      char.origin?.toLowerCase().includes('fishman') ||
+      char.name.toLowerCase().includes('jinbe') ||
+      char.name.toLowerCase().includes('arlong') ||
+      char.name.toLowerCase().includes('fisher') ||
+      char.name.toLowerCase().includes('hody') ||
+      char.name.toLowerCase().includes('camie') ||
+      char.name.toLowerCase().includes('pappag')
+    )
+  },
+  {
+    id: 'villain',
+    name: 'Villano',
+    description: 'Antagonista principal',
+    check: (char) => Boolean(
+      char.name.toLowerCase().includes('crocodile') ||
+      char.name.toLowerCase().includes('enel') ||
+      char.name.toLowerCase().includes('lucci') ||
+      char.name.toLowerCase().includes('moria') ||
+      char.name.toLowerCase().includes('kaido') ||
+      char.name.toLowerCase().includes('bigmom') ||
+      char.name.toLowerCase().includes('doflamingo') ||
+      char.name.toLowerCase().includes('katakuri') ||
+      char.name.toLowerCase().includes('blackbeard') ||
+      char.name.toLowerCase().includes('akainu')
+    )
+  },
+  {
+    id: 'rookie',
+    name: 'Novato',
+    description: 'Personaje joven o novato',
+    check: (char) => Boolean(
+      char.name.toLowerCase().includes('luffy') ||
+      char.name.toLowerCase().includes('coby') ||
+      char.name.toLowerCase().includes('helmeppo') ||
+      char.name.toLowerCase().includes('tashigi') ||
+      char.name.toLowerCase().includes('chopper') ||
+      char.name.toLowerCase().includes('carrot') ||
+      char.name.toLowerCase().includes('yamato') ||
+      char.name.toLowerCase().includes('bonney')
+    )
+  },
+  {
+    id: 'veteran',
+    name: 'Veterano',
+    description: 'Personaje con experiencia',
+    check: (char) => Boolean(
+      char.name.toLowerCase().includes('garp') ||
+      char.name.toLowerCase().includes('sengoku') ||
+      char.name.toLowerCase().includes('whitebeard') ||
+      char.name.toLowerCase().includes('rayleigh') ||
+      char.name.toLowerCase().includes('crocus') ||
+      char.name.toLowerCase().includes('brook') ||
+      char.name.toLowerCase().includes('kokoro') ||
+      char.name.toLowerCase().includes('tsuru')
+    )
+  },
+  {
+    id: 'doctor',
+    name: 'Doctor',
+    description: 'Médico o científico',
+    check: (char) => Boolean(
+      char.name.toLowerCase().includes('chopper') ||
+      char.name.toLowerCase().includes('kureha') ||
+      char.name.toLowerCase().includes('caesar') ||
+      char.name.toLowerCase().includes('vegapunk') ||
+      char.name.toLowerCase().includes('marco') ||
+      char.name.toLowerCase().includes('law') ||
+      char.name.toLowerCase().includes('hiluluk')
+    )
+  },
+  {
+    id: 'cook',
+    name: 'Cocinero',
+    description: 'Chef o cocinero',
+    check: (char) => Boolean(
+      char.name.toLowerCase().includes('sanji') ||
+      char.name.toLowerCase().includes('zeff') ||
+      char.name.toLowerCase().includes('patty') ||
+      char.name.toLowerCase().includes('carne') ||
+      char.name.toLowerCase().includes('streusen') ||
+      char.name.toLowerCase().includes('wanze')
+    )
+  },
+  {
+    id: 'navigator',
+    name: 'Navegante',
+    description: 'Navegante o cartógrafo',
+    check: (char) => Boolean(
+      char.name.toLowerCase().includes('nami') ||
+      char.name.toLowerCase().includes('haredas') ||
+      char.name.toLowerCase().includes('devon') ||
+      char.name.toLowerCase().includes('bepo')
+    )
+  },
+  {
+    id: 'musician',
+    name: 'Músico',
+    description: 'Artista o músico',
+    check: (char) => Boolean(
+      char.name.toLowerCase().includes('brook') ||
+      char.name.toLowerCase().includes('scratchmen') ||
+      char.name.toLowerCase().includes('apoo') ||
+      char.name.toLowerCase().includes('uta')
+    )
   }
 ]
 
 const ALL_COLUMN_CONDITIONS: GridCondition[] = [
   {
     id: 'devil_fruit',
-    name: 'Fruta del Diablo',
+    name: 'Fruta Diablo',
     description: 'Usuario de Fruta del Diablo',
     check: (char) => Boolean(
       (char.devilFruit && char.devilFruit !== 'None' && char.devilFruit !== '') ||
@@ -149,6 +340,277 @@ const ALL_COLUMN_CONDITIONS: GridCondition[] = [
       char.name.toLowerCase().includes('mihawk') ||
       char.name.toLowerCase().includes('shanks') ||
       char.name.toLowerCase().includes('whitebeard')
+    )
+  },
+  {
+    id: 'swordsman',
+    name: 'Espadachín',
+    description: 'Usa espadas',
+    check: (char) => Boolean(
+      char.features?.some(feature => 
+        feature.toLowerCase().includes('sword') || 
+        feature.toLowerCase().includes('blade') ||
+        feature.toLowerCase().includes('katana')
+      ) || 
+      char.name.toLowerCase().includes('zoro') || 
+      char.name.toLowerCase().includes('mihawk') ||
+      char.name.toLowerCase().includes('vista') ||
+      char.name.toLowerCase().includes('shiryu') ||
+      char.name.toLowerCase().includes('ryuma') ||
+      char.name.toLowerCase().includes('brook')
+    )
+  },
+  {
+    id: 'captain',
+    name: 'Capitán',
+    description: 'Líder de tripulación',
+    check: (char) => Boolean(
+      char.crew?.toLowerCase().includes('captain') ||
+      char.name.toLowerCase().includes('luffy') ||
+      char.name.toLowerCase().includes('law') ||
+      char.name.toLowerCase().includes('kid') ||
+      char.name.toLowerCase().includes('shanks') ||
+      char.name.toLowerCase().includes('whitebeard') ||
+      char.name.toLowerCase().includes('roger') ||
+      char.name.toLowerCase().includes('rocks')
+    )
+  },
+  {
+    id: 'female',
+    name: 'Mujer',
+    description: 'Personaje femenino',
+    check: (char) => Boolean(
+      char.name.toLowerCase().includes('nami') ||
+      char.name.toLowerCase().includes('robin') ||
+      char.name.toLowerCase().includes('hancock') ||
+      char.name.toLowerCase().includes('vivi') ||
+      char.name.toLowerCase().includes('perona') ||
+      char.name.toLowerCase().includes('reiju') ||
+      char.name.toLowerCase().includes('ulti') ||
+      char.name.toLowerCase().includes('yamato') ||
+      char.name.toLowerCase().includes('carrot') ||
+      char.name.toLowerCase().includes('bigmom') ||
+      char.name.toLowerCase().includes('tashigi') ||
+      char.name.toLowerCase().includes('kalifa')
+    )
+  },
+  {
+    id: 'logia',
+    name: 'Logia',
+    description: 'Fruta tipo Logia',
+    check: (char) => Boolean(
+      char.name.toLowerCase().includes('ace') ||
+      char.name.toLowerCase().includes('sabo') ||
+      char.name.toLowerCase().includes('akainu') ||
+      char.name.toLowerCase().includes('aokiji') ||
+      char.name.toLowerCase().includes('kizaru') ||
+      char.name.toLowerCase().includes('blackbeard') ||
+      char.name.toLowerCase().includes('crocodile') ||
+      char.name.toLowerCase().includes('enel') ||
+      char.name.toLowerCase().includes('smoker') ||
+      char.name.toLowerCase().includes('caesar')
+    )
+  },
+  {
+    id: 'zoan',
+    name: 'Zoan',
+    description: 'Fruta tipo Zoan',
+    check: (char) => Boolean(
+      char.name.toLowerCase().includes('chopper') ||
+      char.name.toLowerCase().includes('lucci') ||
+      char.name.toLowerCase().includes('kaku') ||
+      char.name.toLowerCase().includes('jabra') ||
+      char.name.toLowerCase().includes('marco') ||
+      char.name.toLowerCase().includes('king') ||
+      char.name.toLowerCase().includes('queen') ||
+      char.name.toLowerCase().includes('kaido') ||
+      char.name.toLowerCase().includes('yamato') ||
+      char.name.toLowerCase().includes('drake')
+    )
+  },
+  {
+    id: 'paramecia',
+    name: 'Paramecia',
+    description: 'Fruta tipo Paramecia',
+    check: (char) => Boolean(
+      char.name.toLowerCase().includes('luffy') ||
+      char.name.toLowerCase().includes('robin') ||
+      char.name.toLowerCase().includes('law') ||
+      char.name.toLowerCase().includes('kid') ||
+      char.name.toLowerCase().includes('hancock') ||
+      char.name.toLowerCase().includes('doflamingo') ||
+      char.name.toLowerCase().includes('katakuri') ||
+      char.name.toLowerCase().includes('whitebeard') ||
+      char.name.toLowerCase().includes('bigmom') ||
+      char.name.toLowerCase().includes('brook')
+    )
+  },
+  {
+    id: 'haki_user',
+    name: 'Haki',
+    description: 'Usuario de Haki',
+    check: (char) => Boolean(
+      char.haki === true || 
+      (char.hakiTypes && char.hakiTypes.length > 0) ||
+      char.name.toLowerCase().includes('luffy') ||
+      char.name.toLowerCase().includes('zoro') ||
+      char.name.toLowerCase().includes('sanji') ||
+      char.name.toLowerCase().includes('shanks') ||
+      char.name.toLowerCase().includes('rayleigh') ||
+      char.name.toLowerCase().includes('katakuri') ||
+      char.name.toLowerCase().includes('kaido')
+    )
+  },
+  {
+    id: 'east_blue',
+    name: 'East Blue',
+    description: 'Originario de East Blue',
+    check: (char) => Boolean(
+      char.origin?.toLowerCase().includes('east blue') ||
+      char.name.toLowerCase().includes('luffy') ||
+      char.name.toLowerCase().includes('zoro') ||
+      char.name.toLowerCase().includes('nami') ||
+      char.name.toLowerCase().includes('usopp') ||
+      char.name.toLowerCase().includes('sanji') ||
+      char.name.toLowerCase().includes('garp') ||
+      char.name.toLowerCase().includes('dragon')
+    )
+  },
+  {
+    id: 'grand_line',
+    name: 'Grand Line',
+    description: 'De la Grand Line',
+    check: (char) => Boolean(
+      char.origin?.toLowerCase().includes('grand line') ||
+      char.name.toLowerCase().includes('chopper') ||
+      char.name.toLowerCase().includes('robin') ||
+      char.name.toLowerCase().includes('franky') ||
+      char.name.toLowerCase().includes('brook') ||
+      char.name.toLowerCase().includes('vivi') ||
+      char.name.toLowerCase().includes('crocodile')
+    )
+  },
+  {
+    id: 'high_bounty',
+    name: 'Recompensa Alta',
+    description: 'Más de 100M berries',
+    check: (char) => Boolean(
+      (char.bounty && char.bounty >= 100000000) ||
+      char.name.toLowerCase().includes('luffy') ||
+      char.name.toLowerCase().includes('law') ||
+      char.name.toLowerCase().includes('kid') ||
+      char.name.toLowerCase().includes('katakuri') ||
+      char.name.toLowerCase().includes('queen') ||
+      char.name.toLowerCase().includes('king') ||
+      char.name.toLowerCase().includes('marco')
+    )
+  },
+  {
+    id: 'young',
+    name: 'Joven',
+    description: 'Personaje joven',
+    check: (char) => Boolean(
+      char.name.toLowerCase().includes('luffy') ||
+      char.name.toLowerCase().includes('chopper') ||
+      char.name.toLowerCase().includes('carrot') ||
+      char.name.toLowerCase().includes('yamato') ||
+      char.name.toLowerCase().includes('bonney') ||
+      char.name.toLowerCase().includes('coby') ||
+      char.name.toLowerCase().includes('helmeppo') ||
+      char.name.toLowerCase().includes('tashigi')
+    )
+  },
+  {
+    id: 'old',
+    name: 'Veterano',
+    description: 'Personaje mayor',
+    check: (char) => Boolean(
+      char.name.toLowerCase().includes('whitebeard') ||
+      char.name.toLowerCase().includes('garp') ||
+      char.name.toLowerCase().includes('sengoku') ||
+      char.name.toLowerCase().includes('rayleigh') ||
+      char.name.toLowerCase().includes('brook') ||
+      char.name.toLowerCase().includes('kureha') ||
+      char.name.toLowerCase().includes('crocus') ||
+      char.name.toLowerCase().includes('tsuru')
+    )
+  },
+  {
+    id: 'royal',
+    name: 'Realeza',
+    description: 'De familia real',
+    check: (char) => Boolean(
+      char.name.toLowerCase().includes('vivi') ||
+      char.name.toLowerCase().includes('cobra') ||
+      char.name.toLowerCase().includes('neptune') ||
+      char.name.toLowerCase().includes('shirahoshi') ||
+      char.name.toLowerCase().includes('riku') ||
+      char.name.toLowerCase().includes('viola') ||
+      char.name.toLowerCase().includes('rebecca')
+    )
+  },
+  {
+    id: 'scientist',
+    name: 'Científico',
+    description: 'Inventor o científico',
+    check: (char) => Boolean(
+      char.name.toLowerCase().includes('vegapunk') ||
+      char.name.toLowerCase().includes('caesar') ||
+      char.name.toLowerCase().includes('franky') ||
+      char.name.toLowerCase().includes('judge') ||
+      char.name.toLowerCase().includes('queen') ||
+      char.name.toLowerCase().includes('chopper')
+    )
+  },
+  {
+    id: 'shipwright',
+    name: 'Carpintero',
+    description: 'Construcción naval',
+    check: (char) => Boolean(
+      char.name.toLowerCase().includes('franky') ||
+      char.name.toLowerCase().includes('iceburg') ||
+      char.name.toLowerCase().includes('paulie') ||
+      char.name.toLowerCase().includes('kaku') ||
+      char.name.toLowerCase().includes('tom') ||
+      char.name.toLowerCase().includes('yokozuna')
+    )
+  },
+  {
+    id: 'sniper',
+    name: 'Tirador',
+    description: 'Francotirador',
+    check: (char) => Boolean(
+      char.name.toLowerCase().includes('usopp') ||
+      char.name.toLowerCase().includes('yasopp') ||
+      char.name.toLowerCase().includes('augur') ||
+      char.name.toLowerCase().includes('daddy') ||
+      char.name.toLowerCase().includes('izo')
+    )
+  },
+  {
+    id: 'assassin',
+    name: 'Asesino',
+    description: 'Asesino profesional',
+    check: (char) => Boolean(
+      char.name.toLowerCase().includes('lucci') ||
+      char.name.toLowerCase().includes('kaku') ||
+      char.name.toLowerCase().includes('kalifa') ||
+      char.name.toLowerCase().includes('jabra') ||
+      char.name.toLowerCase().includes('shiryu') ||
+      char.name.toLowerCase().includes('daz')
+    )
+  },
+  {
+    id: 'giant',
+    name: 'Gigante',
+    description: 'Raza gigante',
+    check: (char) => Boolean(
+      char.name.toLowerCase().includes('dorry') ||
+      char.name.toLowerCase().includes('brogy') ||
+      char.name.toLowerCase().includes('oars') ||
+      char.name.toLowerCase().includes('saul') ||
+      char.name.toLowerCase().includes('hajrudin') ||
+      char.name.toLowerCase().includes('morley')
     )
   }
 ]
@@ -467,14 +929,15 @@ export default function AnimeGridPage() {
 
         {/* Grid Container */}
         <div className="flex justify-center mb-8">
-          <div className="bg-gray-800 p-6 rounded-2xl shadow-2xl border-2 border-yellow-600">
+          <div className="bg-gray-900/90 p-8 rounded-3xl shadow-2xl border border-yellow-500/30">
+            
             {/* Column Headers */}
             {gameState.mode !== 'setup' && colConditions.length > 0 && (
-              <div className="flex mb-4">
-                <div className="w-40"></div>
+              <div className="grid grid-cols-4 gap-3 mb-6">
+                <div className="w-32"></div>
                 {colConditions.map((condition, index) => (
-                  <div key={index} className="w-32 text-center mx-1">
-                    <div className="bg-blue-600 text-white px-3 py-2 rounded-lg font-bold text-sm shadow-lg border-2 border-blue-400">
+                  <div key={index} className="w-32 h-32 flex items-center justify-center">
+                    <div className="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-4 py-2 rounded-xl font-bold text-sm shadow-lg border border-blue-400/50 w-full h-full flex items-center justify-center text-center">
                       {condition.name}
                     </div>
                   </div>
@@ -483,90 +946,93 @@ export default function AnimeGridPage() {
             )}
 
             {/* Grid Rows */}
-            {grid.map((row, rowIndex) => (
-              <div key={rowIndex} className="flex items-center mb-4">
-                {/* Row Header */}
-                {gameState.mode !== 'setup' && rowConditions.length > 0 && (
-                  <div className="w-40 pr-4">
-                    <div className="bg-orange-600 text-white px-3 py-2 rounded-lg font-bold text-sm text-center shadow-lg border-2 border-orange-400">
-                      {rowConditions[rowIndex]?.name}
+            <div className="space-y-3">
+              {grid.map((row, rowIndex) => (
+                <div key={rowIndex} className="grid grid-cols-4 gap-3 items-center">
+                  
+                  {/* Row Header */}
+                  {gameState.mode !== 'setup' && rowConditions.length > 0 && (
+                    <div className="w-32 h-32 flex items-center justify-center">
+                      <div className="bg-gradient-to-r from-orange-600 to-orange-500 text-white px-4 py-2 rounded-xl font-bold text-sm shadow-lg border border-orange-400/50 w-full h-full flex items-center justify-center text-center">
+                        {rowConditions[rowIndex]?.name}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                {/* Grid Cells */}
-                {row.map((cell, colIndex) => (
-                  <div
-                    key={colIndex}
-                    onClick={() => handleCellClick(rowIndex, colIndex)}
-                    className={`
-                      w-32 h-32 mx-1 rounded-xl cursor-pointer
-                      flex flex-col items-center justify-center
-                      transition-all duration-300 hover:scale-105
-                      border-3 shadow-lg relative
-                      ${gameState.mode === 'setup' 
-                        ? 'bg-gray-700 border-gray-500' 
-                        : cell.player 
-                          ? (cell.isValid 
-                            ? 'bg-green-700 border-green-400' 
-                            : 'bg-red-700 border-red-400') 
-                          : 'bg-gray-700 border-gray-500 hover:bg-gray-600 hover:border-yellow-400'
-                      }
-                    `}
-                  >
-                    {/* Player Symbol */}
-                    {cell.player && (
-                      <div className={`absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg border-2 ${
-                        cell.player === 'X' 
-                          ? 'bg-blue-600 text-white border-blue-400' 
-                          : 'bg-red-600 text-white border-red-400'
-                      }`}>
-                        {cell.player}
-                      </div>
-                    )}
-
-                    {/* Character Content */}
-                    {cell.character ? (
-                      <div className="text-center w-full h-full flex flex-col items-center justify-center p-2">
-                        {cell.character.imageUrl ? (
-                          <img 
-                            src={cell.character.imageUrl} 
-                            alt={cell.character.name}
-                            className="w-16 h-16 object-cover rounded-full border-2 border-white shadow-md mb-1"
-                            onError={(e) => {
-                              e.currentTarget.style.display = 'none';
-                            }}
-                          />
-                        ) : (
-                          <div className="w-16 h-16 bg-gray-600 rounded-full border-2 border-white shadow-md mb-1 flex items-center justify-center">
-                            <span className="text-lg">🏴‍☠️</span>
-                          </div>
-                        )}
-                        <div className="text-xs font-bold text-white text-center leading-tight">
-                          {cell.character.name}
+                  {/* Grid Cells */}
+                  {row.map((cell, colIndex) => (
+                    <div
+                      key={colIndex}
+                      onClick={() => handleCellClick(rowIndex, colIndex)}
+                      className={`
+                        w-32 h-32 rounded-2xl cursor-pointer
+                        flex flex-col items-center justify-center
+                        transition-all duration-300 hover:scale-105
+                        border-2 shadow-lg relative overflow-hidden
+                        ${gameState.mode === 'setup' 
+                          ? 'bg-gray-700 border-gray-500 hover:border-gray-400' 
+                          : cell.player 
+                            ? (cell.isValid 
+                              ? 'bg-gradient-to-br from-green-600 to-green-700 border-green-400 shadow-green-500/25' 
+                              : 'bg-gradient-to-br from-red-600 to-red-700 border-red-400 shadow-red-500/25') 
+                            : 'bg-gradient-to-br from-gray-700 to-gray-800 border-gray-500 hover:border-yellow-400 hover:shadow-yellow-500/25'
+                        }
+                      `}
+                    >
+                      {/* Player Symbol */}
+                      {cell.player && (
+                        <div className={`absolute top-2 right-2 w-7 h-7 rounded-full flex items-center justify-center font-bold text-sm border ${
+                          cell.player === 'X' 
+                            ? 'bg-blue-500 text-white border-blue-300 shadow-lg' 
+                            : 'bg-red-500 text-white border-red-300 shadow-lg'
+                        }`}>
+                          {cell.player}
                         </div>
-                      </div>
-                    ) : (
-                      <div className="text-center">
-                        {gameState.mode === 'setup' ? (
-                          <>
-                            <div className="text-4xl mb-1">🎯</div>
-                            <div className="text-xs text-gray-400 font-medium">¡Listo!</div>
-                          </>
-                        ) : (
-                          <>
-                            <div className="text-4xl mb-1">?</div>
-                            <div className="text-xs text-gray-400 font-medium">
-                              {gameState.mode === 'playing' ? 'Seleccionar' : 'Vacío'}
+                      )}
+
+                      {/* Character Content */}
+                      {cell.character ? (
+                        <div className="text-center w-full h-full flex flex-col items-center justify-center p-3">
+                          {cell.character.imageUrl ? (
+                            <img 
+                              src={cell.character.imageUrl} 
+                              alt={cell.character.name}
+                              className="w-14 h-14 object-cover rounded-full border-2 border-white shadow-md mb-1"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                              }}
+                            />
+                          ) : (
+                            <div className="w-14 h-14 bg-gray-600 rounded-full border-2 border-white shadow-md mb-1 flex items-center justify-center">
+                              <span className="text-lg">🏴‍☠️</span>
                             </div>
-                          </>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            ))}
+                          )}
+                          <div className="text-xs font-bold text-white text-center leading-tight max-w-full truncate">
+                            {cell.character.name}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="text-center">
+                          {gameState.mode === 'setup' ? (
+                            <>
+                              <div className="text-3xl mb-1">🎯</div>
+                              <div className="text-xs text-gray-400 font-medium">Listo</div>
+                            </>
+                          ) : (
+                            <>
+                              <div className="text-3xl mb-1 text-gray-400">?</div>
+                              <div className="text-xs text-gray-400 font-medium">
+                                {gameState.mode === 'playing' ? 'Elegir' : 'Vacío'}
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
