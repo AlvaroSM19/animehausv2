@@ -31,9 +31,28 @@ const comingSoonGames: GameDef[] = [
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0a141b] via-[#081018] to-[#050c12] text-amber-100">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
+    <div className="min-h-screen relative text-amber-100">
+      {/* Straw Hat Pirates Flag Background */}
+      <div className="fixed inset-0 z-0">
+        {/* High definition Straw Hat Pirates flag as background */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url('/images/straw-hat-flag.svg')`
+          }}
+        ></div>
+        
+        {/* Dark overlay to make text readable */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/65 to-black/80"></div>
+        
+        {/* Subtle vignette effect */}
+        <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black/30"></div>
+      </div>
+
+      {/* Content with relative positioning */}
+      <div className="relative z-10">
+        {/* Hero Section */}
+        <section className="relative overflow-hidden">
         <div className="container mx-auto px-4 py-16 lg:py-24">
           <div className="text-center space-y-8">
             <div className="space-y-4">
@@ -195,7 +214,7 @@ export default function HomePage() {
       </section>
 
       {/* Characters Section */}
-      <section className="py-16 bg-[#0d1921]/70 relative">
+      <section className="py-16 bg-black/20 relative">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent drop-shadow">Explora el Universo One Piece</h2>
@@ -222,6 +241,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      </div>
     </div>
   )
 }
