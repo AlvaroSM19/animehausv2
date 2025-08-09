@@ -39,26 +39,44 @@ export default function HomePage() {
             <div className="space-y-4">
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-wide">
                 <div className="flex items-center justify-center gap-4">
-                  {/* Sombrero de Paja One Piece */}
+                  <span className="bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 bg-clip-text text-transparent drop-shadow">One Piece Quest</span>
+                  {/* Sombrero de Paja One Piece - Más realista */}
                   <svg 
                     className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20" 
                     viewBox="0 0 100 100" 
                     fill="none"
                   >
-                    {/* Sombrero principal */}
-                    <ellipse cx="50" cy="70" rx="45" ry="8" fill="#D4A574" opacity="0.8"/>
-                    <ellipse cx="50" cy="40" rx="20" ry="25" fill="#E6C580"/>
-                    <ellipse cx="50" cy="35" rx="18" ry="20" fill="#F2D399"/>
+                    {/* Ala del sombrero */}
+                    <ellipse cx="50" cy="75" rx="48" ry="12" fill="#D4A574" stroke="#B8935F" strokeWidth="1"/>
+                    <ellipse cx="50" cy="73" rx="45" ry="10" fill="#E6C580"/>
+                    
+                    {/* Copa del sombrero */}
+                    <ellipse cx="50" cy="50" rx="25" ry="30" fill="#F2D399"/>
+                    <ellipse cx="50" cy="48" rx="23" ry="28" fill="#F5E0B3"/>
+                    
                     {/* Banda del sombrero */}
-                    <rect x="32" y="50" width="36" height="4" fill="#8B4513" rx="2"/>
-                    {/* Detalles de paja */}
-                    <line x1="40" y1="25" x2="42" y2="45" stroke="#D4A574" strokeWidth="1" opacity="0.6"/>
-                    <line x1="50" y1="20" x2="50" y2="50" stroke="#D4A574" strokeWidth="1" opacity="0.6"/>
-                    <line x1="60" y1="25" x2="58" y2="45" stroke="#D4A574" strokeWidth="1" opacity="0.6"/>
-                    <line x1="45" y1="30" x2="55" y2="35" stroke="#D4A574" strokeWidth="1" opacity="0.4"/>
-                    <line x1="43" y1="40" x2="57" y2="42" stroke="#D4A574" strokeWidth="1" opacity="0.4"/>
+                    <rect x="27" y="60" width="46" height="6" fill="#8B4513" rx="3"/>
+                    <rect x="27" y="61" width="46" height="4" fill="#A0522D" rx="2"/>
+                    
+                    {/* Textura de paja - líneas entrecruzadas */}
+                    <g opacity="0.6" stroke="#D4A574" strokeWidth="0.8">
+                      <line x1="35" y1="25" x2="37" y2="55"/>
+                      <line x1="42" y1="20" x2="44" y2="58"/>
+                      <line x1="50" y1="18" x2="50" y2="60"/>
+                      <line x1="58" y1="20" x2="56" y2="58"/>
+                      <line x1="65" y1="25" x2="63" y2="55"/>
+                      
+                      <line x1="32" y1="35" x2="68" y2="40"/>
+                      <line x1="30" y1="45" x2="70" y2="48"/>
+                      <line x1="32" y1="55" x2="68" y2="56"/>
+                    </g>
+                    
+                    {/* Sombra en la copa */}
+                    <ellipse cx="45" cy="45" rx="8" ry="12" fill="#E6C580" opacity="0.7"/>
+                    
+                    {/* Highlight en el ala */}
+                    <ellipse cx="50" cy="70" rx="35" ry="6" fill="#F2D399" opacity="0.5"/>
                   </svg>
-                  <span className="bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 bg-clip-text text-transparent drop-shadow">AnimeHub</span>
                 </div>
                 <span className="mt-2 block text-base md:text-lg font-medium text-amber-300/70">One Piece Games</span>
               </h1>
@@ -73,7 +91,7 @@ export default function HomePage() {
               </div>
               <div className="flex items-center gap-2 bg-[#101b24]/70 px-4 py-2 rounded-lg border border-amber-700/40 backdrop-blur-sm shadow shadow-black/40">
                 <Gamepad2 className="w-4 h-4 text-rose-400" />
-                <span className="text-amber-200/80">5 Modos</span>
+                <span className="text-amber-200/80">6 Modos</span>
               </div>
               <div className="flex items-center gap-2 bg-[#101b24]/70 px-4 py-2 rounded-lg border border-amber-700/40 backdrop-blur-sm shadow shadow-black/40">
                 <Trophy className="w-4 h-4 text-amber-400" />
