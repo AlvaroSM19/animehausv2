@@ -230,33 +230,6 @@ const ALL_ROW_CONDITIONS: GridCondition[] = [
     )
   },
   {
-    id: 'doctor',
-    name: 'Doctor',
-    description: 'Médico o científico',
-    check: (char) => Boolean(
-      char.name.toLowerCase().includes('chopper') ||
-      char.name.toLowerCase().includes('kureha') ||
-      char.name.toLowerCase().includes('caesar') ||
-      char.name.toLowerCase().includes('vegapunk') ||
-      char.name.toLowerCase().includes('marco') ||
-      char.name.toLowerCase().includes('law') ||
-      char.name.toLowerCase().includes('hiluluk')
-    )
-  },
-  {
-    id: 'cook',
-    name: 'Cocinero',
-    description: 'Chef o cocinero',
-    check: (char) => Boolean(
-      char.name.toLowerCase().includes('sanji') ||
-      char.name.toLowerCase().includes('zeff') ||
-      char.name.toLowerCase().includes('patty') ||
-      char.name.toLowerCase().includes('carne') ||
-      char.name.toLowerCase().includes('streusen') ||
-      char.name.toLowerCase().includes('wanze')
-    )
-  },
-  {
     id: 'navigator',
     name: 'Navegante',
     description: 'Navegante o cartógrafo',
@@ -268,14 +241,61 @@ const ALL_ROW_CONDITIONS: GridCondition[] = [
     )
   },
   {
-    id: 'musician',
-    name: 'Músico',
-    description: 'Artista o músico',
+    id: 'archaeologist',
+    name: 'Arqueólogo',
+    description: 'Estudioso de historia',
     check: (char) => Boolean(
+      char.name.toLowerCase().includes('robin') ||
+      char.name.toLowerCase().includes('clover') ||
+      char.name.toLowerCase().includes('olivia') ||
+      char.name.toLowerCase().includes('saul')
+    )
+  },
+  {
+    id: 'high_bounty_row',
+    name: 'Recompensa Alta (500-6000M)',
+    description: '500-6000 millones berries',
+    check: (char) => Boolean(
+      (char.bounty && char.bounty >= 500000000 && char.bounty <= 6000000000) ||
+      char.name.toLowerCase().includes('luffy') ||
+      char.name.toLowerCase().includes('law') ||
+      char.name.toLowerCase().includes('kid') ||
+      char.name.toLowerCase().includes('katakuri') ||
+      char.name.toLowerCase().includes('queen') ||
+      char.name.toLowerCase().includes('king') ||
+      char.name.toLowerCase().includes('marco')
+    )
+  },
+  {
+    id: 'medium_bounty_row',
+    name: 'Recompensa Media (200-500M)',
+    description: '200-500 millones berries',
+    check: (char) => Boolean(
+      (char.bounty && char.bounty >= 200000000 && char.bounty <= 500000000) ||
+      char.name.toLowerCase().includes('katakuri') ||
+      char.name.toLowerCase().includes('queen') ||
+      char.name.toLowerCase().includes('king') ||
+      char.name.toLowerCase().includes('marco') ||
+      char.name.toLowerCase().includes('ace') ||
+      char.name.toLowerCase().includes('sabo') ||
+      char.name.toLowerCase().includes('jinbe')
+    )
+  },
+  {
+    id: 'low_bounty_row',
+    name: 'Recompensa Baja (0-200M)',
+    description: '0-200 millones berries',
+    check: (char) => Boolean(
+      (char.bounty && char.bounty > 0 && char.bounty < 200000000) ||
+      char.name.toLowerCase().includes('chopper') ||
       char.name.toLowerCase().includes('brook') ||
-      char.name.toLowerCase().includes('scratchmen') ||
-      char.name.toLowerCase().includes('apoo') ||
-      char.name.toLowerCase().includes('uta')
+      char.name.toLowerCase().includes('franky') ||
+      char.name.toLowerCase().includes('nami') ||
+      char.name.toLowerCase().includes('usopp') ||
+      char.name.toLowerCase().includes('bepo') ||
+      char.name.toLowerCase().includes('penguin') ||
+      char.name.toLowerCase().includes('zoro') ||
+      char.name.toLowerCase().includes('sanji')
     )
   }
 ]
@@ -492,10 +512,10 @@ const ALL_COLUMN_CONDITIONS: GridCondition[] = [
   },
   {
     id: 'high_bounty',
-    name: 'Recompensa Alta',
-    description: 'Más de 100M berries',
+    name: 'Recompensa Alta (500-6000M)',
+    description: '500-6000 millones berries',
     check: (char) => Boolean(
-      (char.bounty && char.bounty >= 100000000) ||
+      (char.bounty && char.bounty >= 500000000 && char.bounty <= 6000000000) ||
       char.name.toLowerCase().includes('luffy') ||
       char.name.toLowerCase().includes('law') ||
       char.name.toLowerCase().includes('kid') ||
@@ -503,6 +523,38 @@ const ALL_COLUMN_CONDITIONS: GridCondition[] = [
       char.name.toLowerCase().includes('queen') ||
       char.name.toLowerCase().includes('king') ||
       char.name.toLowerCase().includes('marco')
+    )
+  },
+  {
+    id: 'medium_bounty',
+    name: 'Recompensa Media (200-500M)',
+    description: '200-500 millones berries',
+    check: (char) => Boolean(
+      (char.bounty && char.bounty >= 200000000 && char.bounty <= 500000000) ||
+      char.name.toLowerCase().includes('katakuri') ||
+      char.name.toLowerCase().includes('queen') ||
+      char.name.toLowerCase().includes('king') ||
+      char.name.toLowerCase().includes('marco') ||
+      char.name.toLowerCase().includes('ace') ||
+      char.name.toLowerCase().includes('sabo') ||
+      char.name.toLowerCase().includes('jinbe')
+    )
+  },
+  {
+    id: 'low_bounty',
+    name: 'Recompensa Baja (0-200M)',
+    description: '0-200 millones berries',
+    check: (char) => Boolean(
+      (char.bounty && char.bounty > 0 && char.bounty < 200000000) ||
+      char.name.toLowerCase().includes('chopper') ||
+      char.name.toLowerCase().includes('brook') ||
+      char.name.toLowerCase().includes('franky') ||
+      char.name.toLowerCase().includes('nami') ||
+      char.name.toLowerCase().includes('usopp') ||
+      char.name.toLowerCase().includes('bepo') ||
+      char.name.toLowerCase().includes('penguin') ||
+      char.name.toLowerCase().includes('zoro') ||
+      char.name.toLowerCase().includes('sanji')
     )
   },
   {
@@ -560,44 +612,6 @@ const ALL_COLUMN_CONDITIONS: GridCondition[] = [
       char.name.toLowerCase().includes('judge') ||
       char.name.toLowerCase().includes('queen') ||
       char.name.toLowerCase().includes('chopper')
-    )
-  },
-  {
-    id: 'shipwright',
-    name: 'Carpintero',
-    description: 'Construcción naval',
-    check: (char) => Boolean(
-      char.name.toLowerCase().includes('franky') ||
-      char.name.toLowerCase().includes('iceburg') ||
-      char.name.toLowerCase().includes('paulie') ||
-      char.name.toLowerCase().includes('kaku') ||
-      char.name.toLowerCase().includes('tom') ||
-      char.name.toLowerCase().includes('yokozuna')
-    )
-  },
-  {
-    id: 'sniper',
-    name: 'Tirador',
-    description: 'Francotirador',
-    check: (char) => Boolean(
-      char.name.toLowerCase().includes('usopp') ||
-      char.name.toLowerCase().includes('yasopp') ||
-      char.name.toLowerCase().includes('augur') ||
-      char.name.toLowerCase().includes('daddy') ||
-      char.name.toLowerCase().includes('izo')
-    )
-  },
-  {
-    id: 'assassin',
-    name: 'Asesino',
-    description: 'Asesino profesional',
-    check: (char) => Boolean(
-      char.name.toLowerCase().includes('lucci') ||
-      char.name.toLowerCase().includes('kaku') ||
-      char.name.toLowerCase().includes('kalifa') ||
-      char.name.toLowerCase().includes('jabra') ||
-      char.name.toLowerCase().includes('shiryu') ||
-      char.name.toLowerCase().includes('daz')
     )
   },
   {
@@ -661,20 +675,30 @@ export default function AnimeGridPage() {
   }, [gameState.timeLeft, gameState.mode])
 
   const generateRandomConditions = () => {
-    // Intentar generar condiciones que garanticen soluciones válidas
+    // Función Fisher-Yates shuffle mejorada para distribución equitativa
+    const shuffleArray = (array: GridCondition[]) => {
+      const shuffled = [...array]
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1))
+        ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+      }
+      return shuffled
+    }
+
+    // Intentar generar condiciones que garanticen todas las soluciones
     let attempts = 0
     let validRowConditions: GridCondition[] = []
     let validColConditions: GridCondition[] = []
     
-    while (attempts < 10) {
-      // Seleccionar 3 condiciones aleatorias para filas y columnas
-      const shuffledRows = [...ALL_ROW_CONDITIONS].sort(() => Math.random() - 0.5)
-      const shuffledCols = [...ALL_COLUMN_CONDITIONS].sort(() => Math.random() - 0.5)
+    while (attempts < 100 && validRowConditions.length === 0) {
+      // Usar Fisher-Yates shuffle para distribución equitativa
+      const shuffledRows = shuffleArray(ALL_ROW_CONDITIONS)
+      const shuffledCols = shuffleArray(ALL_COLUMN_CONDITIONS)
       
       const testRowConditions = shuffledRows.slice(0, 3)
       const testColConditions = shuffledCols.slice(0, 3)
       
-      // Verificar que cada combinación tenga al menos una solución
+      // Verificar que TODAS las 9 combinaciones tengan solución
       let allCombinationsHaveSolution = true
       
       for (let row = 0; row < 3; row++) {
@@ -690,17 +714,24 @@ export default function AnimeGridPage() {
         if (!allCombinationsHaveSolution) break
       }
       
+      // Solo si TODAS las combinaciones tienen solución
       if (allCombinationsHaveSolution) {
         validRowConditions = testRowConditions
         validColConditions = testColConditions
+        console.log('✅ Condiciones válidas generadas (18x18):', {
+          filas: testRowConditions.map(r => r.name),
+          columnas: testColConditions.map(c => c.name),
+          intento: attempts + 1
+        })
         break
       }
       
       attempts++
     }
     
-    // Si no encontramos una combinación válida, usar condiciones amplias por defecto
+    // Si no encontramos una combinación válida, usar las más amplias
     if (validRowConditions.length === 0) {
+      console.log('⚠️ Usando condiciones amplias por defecto después de', attempts, 'intentos')
       validRowConditions = [
         ALL_ROW_CONDITIONS.find(c => c.id === 'pirate')!,
         ALL_ROW_CONDITIONS.find(c => c.id === 'powerful')!,
@@ -893,6 +924,16 @@ export default function AnimeGridPage() {
                 Nueva Partida
               </button>
             )}
+            <button
+              onClick={() => {
+                generateRandomConditions()
+                console.log('🔄 Condiciones regeneradas manualmente')
+              }}
+              className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-bold text-lg shadow-lg"
+            >
+              🎲
+              Cambiar Condiciones
+            </button>
             <button
               onClick={resetScores}
               className="flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors font-bold text-lg shadow-lg"
