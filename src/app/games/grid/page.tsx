@@ -229,9 +229,23 @@ export default function GridGamePage() {
   }
 
   return (
-  <div className="min-h-screen bg-gradient-to-b from-[#05344d] via-[#065e7c] to-[#f5d9a5] text-amber-100">
-      {/* Header */}
-  <div className="border-b border-amber-700/40 bg-[#042836]/70 backdrop-blur-sm sticky top-0 z-40 shadow-lg shadow-black/40">
+    <div className="min-h-screen relative text-amber-100">
+      {/* Memory Cards Background */}
+      <div className="fixed inset-0 z-0">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url('/images/memory-cards-bg.svg')`
+          }}
+        ></div>
+        {/* Dark overlay to make text readable */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/65 to-black/80"></div>
+      </div>
+
+      {/* Content with relative positioning */}
+      <div className="relative z-10">
+        {/* Header */}
+        <div className="border-b border-amber-700/40 bg-[#042836]/70 backdrop-blur-sm sticky top-0 z-40 shadow-lg shadow-black/40">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -382,6 +396,7 @@ export default function GridGamePage() {
             </div>
           </aside>
         </div>
+      </div>
       </div>
     </div>
   )

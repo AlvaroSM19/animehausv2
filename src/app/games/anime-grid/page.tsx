@@ -979,8 +979,21 @@ export default function AnimeGridPage() {
         }
       `}</style>
       
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-6 font-sans">
-      <div className="max-w-6xl mx-auto">
+      <div className="min-h-screen relative text-white p-6 font-sans">
+        {/* Tic Tac Toe Battle Background */}
+        <div className="fixed inset-0 z-0">
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage: `url('/images/anime-grid-bg.svg')`
+            }}
+          ></div>
+          {/* Dark overlay to make text readable */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black/85"></div>
+        </div>
+
+        {/* Content with relative positioning */}
+        <div className="relative z-10 max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-5xl font-bold mb-4 text-yellow-400 drop-shadow-lg">
@@ -1303,7 +1316,7 @@ export default function AnimeGridPage() {
             💡 Las condiciones cambian en cada partida. ¡Demuestra tu conocimiento de One Piece!
           </p>
         </div>
-      </div>
+        </div>
       </div>
     </>
   )
