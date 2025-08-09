@@ -436,6 +436,7 @@ const ALL_COLUMN_CONDITIONS: GridCondition[] = [
     name: 'Zoan',
     description: 'Fruta tipo Zoan',
     check: (char) => Boolean(
+      char.name.toLowerCase().includes('luffy') || // Hito Hito no Mi Model: Nika (Zoan Mítica)
       char.name.toLowerCase().includes('chopper') ||
       char.name.toLowerCase().includes('lucci') ||
       char.name.toLowerCase().includes('kaku') ||
@@ -453,7 +454,6 @@ const ALL_COLUMN_CONDITIONS: GridCondition[] = [
     name: 'Paramecia',
     description: 'Fruta tipo Paramecia',
     check: (char) => Boolean(
-      char.name.toLowerCase().includes('luffy') ||
       char.name.toLowerCase().includes('robin') ||
       char.name.toLowerCase().includes('law') ||
       char.name.toLowerCase().includes('kid') ||
@@ -664,7 +664,7 @@ export default function AnimeGridPage() {
       return shuffled
     }
 
-    // Intentar generar condiciones que garanticen todas las soluciones
+    // Intentar generar condiciones que garanticen todas las soluciones Y que no se repitan
     let attempts = 0
     let validRowConditions: GridCondition[] = []
     let validColConditions: GridCondition[] = []
@@ -676,6 +676,16 @@ export default function AnimeGridPage() {
       
       const testRowConditions = shuffledRows.slice(0, 3)
       const testColConditions = shuffledCols.slice(0, 3)
+      
+      // Verificar que no haya IDs duplicados entre filas y columnas
+      const rowIds = testRowConditions.map(c => c.id)
+      const colIds = testColConditions.map(c => c.id)
+      const hasOverlap = rowIds.some(id => colIds.includes(id))
+      
+      if (hasOverlap) {
+        attempts++
+        continue // Saltar esta combinación si hay duplicados
+      }
       
       // Verificar que TODAS las 9 combinaciones tengan solución
       let allCombinationsHaveSolution = true
@@ -693,13 +703,13 @@ export default function AnimeGridPage() {
         if (!allCombinationsHaveSolution) break
       }
       
-      // Solo si TODAS las combinaciones tienen solución
+      // Solo si TODAS las combinaciones tienen solución Y no hay duplicados
       if (allCombinationsHaveSolution) {
         validRowConditions = testRowConditions
         validColConditions = testColConditions
-        console.log('✅ Condiciones válidas generadas (18x18):', {
-          filas: testRowConditions.map(r => r.name),
-          columnas: testColConditions.map(c => c.name),
+        console.log('✅ Condiciones válidas generadas (18x18) SIN DUPLICADOS:', {
+          filas: testRowConditions.map(r => `${r.id}: ${r.name}`),
+          columnas: testColConditions.map(c => `${c.id}: ${c.name}`),
           intento: attempts + 1
         })
         break
@@ -708,18 +718,18 @@ export default function AnimeGridPage() {
       attempts++
     }
     
-    // Si no encontramos una combinación válida, usar las más amplias
+    // Si no encontramos una combinación válida, usar condiciones garantizadas sin duplicados
     if (validRowConditions.length === 0) {
-      console.log('⚠️ Usando condiciones amplias por defecto después de', attempts, 'intentos')
+      console.log('⚠️ Usando condiciones por defecto SIN DUPLICADOS después de', attempts, 'intentos')
       validRowConditions = [
         ALL_ROW_CONDITIONS.find(c => c.id === 'pirate')!,
         ALL_ROW_CONDITIONS.find(c => c.id === 'powerful')!,
         ALL_ROW_CONDITIONS.find(c => c.id === 'marine')!
       ]
       validColConditions = [
-        ALL_COLUMN_CONDITIONS.find(c => c.id === 'famous')!,
+        ALL_COLUMN_CONDITIONS.find(c => c.id === 'devil_fruit')!,
         ALL_COLUMN_CONDITIONS.find(c => c.id === 'fighter')!,
-        ALL_COLUMN_CONDITIONS.find(c => c.id === 'devil_fruit')!
+        ALL_COLUMN_CONDITIONS.find(c => c.id === 'female')!
       ]
     }
     

@@ -48,6 +48,47 @@ export default function OnePiecedlePage() {
     )
   }, [input, all, guessedIds])
 
+  // Función para obtener el tipo de fruta del diablo
+  const getDevilFruitType = (character: AnimeCharacter): string => {
+    if (!character.devilFruit) return 'Sin fruta'
+    
+    const fruit = character.devilFruit.toLowerCase()
+    const name = character.name.toLowerCase()
+    
+    // Casos especiales oficialmente confirmados
+    if (name.includes('luffy') || name.includes('monkey d. luffy')) {
+      return 'Zoan Mítica' // Nika no Mi reclasificada oficialmente
+    }
+    
+    // Zoan Míticas conocidas
+    if (fruit.includes('hito hito no mi') && !name.includes('chopper') ||
+        fruit.includes('inu inu no mi') && fruit.includes('kyubi') ||
+        fruit.includes('tori tori no mi') && fruit.includes('phoenix') ||
+        fruit.includes('hebi hebi no mi') && fruit.includes('yamata') ||
+        fruit.includes('uo uo no mi')) {
+      return 'Zoan Mítica'
+    }
+    
+    // Logia
+    if (fruit.includes('mera mera') || fruit.includes('moku moku') || fruit.includes('suna suna') ||
+        fruit.includes('goro goro') || fruit.includes('hie hie') || fruit.includes('yami yami') ||
+        fruit.includes('pika pika') || fruit.includes('magu magu') || fruit.includes('numa numa') ||
+        fruit.includes('gasu gasu') || fruit.includes('yuki yuki') || fruit.includes('beta beta')) {
+      return 'Logia'
+    }
+    
+    // Zoan regulares
+    if (fruit.includes('hito hito') || fruit.includes('inu inu') || fruit.includes('neko neko') ||
+        fruit.includes('zou zou') || fruit.includes('tori tori') || fruit.includes('uma uma') ||
+        fruit.includes('ushi ushi') || fruit.includes('hebi hebi') || fruit.includes('mushi mushi') ||
+        fruit.includes('ryu ryu') || fruit.includes('sara sara')) {
+      return 'Zoan'
+    }
+    
+    // Por defecto, Paramecia (la mayoría de frutas)
+    return 'Paramecia'
+  }
+
   const evaluate = (guess: AnimeCharacter, target: AnimeCharacter): AttributeResult => {
     // Bounty direction relative to target bounty
     let bountyDir: AttributeResult['bountyDir'] = 'unknown'
@@ -74,8 +115,8 @@ export default function OnePiecedlePage() {
       else if (overlap === tTypes.size && gTypes.size === tTypes.size) hakiStatus = 'match'
       else hakiStatus = 'partial'
     }
-    // Devil fruit equality (presence + name)
-    const devilFruitMatch = (guess.devilFruit || '') === (target.devilFruit || '')
+    // Devil fruit type comparison instead of specific fruit names
+    const devilFruitMatch = getDevilFruitType(guess) === getDevilFruitType(target)
     return {
       crew: crewMatch,
       origin: originMatch,
@@ -146,10 +187,11 @@ export default function OnePiecedlePage() {
 
   const fruitBox = (guess: AnimeCharacter, match: boolean | null) => {
     const color = match ? 'bg-green-600 text-white' : 'bg-red-600 text-white'
+    const fruitType = getDevilFruitType(guess)
     return (
       <div className={`px-3 py-2 rounded flex flex-col items-center justify-center min-w-[140px] ${color}`}>
         <span className="text-[10px] uppercase tracking-wide opacity-80 mb-1">Fruta</span>
-        <span className="text-[10px] font-semibold text-center leading-tight line-clamp-3">{guess.devilFruit ? guess.devilFruit : 'Sin fruta'}</span>
+        <span className="text-[10px] font-semibold text-center leading-tight line-clamp-3">{fruitType}</span>
       </div>
     )
   }

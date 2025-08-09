@@ -16,7 +16,7 @@ interface GameDef {
 
 const games: GameDef[] = [
   { id: 'grid', title: 'Memory Cards', description: 'Empareja las cartas 4x4 con personajes de One Piece', icon: Grid3X3, difficulty: 'Easy', players: '1 Player', time: '2-5 min', status: 'available', href: '/games/grid', color: 'from-blue-500 to-cyan-500' },
-  { id: 'anime-grid', title: 'One Piece Grid Challenge', description: 'Coloca personajes que cumplan las condiciones de fila Y columna', icon: Target, difficulty: 'Hard', players: '1 Player', time: '5-15 min', status: 'available', href: '/games/anime-grid', color: 'from-cyan-500 to-teal-500' },
+  { id: 'anime-grid', title: 'One Piece Tic Tac Toe', description: 'Tic-tac-toe con condiciones de personajes One Piece', icon: Target, difficulty: 'Hard', players: '1 Player', time: '5-15 min', status: 'available', href: '/games/anime-grid', color: 'from-cyan-500 to-teal-500' },
   { id: 'wordle', title: 'Anime Wordle', description: 'Guess the character name in 6 tries', icon: Brain, difficulty: 'Medium', players: '1 Player', time: '3-8 min', status: 'available', href: '/games/wordle', color: 'from-green-500 to-emerald-500' },
   { id: 'higher-lower', title: 'Higher or Lower', description: 'Guess if the next bounty is higher or lower', icon: TrendingUp, difficulty: 'Medium', players: '1 Player', time: '5-10 min', status: 'available', href: '/games/higher-lower', color: 'from-orange-500 to-red-500' },
   { id: 'onepiecedle', title: 'OnePiecedle', description: 'Deduce el personaje por atributos (crew, origen, haki...)', icon: Trophy, difficulty: 'Medium', players: '1 Player', time: '3-8 min', status: 'available', href: '/games/onepiecedle', color: 'from-purple-600 to-fuchsia-500' },
