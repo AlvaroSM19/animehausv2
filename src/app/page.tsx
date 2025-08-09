@@ -87,7 +87,7 @@ export default function HomePage() {
             <div className="flex flex-wrap justify-center gap-6 text-sm">
               <div className="flex items-center gap-2 bg-[#101b24]/70 px-4 py-2 rounded-lg border border-amber-700/40 backdrop-blur-sm shadow shadow-black/40">
                 <Users className="w-4 h-4 text-emerald-400" />
-                <span className="text-amber-200/80">168+ Personajes</span>
+                <span className="text-amber-200/80">246+ Personajes</span>
               </div>
               <div className="flex items-center gap-2 bg-[#101b24]/70 px-4 py-2 rounded-lg border border-amber-700/40 backdrop-blur-sm shadow shadow-black/40">
                 <Gamepad2 className="w-4 h-4 text-rose-400" />
@@ -199,7 +199,7 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent drop-shadow">Explora el Universo One Piece</h2>
-            <p className="text-lg text-amber-200/70 max-w-2xl mx-auto">Información detallada de más de 168 personajes: crews, bounties, haki, frutas y más.</p>
+            <p className="text-lg text-amber-200/70 max-w-2xl mx-auto">Información detallada de más de 246 personajes: crews, bounties, haki, frutas y más.</p>
           </div>
           <div className="max-w-4xl mx-auto">
             <div className="bg-[#101b24]/70 border border-amber-800/40 rounded-xl p-8 text-center backdrop-blur-sm shadow shadow-black/40">

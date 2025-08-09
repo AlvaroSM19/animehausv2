@@ -4,6 +4,18 @@ import { useState, useEffect, useCallback } from 'react'
 import { getAllCharacters, type AnimeCharacter } from '../../../lib/anime-data'
 import { Search, RotateCcw, Trophy, Clock, Users, X } from 'lucide-react'
 
+// Estilos CSS para la animación de error
+const shakeAnimation = `
+  @keyframes shake {
+    0%, 20%, 40%, 60%, 80% { transform: translateX(0) }
+    10%, 30%, 50%, 70% { transform: translateX(-8px) }
+    15%, 35%, 55%, 75% { transform: translateX(8px) }
+  }
+  .shake {
+    animation: shake 0.6s ease-in-out;
+  }
+`
+
 type Player = 'X' | 'O'
 type GameMode = 'setup' | 'playing' | 'finished'
 
@@ -639,6 +651,7 @@ export default function AnimeGridPage() {
     })))
   )
   const [selectedCell, setSelectedCell] = useState<{row: number, col: number} | null>(null)
+  const [showIncorrectAnimation, setShowIncorrectAnimation] = useState<{row: number, col: number, character: AnimeCharacter} | null>(null)
   const [showPicker, setShowPicker] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [gameState, setGameState] = useState<GameState>({
@@ -664,27 +677,66 @@ export default function AnimeGridPage() {
       return shuffled
     }
 
-    // Intentar generar condiciones que garanticen todas las soluciones Y que no se repitan
+    // Combinar TODAS las condiciones disponibles
+    const allConditions = [...ALL_ROW_CONDITIONS, ...ALL_COLUMN_CONDITIONS]
+    
+    // Intentar generar 6 condiciones ÚNICAS y COMPATIBLES que garanticen todas las soluciones
     let attempts = 0
     let validRowConditions: GridCondition[] = []
     let validColConditions: GridCondition[] = []
     
-    while (attempts < 100 && validRowConditions.length === 0) {
-      // Usar Fisher-Yates shuffle para distribución equitativa
-      const shuffledRows = shuffleArray(ALL_ROW_CONDITIONS)
-      const shuffledCols = shuffleArray(ALL_COLUMN_CONDITIONS)
+    while (attempts < 200 && validRowConditions.length === 0) {
+      // Shufflear todas las condiciones disponibles
+      const shuffledAll = shuffleArray(allConditions)
       
-      const testRowConditions = shuffledRows.slice(0, 3)
-      const testColConditions = shuffledCols.slice(0, 3)
+      // Seleccionar condiciones únicas por nombre Y compatibles lógicamente
+      const selectedConditions: GridCondition[] = []
+      const usedNames = new Set<string>()
+      const categoryCount = {
+        bounty: 0, // Solo permitir UNA condición de recompensa
+        haki: 0,   // Podría limitar haki también si es necesario
+        other: 0
+      }
       
-      // Verificar que no haya IDs duplicados entre filas y columnas
-      const rowIds = testRowConditions.map(c => c.id)
-      const colIds = testColConditions.map(c => c.id)
-      const hasOverlap = rowIds.some(id => colIds.includes(id))
+      for (const condition of shuffledAll) {
+        // Verificar si es una condición de recompensa
+        const isBountyCondition = condition.name.toLowerCase().includes('recompensa')
+        const isHakiCondition = condition.name.toLowerCase().includes('haki')
+        
+        // Aplicar reglas de compatibilidad
+        if (isBountyCondition && categoryCount.bounty >= 1) {
+          continue // Ya tenemos una condición de recompensa, saltar
+        }
+        
+        if (!usedNames.has(condition.name) && selectedConditions.length < 6) {
+          selectedConditions.push(condition)
+          usedNames.add(condition.name)
+          
+          // Actualizar contadores de categorías
+          if (isBountyCondition) categoryCount.bounty++
+          else if (isHakiCondition) categoryCount.haki++
+          else categoryCount.other++
+        }
+      }
       
-      if (hasOverlap) {
+      // Si no conseguimos 6 condiciones únicas y compatibles, saltamos este intento
+      if (selectedConditions.length < 6) {
         attempts++
-        continue // Saltar esta combinación si hay duplicados
+        continue
+      }
+      
+      // Dividir aleatoriamente en filas y columnas
+      const testRowConditions = selectedConditions.slice(0, 3)
+      const testColConditions = selectedConditions.slice(3, 6)
+      
+      // GARANTÍA ABSOLUTA: NO hay duplicados de nombre ni condiciones incompatibles
+      const allNames = selectedConditions.map(c => c.name)
+      const uniqueNames = new Set(allNames)
+      const bountyConditions = selectedConditions.filter(c => c.name.toLowerCase().includes('recompensa'))
+      
+      if (uniqueNames.size !== 6 || bountyConditions.length > 1) {
+        attempts++
+        continue // Falló la validación de unicidad o compatibilidad
       }
       
       // Verificar que TODAS las 9 combinaciones tengan solución
@@ -703,13 +755,16 @@ export default function AnimeGridPage() {
         if (!allCombinationsHaveSolution) break
       }
       
-      // Solo si TODAS las combinaciones tienen solución Y no hay duplicados
+      // Solo si TODAS las combinaciones tienen solución
       if (allCombinationsHaveSolution) {
         validRowConditions = testRowConditions
         validColConditions = testColConditions
-        console.log('✅ Condiciones válidas generadas (18x18) SIN DUPLICADOS:', {
+        console.log('✅ Condiciones COMPATIBLES generadas (máximo 1 recompensa):', {
           filas: testRowConditions.map(r => `${r.id}: ${r.name}`),
           columnas: testColConditions.map(c => `${c.id}: ${c.name}`),
+          totalCondiciones: 6,
+          condicionesRecompensa: bountyConditions.length,
+          nombresUnicos: new Set([...testRowConditions, ...testColConditions].map(c => c.name)).size,
           intento: attempts + 1
         })
         break
@@ -718,9 +773,9 @@ export default function AnimeGridPage() {
       attempts++
     }
     
-    // Si no encontramos una combinación válida, usar condiciones garantizadas sin duplicados
+    // Si no encontramos una combinación válida, usar condiciones garantizadas COMPATIBLES
     if (validRowConditions.length === 0) {
-      console.log('⚠️ Usando condiciones por defecto SIN DUPLICADOS después de', attempts, 'intentos')
+      console.log('⚠️ Usando condiciones por defecto COMPATIBLES (máximo 1 recompensa) después de', attempts, 'intentos')
       validRowConditions = [
         ALL_ROW_CONDITIONS.find(c => c.id === 'pirate')!,
         ALL_ROW_CONDITIONS.find(c => c.id === 'powerful')!,
@@ -729,8 +784,21 @@ export default function AnimeGridPage() {
       validColConditions = [
         ALL_COLUMN_CONDITIONS.find(c => c.id === 'devil_fruit')!,
         ALL_COLUMN_CONDITIONS.find(c => c.id === 'fighter')!,
-        ALL_COLUMN_CONDITIONS.find(c => c.id === 'female')!
+        ALL_COLUMN_CONDITIONS.find(c => c.id === 'low_bounty')! // Solo UNA condición de recompensa
       ]
+      
+      // Verificar que las condiciones por defecto son compatibles
+      const defaultNames = [
+        ...validRowConditions.map(c => c.name),
+        ...validColConditions.map(c => c.name)
+      ]
+      const uniqueDefaultNames = new Set(defaultNames)
+      const defaultBountyConditions = [...validRowConditions, ...validColConditions]
+        .filter(c => c.name.toLowerCase().includes('recompensa'))
+      
+      console.log('🔒 Condiciones por defecto - Total:', defaultNames.length, 
+                  'Nombres únicos:', uniqueDefaultNames.size,
+                  'Condiciones de recompensa:', defaultBountyConditions.length)
     }
     
     setRowConditions(validRowConditions)
@@ -822,33 +890,51 @@ export default function AnimeGridPage() {
     const { row, col } = selectedCell
     const isValid = checkCharacterValidForCell(character, row, col)
     
-    const newGrid = [...grid]
-    newGrid[row][col] = { 
-      player: gameState.currentPlayer, 
-      character, 
-      isValid 
-    }
-    setGrid(newGrid)
-    
-    // Verificar ganador
-    const winner = checkWinner(newGrid)
-    if (winner) {
-      setGameState(prev => ({
-        ...prev,
-        mode: 'finished',
-        winner,
-        scores: winner !== 'draw' ? {
-          ...prev.scores,
-          [winner]: prev.scores[winner] + 1
-        } : prev.scores
-      }))
+    if (isValid) {
+      // Si es correcto, colocar el personaje y marcar la casilla como del jugador actual
+      const newGrid = [...grid]
+      newGrid[row][col] = { 
+        player: gameState.currentPlayer, 
+        character, 
+        isValid: true 
+      }
+      setGrid(newGrid)
+      
+      // Verificar ganador
+      const winner = checkWinner(newGrid)
+      if (winner) {
+        setGameState(prev => ({
+          ...prev,
+          mode: 'finished',
+          winner,
+          scores: winner !== 'draw' ? {
+            ...prev.scores,
+            [winner]: prev.scores[winner] + 1
+          } : prev.scores
+        }))
+      } else {
+        switchPlayer()
+      }
+      
+      setShowPicker(false)
+      setSelectedCell(null)
+      setSearchTerm('')
     } else {
-      switchPlayer()
+      // Si es incorrecto, mostrar animación de error
+      setShowIncorrectAnimation({ row, col, character })
+      console.log(`❌ ${gameState.currentPlayer} falló con ${character.name} en [${row}, ${col}]. Turno para el otro jugador.`)
+      
+      // Ocultar el picker inmediatamente
+      setShowPicker(false)
+      setSelectedCell(null)
+      setSearchTerm('')
+      
+      // Después de 1.5 segundos, quitar la animación y cambiar turno
+      setTimeout(() => {
+        setShowIncorrectAnimation(null)
+        switchPlayer()
+      }, 1500)
     }
-    
-    setShowPicker(false)
-    setSelectedCell(null)
-    setSearchTerm('')
   }
 
   const startNewGame = () => {
@@ -881,7 +967,19 @@ export default function AnimeGridPage() {
   )
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-6 font-sans">
+    <>
+      <style jsx>{`
+        @keyframes shake {
+          0%, 20%, 40%, 60%, 80% { transform: translateX(0) }
+          10%, 30%, 50%, 70% { transform: translateX(-8px) }
+          15%, 35%, 55%, 75% { transform: translateX(8px) }
+        }
+        .shake {
+          animation: shake 0.6s ease-in-out;
+        }
+      `}</style>
+      
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-6 font-sans">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
@@ -1017,76 +1115,90 @@ export default function AnimeGridPage() {
                   )}
 
                   {/* Grid Cells */}
-                  {row.map((cell, colIndex) => (
-                    <div
-                      key={colIndex}
-                      onClick={() => handleCellClick(rowIndex, colIndex)}
-                      className={`
-                        w-32 h-32 rounded-2xl cursor-pointer
-                        flex flex-col items-center justify-center
-                        transition-all duration-300 hover:scale-105
-                        border-2 shadow-lg relative overflow-hidden
-                        ${gameState.mode === 'setup' 
-                          ? 'bg-gray-700 border-gray-500 hover:border-gray-400' 
-                          : cell.player 
-                            ? (cell.isValid 
-                              ? 'bg-gradient-to-br from-green-600 to-green-700 border-green-400 shadow-green-500/25' 
-                              : 'bg-gradient-to-br from-red-600 to-red-700 border-red-400 shadow-red-500/25') 
-                            : 'bg-gradient-to-br from-gray-700 to-gray-800 border-gray-500 hover:border-yellow-400 hover:shadow-yellow-500/25'
-                        }
-                      `}
-                    >
-                      {/* Player Symbol */}
-                      {cell.player && (
-                        <div className={`absolute top-2 right-2 w-7 h-7 rounded-full flex items-center justify-center font-bold text-sm border ${
-                          cell.player === 'X' 
-                            ? 'bg-blue-500 text-white border-blue-300 shadow-lg' 
-                            : 'bg-red-500 text-white border-red-300 shadow-lg'
-                        }`}>
-                          {cell.player}
-                        </div>
-                      )}
-
-                      {/* Character Content */}
-                      {cell.character ? (
-                        <div className="text-center w-full h-full flex flex-col items-center justify-center p-3">
-                          {cell.character.imageUrl ? (
-                            <img 
-                              src={cell.character.imageUrl} 
-                              alt={cell.character.name}
-                              className="w-14 h-14 object-cover rounded-full border-2 border-white shadow-md mb-1"
-                              onError={(e) => {
-                                e.currentTarget.style.display = 'none';
-                              }}
-                            />
-                          ) : (
-                            <div className="w-14 h-14 bg-gray-600 rounded-full border-2 border-white shadow-md mb-1 flex items-center justify-center">
-                              <span className="text-lg">🏴‍☠️</span>
-                            </div>
-                          )}
-                          <div className="text-xs font-bold text-white text-center leading-tight max-w-full truncate">
-                            {cell.character.name}
+                  {row.map((cell, colIndex) => {
+                    // Verificar si esta casilla está mostrando animación de error
+                    const isShowingError = showIncorrectAnimation?.row === rowIndex && showIncorrectAnimation?.col === colIndex
+                    const displayCharacter = isShowingError ? showIncorrectAnimation.character : cell.character
+                    
+                    return (
+                      <div
+                        key={colIndex}
+                        onClick={() => handleCellClick(rowIndex, colIndex)}
+                        className={`
+                          w-32 h-32 rounded-2xl cursor-pointer
+                          flex flex-col items-center justify-center
+                          transition-all duration-300 hover:scale-105
+                          border-2 shadow-lg relative overflow-hidden
+                          ${isShowingError ? 'shake bg-gradient-to-br from-red-600 to-red-700 border-red-400 shadow-red-500/50' :
+                            gameState.mode === 'setup' 
+                              ? 'bg-gray-700 border-gray-500 hover:border-gray-400' 
+                              : cell.player 
+                                ? (cell.isValid 
+                                  ? 'bg-gradient-to-br from-green-600 to-green-700 border-green-400 shadow-green-500/25' 
+                                  : 'bg-gradient-to-br from-red-600 to-red-700 border-red-400 shadow-red-500/25') 
+                                : 'bg-gradient-to-br from-gray-700 to-gray-800 border-gray-500 hover:border-yellow-400 hover:shadow-yellow-500/25'
+                          }
+                        `}
+                      >
+                        {/* Player Symbol */}
+                        {cell.player && !isShowingError && (
+                          <div className={`absolute top-2 right-2 w-7 h-7 rounded-full flex items-center justify-center font-bold text-sm border ${
+                            cell.player === 'X' 
+                              ? 'bg-blue-500 text-white border-blue-300 shadow-lg' 
+                              : 'bg-red-500 text-white border-red-300 shadow-lg'
+                          }`}>
+                            {cell.player}
                           </div>
-                        </div>
-                      ) : (
-                        <div className="text-center">
-                          {gameState.mode === 'setup' ? (
-                            <>
-                              <div className="text-3xl mb-1">🎯</div>
-                              <div className="text-xs text-gray-400 font-medium">Listo</div>
-                            </>
-                          ) : (
-                            <>
-                              <div className="text-3xl mb-1 text-gray-400">?</div>
-                              <div className="text-xs text-gray-400 font-medium">
-                                {gameState.mode === 'playing' ? 'Elegir' : 'Vacío'}
+                        )}
+
+                        {/* Error indicator para animación */}
+                        {isShowingError && (
+                          <div className="absolute top-2 right-2 w-7 h-7 rounded-full flex items-center justify-center font-bold text-sm bg-red-600 text-white border-red-300 shadow-lg">
+                            ❌
+                          </div>
+                        )}
+
+                        {/* Character Content */}
+                        {displayCharacter ? (
+                          <div className="text-center w-full h-full flex flex-col items-center justify-center p-3">
+                            {displayCharacter.imageUrl ? (
+                              <img 
+                                src={displayCharacter.imageUrl} 
+                                alt={displayCharacter.name}
+                                className="w-14 h-14 object-cover rounded-full border-2 border-white shadow-md mb-1"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = 'none';
+                                }}
+                              />
+                            ) : (
+                              <div className="w-14 h-14 bg-gray-600 rounded-full border-2 border-white shadow-md mb-1 flex items-center justify-center">
+                                <span className="text-lg">🏴‍☠️</span>
                               </div>
-                            </>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                            )}
+                            <div className="text-xs font-bold text-white text-center leading-tight max-w-full truncate">
+                              {displayCharacter.name}
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="text-center">
+                            {gameState.mode === 'setup' ? (
+                              <>
+                                <div className="text-3xl mb-1">🎯</div>
+                                <div className="text-xs text-gray-400 font-medium">Listo</div>
+                              </>
+                            ) : (
+                              <>
+                                <div className="text-3xl mb-1 text-gray-400">?</div>
+                                <div className="text-xs text-gray-400 font-medium">
+                                  {gameState.mode === 'playing' ? 'Elegir' : 'Vacío'}
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
                 </div>
               ))}
             </div>
@@ -1192,6 +1304,7 @@ export default function AnimeGridPage() {
           </p>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   )
 }
