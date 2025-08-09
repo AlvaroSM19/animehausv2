@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280">
+  <defs>
+    <!-- Main gradient background matching the original -->
+    <radialGradient id="cardBg" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" style="stop-color:#5A67D8;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#4C51BF;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#3C366B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2D3748;stop-opacity:1" />
+    </radialGradient>
+    
+    <!-- Golden gradient for the compass -->
+    <radialGradient id="goldGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FED700;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#F59E0B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#D97706;stop-opacity:1" />
+    </radialGradient>
+    
+    <!-- Pattern for the geometric lines -->
+    <pattern id="geometricLines" patternUnits="userSpaceOnUse" width="40" height="40">
+      <path d="M0,0 L40,40 M40,0 L0,40" stroke="#F59E0B" stroke-width="0.5" opacity="0.3"/>
+    </pattern>
+    
+    <!-- Glow effect -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Card background with rounded corners -->
+  <rect width="200" height="280" rx="12" fill="url(#cardBg)"/>
+  
+  <!-- Geometric pattern overlay -->
+  <rect width="200" height="280" rx="12" fill="url(#geometricLines)" opacity="0.6"/>
+  
+  <!-- Additional diagonal lines to match the original -->
+  <g stroke="#F59E0B" stroke-width="0.8" opacity="0.4">
+    <line x1="0" y1="20" x2="180" y2="0"/>
+    <line x1="20" y1="0" x2="200" y2="20"/>
+    <line x1="0" y1="80" x2="120" y2="0"/>
+    <line x1="80" y1="0" x2="200" y2="80"/>
+    <line x1="0" y1="140" x2="60" y2="0"/>
+    <line x1="140" y1="0" x2="200" y2="140"/>
+    <line x1="0" y1="200" x2="200" y2="200"/>
+    <line x1="0" y1="260" x2="140" y2="280"/>
+    <line x1="60" y1="280" x2="200" y2="260"/>
+    <line x1="0" y1="180" x2="200" y2="180"/>
+    <line x1="0" y1="100" x2="200" y2="100"/>
+    <line x1="100" y1="0" x2="100" y2="280"/>
+    <line x1="50" y1="0" x2="50" y2="280"/>
+    <line x1="150" y1="0" x2="150" y2="280"/>
+  </g>
+  
+  <!-- Central compass design - matching the original exactly -->
+  <g transform="translate(100,140)">
+    <!-- Outer ring -->
+    <circle cx="0" cy="0" r="55" fill="none" stroke="url(#goldGradient)" stroke-width="4" filter="url(#glow)"/>
+    
+    <!-- Second ring -->
+    <circle cx="0" cy="0" r="45" fill="none" stroke="url(#goldGradient)" stroke-width="3" opacity="0.8"/>
+    
+    <!-- Third ring -->
+    <circle cx="0" cy="0" r="35" fill="none" stroke="url(#goldGradient)" stroke-width="2" opacity="0.6"/>
+    
+    <!-- Inner compass markings -->
+    <g stroke="url(#goldGradient)" stroke-width="1.5" opacity="0.7">
+      <!-- Radial lines -->
+      <line x1="0" y1="-35" x2="0" y2="-25"/>
+      <line x1="25" y1="-25" x2="18" y2="-18"/>
+      <line x1="35" y1="0" x2="25" y2="0"/>
+      <line x1="25" y1="25" x2="18" y2="18"/>
+      <line x1="0" y1="35" x2="0" y2="25"/>
+      <line x1="-25" y1="25" x2="-18" y2="18"/>
+      <line x1="-35" y1="0" x2="-25" y2="0"/>
+      <line x1="-25" y1="-25" x2="-18" y2="-18"/>
+    </g>
+    
+    <!-- Central navigation star/compass -->
+    <g fill="url(#goldGradient)" stroke="url(#goldGradient)" stroke-width="1">
+      <!-- Main compass needle pointing up -->
+      <path d="M0,-30 L6,-15 L0,-8 L-6,-15 Z" filter="url(#glow)"/>
+      <!-- Side arms -->
+      <path d="M-30,0 L-15,-6 L-8,0 L-15,6 Z" opacity="0.8"/>
+      <path d="M30,0 L15,-6 L8,0 L15,6 Z" opacity="0.8"/>
+      <!-- Bottom point -->
+      <path d="M0,30 L6,15 L0,8 L-6,15 Z" opacity="0.6"/>
+      
+      <!-- Diagonal arms -->
+      <path d="M-21,-21 L-15,-27 L-9,-21 L-15,-15 Z" opacity="0.5"/>
+      <path d="M21,-21 L27,-15 L21,-9 L15,-15 Z" opacity="0.5"/>
+      <path d="M21,21 L15,27 L9,21 L15,15 Z" opacity="0.5"/>
+      <path d="M-21,21 L-27,15 L-21,9 L-15,15 Z" opacity="0.5"/>
+    </g>
+    
+    <!-- Central core -->
+    <circle cx="0" cy="0" r="8" fill="url(#goldGradient)" stroke="#D97706" stroke-width="1" filter="url(#glow)"/>
+    <circle cx="0" cy="0" r="4" fill="#FED700"/>
+  </g>
+  
+  <!-- Bottom text area - exactly like the original -->
+  <g transform="translate(100,235)">
+    <!-- Background for text with slight transparency -->
+    <rect x="-85" y="-20" width="170" height="35" rx="3" fill="#1A202C" fill-opacity="0.7" stroke="url(#goldGradient)" stroke-width="1"/>
+    
+    <!-- "ONE PIECE" text - matching original font style -->
+    <text x="0" y="-5" text-anchor="middle" font-size="18" fill="#FFFFFF" font-weight="bold" font-family="Impact, Arial Black, sans-serif" letter-spacing="1px">
+      ONE PIECE
+    </text>
+    <!-- "CARD GAME" text -->
+    <text x="0" y="8" text-anchor="middle" font-size="11" fill="url(#goldGradient)" font-weight="normal" font-family="Arial, sans-serif" letter-spacing="2px">
+      CARD GAME
+    </text>
+  </g>
+  
+  <!-- Border effect -->
+  <rect width="200" height="280" rx="12" fill="none" stroke="url(#goldGradient)" stroke-width="1" opacity="0.6"/>
+</svg>

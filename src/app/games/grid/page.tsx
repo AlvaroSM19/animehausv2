@@ -331,9 +331,23 @@ export default function GridGamePage() {
                 <div className={`relative w-full h-full transition-transform duration-500 transform-style-preserve-3d ${
                   character.isFlipped || character.isMatched || showPreview ? 'rotate-y-180' : 'rotate-y-0'
                 }`}>
-                  {/* Back (default visible face with ?) */}
-                  <div className="absolute w-full h-full backface-hidden flex items-center justify-center memory-card bg-gradient-to-br from-amber-500/10 to-transparent border border-dashed border-amber-500/30 rounded-xl">
-                    <span className="question-mark text-amber-300 drop-shadow-lg select-none">?</span>
+                  {/* Back (default visible face with One Piece Card) */}
+                  <div className="absolute w-full h-full backface-hidden flex items-center justify-center rounded-xl overflow-hidden">
+                    <img
+                      src="/images/card-back.svg"
+                      alt="One Piece Card Back"
+                      className="w-full h-full object-cover"
+                      onError={(e) => { 
+                        // Fallback to original design if image fails to load
+                        e.currentTarget.style.display = 'none'
+                        const fallback = e.currentTarget.nextElementSibling as HTMLElement
+                        if (fallback) fallback.style.display = 'flex'
+                      }}
+                    />
+                    {/* Fallback design */}
+                    <div className="memory-card bg-gradient-to-br from-amber-500/10 to-transparent border border-dashed border-amber-500/30 rounded-xl w-full h-full items-center justify-center" style={{ display: 'none' }}>
+                      <span className="question-mark text-amber-300 drop-shadow-lg select-none">?</span>
+                    </div>
                   </div>
                   {/* Front (image) */}
                   <div className="absolute w-full h-full backface-hidden rotate-y-180">

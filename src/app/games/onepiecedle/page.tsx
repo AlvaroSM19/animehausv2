@@ -276,9 +276,6 @@ export default function OnePiecedlePage() {
                   className="w-full h-full object-cover filter blur-md brightness-75"
                   style={{ WebkitFilter: 'blur(12px)' }}
                 />
-                <div className="absolute inset-0 flex items-center justify-center text-amber-200/60 text-xs font-medium bg-black/30">
-                  Pista (imagen borrosa)
-                </div>
               </div>
             )}
             {guesses.length >= 8 && guesses.length < MAX_ATTEMPTS && (

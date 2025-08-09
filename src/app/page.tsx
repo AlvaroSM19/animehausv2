@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Play, Users, Trophy, Gamepad2, Grid3X3, Zap, TrendingUp, Eye, Brain, Search, Star, Target } from 'lucide-react'
+import { Play, Users, Trophy, Gamepad2, Grid3X3, Zap, TrendingUp, Eye, Brain, Search, Star, Target, Clock } from 'lucide-react'
 
 interface GameDef {
   id: string
@@ -20,6 +20,7 @@ const games: GameDef[] = [
   { id: 'wordle', title: 'Anime Wordle', description: 'Guess the character name in 6 tries', icon: Brain, difficulty: 'Medium', players: '1 Player', time: '3-8 min', status: 'available', href: '/games/wordle', color: 'from-green-500 to-emerald-500' },
   { id: 'higher-lower', title: 'Higher or Lower', description: 'Guess if the next bounty is higher or lower', icon: TrendingUp, difficulty: 'Medium', players: '1 Player', time: '5-10 min', status: 'available', href: '/games/higher-lower', color: 'from-orange-500 to-red-500' },
   { id: 'onepiecedle', title: 'OnePiecedle', description: 'Deduce el personaje por atributos (crew, origen, haki...)', icon: Trophy, difficulty: 'Medium', players: '1 Player', time: '3-8 min', status: 'available', href: '/games/onepiecedle', color: 'from-purple-600 to-fuchsia-500' },
+  { id: 'crew-quiz', title: 'Adivina la Crew', description: 'Escribe todos los miembros de tripulaciones y grupos', icon: Clock, difficulty: 'Hard', players: '1 Player', time: '2-10 min', status: 'available', href: '/games/crew-quiz', color: 'from-emerald-600 to-teal-600' },
   { id: 'impostor', title: 'Impostor', description: 'Find the character that doesn\'t belong to the group', icon: Search, difficulty: 'Hard', players: '1 Player', time: '2-4 min', status: 'available', href: '/games/impostor', color: 'from-purple-500 to-pink-500' }
 ]
 
@@ -110,7 +111,7 @@ export default function HomePage() {
               </div>
               <div className="flex items-center gap-2 bg-[#101b24]/70 px-4 py-2 rounded-lg border border-amber-700/40 backdrop-blur-sm shadow shadow-black/40">
                 <Gamepad2 className="w-4 h-4 text-rose-400" />
-                <span className="text-amber-200/80">6 Modos</span>
+                <span className="text-amber-200/80">7 Modos</span>
               </div>
               <div className="flex items-center gap-2 bg-[#101b24]/70 px-4 py-2 rounded-lg border border-amber-700/40 backdrop-blur-sm shadow shadow-black/40">
                 <Trophy className="w-4 h-4 text-amber-400" />
