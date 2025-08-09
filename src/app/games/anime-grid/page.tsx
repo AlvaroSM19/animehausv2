@@ -653,28 +653,7 @@ export default function AnimeGridPage() {
   const [rowConditions, setRowConditions] = useState<GridCondition[]>([])
   const [colConditions, setColConditions] = useState<GridCondition[]>([])
 
-  useEffect(() => {
-    setCharacters(getAllCharacters())
-    generateRandomConditions()
-  }, [])
-
-  // Timer countdown
-  useEffect(() => {
-    if (gameState.mode !== 'playing' || gameState.timeLeft <= 0) return
-
-    const timer = setTimeout(() => {
-      if (gameState.timeLeft <= 1) {
-        // Se acabó el tiempo, cambiar de jugador
-        switchPlayer()
-      } else {
-        setGameState(prev => ({ ...prev, timeLeft: prev.timeLeft - 1 }))
-      }
-    }, 1000)
-
-    return () => clearTimeout(timer)
-  }, [gameState.timeLeft, gameState.mode])
-
-  const generateRandomConditions = () => {
+  const generateRandomConditions = useCallback(() => {
     // Función Fisher-Yates shuffle mejorada para distribución equitativa
     const shuffleArray = (array: GridCondition[]) => {
       const shuffled = [...array]
@@ -746,7 +725,34 @@ export default function AnimeGridPage() {
     
     setRowConditions(validRowConditions)
     setColConditions(validColConditions)
-  }
+  }, [characters])
+
+  useEffect(() => {
+    setCharacters(getAllCharacters())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    if (characters.length > 0) {
+      generateRandomConditions()
+    }
+  }, [characters, generateRandomConditions])
+
+  // Timer countdown
+  useEffect(() => {
+    if (gameState.mode !== 'playing' || gameState.timeLeft <= 0) return
+
+    const timer = setTimeout(() => {
+      if (gameState.timeLeft <= 1) {
+        // Se acabó el tiempo, cambiar de jugador
+        switchPlayer()
+      } else {
+        setGameState(prev => ({ ...prev, timeLeft: prev.timeLeft - 1 }))
+      }
+    }, 1000)
+
+    return () => clearTimeout(timer)
+  }, [gameState.timeLeft, gameState.mode])
 
   const checkCharacterValidForCell = (character: AnimeCharacter, row: number, col: number): boolean => {
     if (!rowConditions[row] || !colConditions[col]) return false

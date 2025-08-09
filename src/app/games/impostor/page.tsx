@@ -275,7 +275,7 @@ export default function ImpostorGamePage() {
               {/* Instructions */}
               <div className="mt-8 text-center">
                 <p className="text-amber-200/80 text-sm mb-2">
-                  Click on the character that doesn't belong to the group above!
+                  Click on the character that doesn&apos;t belong to the group above!
                 </p>
                 <p className="text-amber-300/60 text-xs">
                   ⚠️ One wrong answer and the game ends! Try to get the highest streak possible.
