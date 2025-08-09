@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+  <defs>
+    <radialGradient id="yellowFlag" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" style="stop-color:#FFE135;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F4C430;stop-opacity:1" />
+    </radialGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="3" dy="3" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Flag background -->
+  <rect width="1200" height="800" fill="url(#yellowFlag)"/>
+  
+  <!-- Jolly Roger centered -->
+  <g transform="translate(600,400)" filter="url(#shadow)">
+    
+    <!-- Main skull -->
+    <ellipse cx="0" cy="-30" rx="65" ry="75" fill="#000000" stroke="#1a1a1a" stroke-width="3"/>
+    
+    <!-- Eye sockets -->
+    <ellipse cx="-25" cy="-50" rx="18" ry="22" fill="#000000"/>
+    <ellipse cx="25" cy="-50" rx="18" ry="22" fill="#000000"/>
+    
+    <!-- Inner eye shadows -->
+    <ellipse cx="-25" cy="-45" rx="12" ry="15" fill="#0a0a0a"/>
+    <ellipse cx="25" cy="-45" rx="12" ry="15" fill="#0a0a0a"/>
+    
+    <!-- Nasal cavity -->
+    <path d="M 0,-20 L -12,10 L 0,18 L 12,10 Z" fill="#000000"/>
+    
+    <!-- Jaw line -->
+    <path d="M -50,20 Q 0,35 50,20" stroke="#000000" stroke-width="4" fill="none"/>
+    
+    <!-- Teeth -->
+    <rect x="-30" y="20" width="60" height="12" fill="#000000"/>
+    <rect x="-27" y="20" width="6" height="18" fill="#FFFFFF"/>
+    <rect x="-15" y="20" width="6" height="18" fill="#FFFFFF"/>
+    <rect x="-3" y="20" width="6" height="18" fill="#FFFFFF"/>
+    <rect x="9" y="20" width="6" height="18" fill="#FFFFFF"/>
+    <rect x="21" y="20" width="6" height="18" fill="#FFFFFF"/>
+    
+    <!-- Left crossbone (rotated -45 degrees) -->
+    <g transform="rotate(-45)">
+      <rect x="-180" y="-12" width="360" height="24" fill="#000000" stroke="#1a1a1a" stroke-width="3"/>
+      <!-- Bone ends -->
+      <ellipse cx="-180" cy="0" rx="30" ry="18" fill="#000000"/>
+      <ellipse cx="180" cy="0" rx="30" ry="18" fill="#000000"/>
+      <!-- Bone knobs -->
+      <ellipse cx="-180" cy="-30" rx="18" ry="12" fill="#000000"/>
+      <ellipse cx="-180" cy="30" rx="18" ry="12" fill="#000000"/>
+      <ellipse cx="180" cy="-30" rx="18" ry="12" fill="#000000"/>
+      <ellipse cx="180" cy="30" rx="18" ry="12" fill="#000000"/>
+    </g>
+    
+    <!-- Right crossbone (rotated 45 degrees) -->
+    <g transform="rotate(45)">
+      <rect x="-180" y="-12" width="360" height="24" fill="#000000" stroke="#1a1a1a" stroke-width="3"/>
+      <!-- Bone ends -->
+      <ellipse cx="-180" cy="0" rx="30" ry="18" fill="#000000"/>
+      <ellipse cx="180" cy="0" rx="30" ry="18" fill="#000000"/>
+      <!-- Bone knobs -->
+      <ellipse cx="-180" cy="-30" rx="18" ry="12" fill="#000000"/>
+      <ellipse cx="-180" cy="30" rx="18" ry="12" fill="#000000"/>
+      <ellipse cx="180" cy="-30" rx="18" ry="12" fill="#000000"/>
+      <ellipse cx="180" cy="30" rx="18" ry="12" fill="#000000"/>
+    </g>
+    
+    <!-- Skull highlights for depth -->
+    <ellipse cx="-15" cy="-60" rx="8" ry="10" fill="#1a1a1a" opacity="0.5"/>
+    <ellipse cx="15" cy="-60" rx="8" ry="10" fill="#1a1a1a" opacity="0.5"/>
+    
+  </g>
+  
+  <!-- Subtle flag texture -->
+  <rect width="1200" height="800" fill="url(#yellowFlag)" opacity="0.1"/>
+  
+</svg>

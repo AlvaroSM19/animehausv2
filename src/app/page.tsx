@@ -16,7 +16,7 @@ interface GameDef {
 
 const games: GameDef[] = [
   { id: 'grid', title: 'Memory Cards', description: 'Empareja las cartas 4x4 con personajes de One Piece', icon: Grid3X3, difficulty: 'Easy', players: '1 Player', time: '2-5 min', status: 'available', href: '/games/grid', color: 'from-blue-500 to-cyan-500' },
-  { id: 'anime-grid', title: 'One Piece Grid Challenge', description: 'Coloca personajes que cumplan las condiciones de fila Y columna', icon: Target, difficulty: 'Hard', players: '1 Player', time: '5-15 min', status: 'available', href: '/games/anime-grid', color: 'from-cyan-500 to-teal-500' },
+  { id: 'anime-grid', title: 'One Piece Tic Tac Toe', description: 'Tic-tac-toe con condiciones de personajes One Piece', icon: Target, difficulty: 'Hard', players: '1 Player', time: '5-15 min', status: 'available', href: '/games/anime-grid', color: 'from-cyan-500 to-teal-500' },
   { id: 'wordle', title: 'Anime Wordle', description: 'Guess the character name in 6 tries', icon: Brain, difficulty: 'Medium', players: '1 Player', time: '3-8 min', status: 'available', href: '/games/wordle', color: 'from-green-500 to-emerald-500' },
   { id: 'higher-lower', title: 'Higher or Lower', description: 'Guess if the next bounty is higher or lower', icon: TrendingUp, difficulty: 'Medium', players: '1 Player', time: '5-10 min', status: 'available', href: '/games/higher-lower', color: 'from-orange-500 to-red-500' },
   { id: 'onepiecedle', title: 'OnePiecedle', description: 'Deduce el personaje por atributos (crew, origen, haki...)', icon: Trophy, difficulty: 'Medium', players: '1 Player', time: '3-8 min', status: 'available', href: '/games/onepiecedle', color: 'from-purple-600 to-fuchsia-500' },
@@ -31,9 +31,28 @@ const comingSoonGames: GameDef[] = [
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0a141b] via-[#081018] to-[#050c12] text-amber-100">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
+    <div className="min-h-screen relative text-amber-100">
+      {/* Straw Hat Pirates Flag Background */}
+      <div className="fixed inset-0 z-0">
+        {/* High definition Straw Hat Pirates flag as background */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url('/images/straw-hat-flag.svg')`
+          }}
+        ></div>
+        
+        {/* Dark overlay to make text readable */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/65 to-black/80"></div>
+        
+        {/* Subtle vignette effect */}
+        <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black/30"></div>
+      </div>
+
+      {/* Content with relative positioning */}
+      <div className="relative z-10">
+        {/* Hero Section */}
+        <section className="relative overflow-hidden">
         <div className="container mx-auto px-4 py-16 lg:py-24">
           <div className="text-center space-y-8">
             <div className="space-y-4">
@@ -87,7 +106,7 @@ export default function HomePage() {
             <div className="flex flex-wrap justify-center gap-6 text-sm">
               <div className="flex items-center gap-2 bg-[#101b24]/70 px-4 py-2 rounded-lg border border-amber-700/40 backdrop-blur-sm shadow shadow-black/40">
                 <Users className="w-4 h-4 text-emerald-400" />
-                <span className="text-amber-200/80">168+ Personajes</span>
+                <span className="text-amber-200/80">246+ Personajes</span>
               </div>
               <div className="flex items-center gap-2 bg-[#101b24]/70 px-4 py-2 rounded-lg border border-amber-700/40 backdrop-blur-sm shadow shadow-black/40">
                 <Gamepad2 className="w-4 h-4 text-rose-400" />
@@ -195,11 +214,11 @@ export default function HomePage() {
       </section>
 
       {/* Characters Section */}
-      <section className="py-16 bg-[#0d1921]/70 relative">
+      <section className="py-16 bg-black/20 relative">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent drop-shadow">Explora el Universo One Piece</h2>
-            <p className="text-lg text-amber-200/70 max-w-2xl mx-auto">Información detallada de más de 168 personajes: crews, bounties, haki, frutas y más.</p>
+            <p className="text-lg text-amber-200/70 max-w-2xl mx-auto">Información detallada de más de 246 personajes: crews, bounties, haki, frutas y más.</p>
           </div>
           <div className="max-w-4xl mx-auto">
             <div className="bg-[#101b24]/70 border border-amber-800/40 rounded-xl p-8 text-center backdrop-blur-sm shadow shadow-black/40">
@@ -222,6 +241,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      </div>
     </div>
   )
 }

@@ -63,3 +63,8 @@ html {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+/* Radial gradient utility */
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-stops));
+}
