@@ -96,6 +96,8 @@ export default function GridGamePage() {
   const [firstChoice, setFirstChoice] = useState<GameCard | null>(null)
   const [secondChoice, setSecondChoice] = useState<GameCard | null>(null)
   const [canClick, setCanClick] = useState(true)
+  const [showPreview, setShowPreview] = useState(true) // Estado para la vista previa inicial
+  const [previewTimeLeft, setPreviewTimeLeft] = useState(2.5) // Tiempo restante de vista previa
 
   // Load best score from localStorage on client-side
   useEffect(() => {
@@ -104,6 +106,38 @@ export default function GridGamePage() {
       setBestScore(parseInt(saved))
     }
   }, [])
+
+  // Vista previa inicial - mostrar todas las cartas por 2.5 segundos
+  useEffect(() => {
+    if (showPreview) {
+      setCanClick(false) // Deshabilitar clics durante la vista previa
+      setPreviewTimeLeft(2.5) // Resetear contador
+      
+      // Contador regresivo
+      const countdownTimer = setInterval(() => {
+        setPreviewTimeLeft(prev => {
+          const newTime = prev - 0.1
+          if (newTime <= 0) {
+            clearInterval(countdownTimer)
+            return 0
+          }
+          return newTime
+        })
+      }, 100)
+      
+      // Timer principal para terminar la vista previa
+      const timer = setTimeout(() => {
+        setShowPreview(false)
+        setCanClick(true) // Habilitar clics después de la vista previa
+        clearInterval(countdownTimer)
+      }, 2500)
+      
+      return () => {
+        clearTimeout(timer)
+        clearInterval(countdownTimer)
+      }
+    }
+  }, [showPreview])
 
   useEffect(() => {
     let timer: ReturnType<typeof setInterval>
@@ -116,20 +150,22 @@ export default function GridGamePage() {
   }, [isPlaying])
 
   const startNewGame = () => {
-  const newDeck = buildDeck()
-  setCharacters(newDeck)
+    const newDeck = buildDeck()
+    setCharacters(newDeck)
     setScore(0)
     setMoves(0)
     setTime(0)
-    setIsPlaying(true)
+    setIsPlaying(false) // No empezar el juego hasta después de la vista previa
     setFirstChoice(null)
     setSecondChoice(null)
-    setCanClick(true)
+    setCanClick(false) // Deshabilitar clics durante la vista previa
+    setShowPreview(true) // Activar la vista previa
+    setPreviewTimeLeft(2.5) // Resetear contador de vista previa
   }
 
   const handleCardClick = (clickedCard: GameCard) => {
-    if (!canClick || clickedCard.isFlipped || clickedCard.isMatched) return
-    if (!isPlaying) setIsPlaying(true)
+    if (!canClick || clickedCard.isFlipped || clickedCard.isMatched || showPreview) return
+    if (!isPlaying) setIsPlaying(true) // Comenzar el juego en el primer clic
 
     const newCards = characters.map(card => 
       card.id === clickedCard.id ? { ...card, isFlipped: true } : card
@@ -222,8 +258,18 @@ export default function GridGamePage() {
       </div>
 
       {/* Game Stats */}
-  <div className="container mx-auto px-4 py-4">
+      <div className="container mx-auto px-4 py-4">
         <div className="max-w-3xl mx-auto">
+          {/* Vista previa mensaje */}
+          {showPreview && (
+            <div className="bg-amber-500/20 border border-amber-400/40 backdrop-blur-sm rounded-lg p-4 mb-4 text-center">
+              <div className="flex items-center justify-center gap-2 text-amber-200">
+                <Timer className="w-5 h-5 animate-spin" />
+                <span className="font-semibold">Memoriza las cartas - Tiempo restante: {previewTimeLeft.toFixed(1)}s</span>
+              </div>
+            </div>
+          )}
+          
           <div className="flex justify-between items-center bg-[#06394f]/70 border border-amber-700/40 backdrop-blur-sm rounded-lg p-3 mb-6 shadow shadow-black/40">
             <div className="flex items-center gap-8">
               <div className="flex items-center gap-2">
@@ -265,11 +311,11 @@ export default function GridGamePage() {
               <div
                 key={character.id}
                 onClick={() => handleCardClick(character)}
-                className={`aspect-square rounded-xl cursor-pointer transition-transform duration-300 ${character.isMatched ? 'opacity-60' : ''}`}
+                className={`aspect-square rounded-xl cursor-pointer transition-transform duration-300 ${character.isMatched ? 'opacity-60' : ''} ${showPreview ? 'cursor-default' : ''}`}
                 style={{ perspective: '1000px' }}
               >
                 <div className={`relative w-full h-full transition-transform duration-500 transform-style-preserve-3d ${
-                  character.isFlipped || character.isMatched ? 'rotate-y-180' : 'rotate-y-0'
+                  character.isFlipped || character.isMatched || showPreview ? 'rotate-y-180' : 'rotate-y-0'
                 }`}>
                   {/* Back (default visible face with ?) */}
                   <div className="absolute w-full h-full backface-hidden flex items-center justify-center memory-card bg-gradient-to-br from-amber-500/10 to-transparent border border-dashed border-amber-500/30 rounded-xl">
