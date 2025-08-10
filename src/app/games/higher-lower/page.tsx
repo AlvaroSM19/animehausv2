@@ -436,7 +436,7 @@ export default function HigherLowerPage() {
                     {getCurrentRank(score).name}
                   </div>
                   <div className="text-xs text-amber-200/70 mt-1 italic">
-                    "{getCurrentRank(score).description}"
+                    &quot;{getCurrentRank(score).description}&quot;
                   </div>
                   <div className="text-xs text-amber-300/80 mt-2 font-semibold">
                     Rango Actual
@@ -588,7 +588,7 @@ export default function HigherLowerPage() {
               </div>
               
               <div className="text-sm text-amber-200/80 italic mb-4">
-                "{getCurrentRank(score).description}"
+                &quot;{getCurrentRank(score).description}&quot;
               </div>
               
               <div className="flex items-center justify-center gap-2 text-lg font-bold text-yellow-300">

@@ -37,7 +37,8 @@ export default function CrewQuizPage() {
   })
 
   // Generar preguntas dinámicamente basadas en los datos
-  const generateQuestions = (): Question[] => {
+  const questions = useMemo(() => {
+    // Generar preguntas dinámicamente basadas en los datos
     const questions: Question[] = []
     
     // Agrupar personajes por tripulación
@@ -114,9 +115,7 @@ export default function CrewQuizPage() {
 
     questions.push(...specialQuestions)
     return questions
-  }
-
-  const questions = useMemo(() => generateQuestions(), [allCharacters])
+  }, [allCharacters])
 
   const startGame = () => {
     if (questions.length === 0) return
