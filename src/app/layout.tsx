@@ -137,6 +137,12 @@ export default function RootLayout({
                   >
                     Leaderboard
                   </a>
+                  <a
+                    className="transition-colors hover:text-foreground/80 text-foreground/60"
+                    href="/games/tapone"
+                  >
+                    Tap One
+                  </a>
                 </nav>
               </div>
               
