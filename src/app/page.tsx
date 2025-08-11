@@ -33,8 +33,8 @@ const comingSoonGames: GameDef[] = [
 export default function HomePage() {
   return (
     <div className="min-h-screen relative text-amber-100">
-      {/* Straw Hat Pirates Flag Background */}
-      <div className="fixed inset-0 z-0">
+  {/* Straw Hat Pirates Flag Background (hidden when custom wallpaper active) */}
+  <div className="fixed inset-0 z-0 homepage-flag-bg">
         {/* High definition Straw Hat Pirates flag as background */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"

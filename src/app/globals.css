@@ -81,6 +81,13 @@ html {
   background-repeat: no-repeat;
 }
 
+/* Hard-disable any default gradient when custom wallpaper is active */
+body.has-custom-bg,
+html.has-custom-bg {
+  background: transparent !important;
+  background-image: none !important;
+}
+
 /* Overlay para wallpapers personalizados */
 #wallpaper-overlay {
   backdrop-filter: blur(0.5px);
@@ -120,4 +127,9 @@ body.has-custom-bg .header-pattern-overlay {
 /* Tone down global radial overlays when a custom wallpaper is active */
 body.has-custom-bg .wallpaper-global-overlay {
   opacity: 0.08 !important;
+}
+
+/* Replace homepage yellow skull background with selected wallpaper */
+body.has-custom-bg .homepage-flag-bg {
+  display: none !important;
 }
