@@ -18,6 +18,12 @@ const wallpapers: Wallpaper[] = [
     file: 'default'
   },
   {
+    id: 'barco',
+    name: 'Barco',
+    preview: 'barco',
+    file: '/images/wallpapers/op-barco.webp'
+  },
+  {
     id: 'luffy',
     name: 'Luffy',
     preview: 'luffy',
@@ -302,87 +308,23 @@ export default function WallpaperSelector() {
             role="menu"
             aria-label="Selector de wallpaper"
           >
-            <div className="p-3 border-b border-white/10">
-              <h3 className="text-sm font-semibold text-white">Seleccionar Wallpaper</h3>
-              <p className="text-xs text-gray-300 mt-1">Personaliza el fondo de tu aventura</p>
-            </div>
-
-            <div className="max-h-80 overflow-y-auto">
+            {/* Grid previews without titles */}
+            <div className="grid grid-cols-2 gap-2 p-2 max-h-80 overflow-y-auto">
               {wallpapers.map((wallpaper) => (
                 <button
                   key={wallpaper.id}
                   onClick={() => handleWallpaperChange(wallpaper.id)}
-                  className={`w-full p-3 text-left transition-colors hover:bg-white/10 flex items-center space-x-3 ${
-                    selectedWallpaper === wallpaper.id ? 'bg-blue-600/30 border-l-4 border-blue-400' : ''
-                  }`}
+                  className={`relative aspect-[3/2] rounded-lg overflow-hidden border ${selectedWallpaper === wallpaper.id ? 'border-blue-400 ring-2 ring-blue-400/60' : 'border-white/20'} hover:brightness-110 transition`}
                   role="menuitem"
+                  title={wallpaper.name}
                 >
-                  {/* Preview */}
-                  <div className="w-12 h-8 rounded flex-shrink-0 overflow-hidden">
-                    {wallpaper.preview === 'default' && (
-                      <div className="w-full h-full bg-gradient-to-br from-[#041c2c] via-[#064663] to-[#f2d8a7]"></div>
-                    )}
-                    {wallpaper.preview === 'luffy' && (
-                      <div className="w-full h-full bg-gradient-to-br from-red-600 via-red-500 to-yellow-400"></div>
-                    )}
-                    {wallpaper.preview === 'gear5' && (
-                      <div className="w-full h-full bg-gradient-to-br from-white via-yellow-200 to-red-400"></div>
-                    )}
-                    {wallpaper.preview === 'zoro' && (
-                      <div className="w-full h-full bg-gradient-to-br from-green-800 via-green-600 to-gray-900"></div>
-                    )}
-                    {wallpaper.preview === 'law' && (
-                      <div className="w-full h-full bg-gradient-to-br from-yellow-400 via-blue-500 to-gray-800"></div>
-                    )}
-                    {wallpaper.preview === 'mugiwara' && (
-                      <div className="w-full h-full bg-gradient-to-br from-red-500 via-orange-400 to-blue-500"></div>
-                    )}
-                    {wallpaper.preview === 'brothers' && (
-                      <div className="w-full h-full bg-gradient-to-br from-red-600 via-orange-500 to-blue-600"></div>
-                    )}
-                    {wallpaper.preview === 'wano-real' && (
-                      <div className="w-full h-full bg-gradient-to-br from-purple-900 via-pink-600 to-orange-400"></div>
-                    )}
-                    {wallpaper.preview === 'wano-kaido' && (
-                      <div className="w-full h-full bg-gradient-to-br from-purple-800 via-blue-600 to-teal-500"></div>
-                    )}
-                    {wallpaper.preview === 'kampai' && (
-                      <div className="w-full h-full bg-gradient-to-br from-amber-400 via-orange-500 to-red-500"></div>
-                    )}
-                    {wallpaper.preview === 'face' && (
-                      <div className="w-full h-full bg-gradient-to-br from-blue-800 via-red-600 to-yellow-400"></div>
-                    )}
-                    {wallpaper.preview === 'sunny' && (
-                      <div className="w-full h-full bg-gradient-to-br from-yellow-400 via-orange-500 to-red-600"></div>
-                    )}
-                    {wallpaper.preview === 'wano-svg' && (
-                      <div className="w-full h-full bg-gradient-to-br from-purple-800 via-pink-600 to-red-500"></div>
-                    )}
-                    {wallpaper.preview === 'marine' && (
-                      <div className="w-full h-full bg-gradient-to-br from-blue-900 via-blue-700 to-white"></div>
-                    )}
-                    {wallpaper.preview === 'cake' && (
-                      <div className="w-full h-full bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-600"></div>
-                    )}
-                  </div>
-
-                  {/* Info */}
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium text-white truncate">
-                      {wallpaper.name}
-                    </div>
-                    {selectedWallpaper === wallpaper.id && (
-                      <div className="text-xs text-blue-300 mt-1">✓ Actualmente seleccionado</div>
-                    )}
-                  </div>
+                  <div
+                    className="absolute inset-0 bg-cover bg-center"
+                    style={{ backgroundImage: wallpaper.file === 'default' ? 'linear-gradient(135deg, #041c2c, #064663, #f2d8a7)' : `url('${wallpaper.file}')` }}
+                  />
+                  <div className="absolute inset-0 bg-black/20" />
                 </button>
               ))}
-            </div>
-
-            <div className="p-3 border-t border-white/10">
-              <p className="text-xs text-gray-400">
-                Los wallpapers se guardan automáticamente en tu navegador
-              </p>
             </div>
           </div>
         </>,
