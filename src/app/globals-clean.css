@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Simple CSS variables for AnimeHaus */
+:root {
+  /* Base theme colors */
+  --background: 220 26% 5%;      /* Very dark blue */
+  --foreground: 210 40% 98%;     /* Soft white */
+  
+  --card: 220 26% 8%;            /* Dark blue for cards */
+  --card-foreground: 210 40% 98%;
+  
+  --primary: 213 91% 38%;        /* Anime blue */
+  --primary-foreground: 210 40% 98%;
+  
+  --secondary: 32 91% 54%;       /* Anime orange */
+  --secondary-foreground: 220 26% 5%;
+  
+  --muted: 220 13% 15%;          /* Dark gray */
+  --muted-foreground: 210 40% 60%;
+  
+  --accent: 47 91% 58%;          /* Golden yellow */
+  --accent-foreground: 220 26% 5%;
+  
+  --border: 220 13% 20%;         /* Subtle borders */
+  --input: 220 13% 20%;          /* Inputs */
+  --ring: 213 91% 38%;           /* Focus ring */
+  
+  --radius: 0.75rem;             /* Border radius */
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: 'Inter', sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Character card animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.character-card {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Gradient text utility */
+.gradient-text {
+  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Radial gradient utility */
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-stops));
+}
+
+/* Wallpaper selector styles */
+.wallpaper-body {
+  transition: background-image 0.5s ease-in-out;
+}
+
+.wallpaper-body.has-custom-bg {
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Overlay para wallpapers personalizados */
+#wallpaper-overlay {
+  backdrop-filter: blur(0.5px);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Asegurar que el contenido esté por encima del wallpaper */
+.wallpaper-content {
+  position: relative;
+  z-index: 10;
+}
