@@ -318,10 +318,17 @@ export default function WallpaperSelector() {
                   role="menuitem"
                   title={wallpaper.name}
                 >
-                  <div
-                    className="absolute inset-0 bg-cover bg-center"
-                    style={{ backgroundImage: wallpaper.file === 'default' ? 'linear-gradient(135deg, #041c2c, #064663, #f2d8a7)' : `url('${wallpaper.file}')` }}
-                  />
+                  {wallpaper.file === 'default' ? (
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#041c2c] via-[#064663] to-[#f2d8a7]" />
+                  ) : (
+                    <img
+                      src={`${wallpaper.file}?v=1`}
+                      alt={wallpaper.name}
+                      className="absolute inset-0 w-full h-full object-cover"
+                      loading="eager"
+                      decoding="async"
+                    />
+                  )}
                   <div className="absolute inset-0 bg-black/20" />
                 </button>
               ))}
