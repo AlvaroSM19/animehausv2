@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import WallpaperSelector from '@/components/WallpaperSelector'
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -86,14 +87,15 @@ export default function RootLayout({
         <meta name="theme-color" content="#1e3a8a" />
         <meta name="msapplication-TileColor" content="#1e3a8a" />
       </head>
-      <body className={`${inter.variable} antialiased min-h-screen bg-gradient-to-b from-[#041c2c] via-[#064663] to-[#f2d8a7] text-amber-100 relative overflow-x-hidden`}>        
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(255,225,150,0.15),transparent_60%)]"/>
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_70%,rgba(255,180,80,0.12),transparent_55%)]"/>
-        <div className="relative flex min-h-screen flex-col">
+      <body className={`${inter.variable} antialiased min-h-screen bg-gradient-to-b from-[#041c2c] via-[#064663] to-[#f2d8a7] text-amber-100 relative overflow-x-hidden wallpaper-body`}>        
+        {/* Overlays decorativos que se mantienen siempre */}
+  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(255,225,150,0.15),transparent_60%)] z-10 wallpaper-global-overlay"/>
+  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_70%,rgba(255,180,80,0.12),transparent_55%)] z-10 wallpaper-global-overlay"/>
+  <div className="relative flex min-h-screen flex-col z-20 wallpaper-content">
           <header className="sticky top-0 z-50 w-full border-b backdrop-blur supports-[backdrop-filter]:bg-background/60 relative overflow-hidden">
             {/* One Piece themed background */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#041c2c] via-[#064663] to-[#0a2847] opacity-95"></div>
-            <div className="absolute inset-0 opacity-30" style={{
+            <div className="absolute inset-0 bg-gradient-to-r from-[#041c2c] via-[#064663] to-[#0a2847] opacity-95 header-bg-overlay"></div>
+            <div className="absolute inset-0 opacity-30 header-pattern-overlay" style={{
               backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f59e0b' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
             }}></div>
             
@@ -171,6 +173,7 @@ export default function RootLayout({
                   </a>
                 </div>
                 <nav className="flex items-center space-x-2">
+                  <WallpaperSelector />
                   <a
                     className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
                     href="/games/grid"

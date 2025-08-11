@@ -68,3 +68,56 @@ html {
 .bg-gradient-radial {
   background: radial-gradient(circle, var(--tw-gradient-stops));
 }
+
+/* Wallpaper selector styles */
+.wallpaper-body {
+  transition: background-image 0.5s ease-in-out;
+}
+
+.wallpaper-body.has-custom-bg {
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Overlay para wallpapers personalizados */
+#wallpaper-overlay {
+  backdrop-filter: blur(0.5px);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Full-screen background layer for selected wallpaper */
+#wallpaper-bg {
+  z-index: 0;
+}
+
+/* Asegurar que el contenido esté por encima del wallpaper */
+.wallpaper-content {
+  position: relative;
+  z-index: 10;
+}
+
+/* Clase especial para dropdown con máximo z-index */
+.dropdown-highest {
+  z-index: 2147483647 !important; /* Máximo z-index posible */
+  position: fixed !important;
+}
+
+.backdrop-highest {
+  z-index: 2147483646 !important;
+  position: fixed !important;
+}
+
+/* When a custom wallpaper is active, reduce header overlays so the background is visible */
+body.has-custom-bg .header-bg-overlay {
+  opacity: 0.7 !important;
+}
+body.has-custom-bg .header-pattern-overlay {
+  opacity: 0.15 !important;
+}
+
+/* Tone down global radial overlays when a custom wallpaper is active */
+body.has-custom-bg .wallpaper-global-overlay {
+  opacity: 0.08 !important;
+}
