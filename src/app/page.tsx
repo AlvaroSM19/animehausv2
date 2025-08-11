@@ -15,6 +15,7 @@ interface GameDef {
 }
 
 const games: GameDef[] = [
+  { id: 'tapone', title: 'Tap One', description: 'Elige tu destino: selecciona una categoría en el momento justo', icon: Gamepad2, difficulty: 'Medium', players: '1 Player', time: '2-5 min', status: 'available', href: '/games/tapone', color: 'from-yellow-400 to-orange-500' },
   { id: 'grid', title: 'Memory Cards', description: 'Empareja las cartas 4x4 con personajes de One Piece', icon: Grid3X3, difficulty: 'Easy', players: '1 Player', time: '2-5 min', status: 'available', href: '/games/grid', color: 'from-blue-500 to-cyan-500' },
   { id: 'anime-grid', title: 'One Piece Tic Tac Toe', description: 'Tic-tac-toe con condiciones de personajes One Piece', icon: Target, difficulty: 'Hard', players: '1 Player', time: '5-15 min', status: 'available', href: '/games/anime-grid', color: 'from-cyan-500 to-teal-500' },
   { id: 'wordle', title: 'Anime Wordle', description: 'Guess the character name in 6 tries', icon: Brain, difficulty: 'Medium', players: '1 Player', time: '3-8 min', status: 'available', href: '/games/wordle', color: 'from-green-500 to-emerald-500' },
