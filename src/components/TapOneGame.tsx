@@ -1,3 +1,5 @@
+
+'use client';
 import React, { useState, useEffect } from 'react';
 
 // Modelo de datos para una categoría y sus elementos
