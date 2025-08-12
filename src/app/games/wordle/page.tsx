@@ -1,4 +1,4 @@
-'use client'
+ 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
 import { ArrowLeft, RotateCcw, Trophy, Target, Brain, CheckCircle, XCircle, HelpCircle } from 'lucide-react'

@@ -170,7 +170,7 @@ const TapOneGame: React.FC = () => {
   // Estado para mostrar los resultados
   const [showResults, setShowResults] = useState(false);
   const [finalScore, setFinalScore] = useState(0);
-  const [playerRank, setPlayerRank] = useState({ title: '', bounty: '', points: '' });
+  const [playerRank, setPlayerRank] = useState({ title: '', bounty: '', rank: 0 });
 
   // Sistema de puntuación y rangos
   const calculateScore = () => {
@@ -186,15 +186,15 @@ const TapOneGame: React.FC = () => {
   };
 
   const getRankAndBounty = (score: number) => {
-    if (score >= 900) return { title: '#1 REY DE LOS PIRATAS', bounty: '5,564,800,000', points: '900-1000' };
-    if (score >= 800) return { title: 'EMPERADOR DEL MAR (YONKO)', bounty: '4,611,100,000', points: '800-899' };
-    if (score >= 700) return { title: 'LEYENDA DE LOS MARES', bounty: '3,457,900,000', points: '700-799' };
-    if (score >= 600) return { title: 'CAPITÁN FAMOSO', bounty: '2,185,000,000', points: '600-699' };
-    if (score >= 500) return { title: 'PIRATA RESPETADO', bounty: '1,210,000,000', points: '500-599' };
-    if (score >= 400) return { title: 'SUPERNOVA', bounty: '780,000,000', points: '400-499' };
-    if (score >= 300) return { title: 'CAZADOR DE RECOMPENSAS', bounty: '340,000,000', points: '300-399' };
-    if (score >= 200) return { title: 'TRIPULANTE NOVATO', bounty: '90,000,000', points: '200-299' };
-    return { title: 'CHICO DE LOS RECADOS', bounty: '10,000', points: '0-199' };
+    if (score >= 900) return { title: '#1 PIRATE KING', bounty: '10,000,000,000', rank: 1 };
+    if (score >= 800) return { title: '#2 EMPEROR OF THE SEA', bounty: '5,000,000,000', rank: 2 };
+    if (score >= 700) return { title: '#3 LEGEND OF THE SEAS', bounty: '2,500,000,000', rank: 3 };
+    if (score >= 600) return { title: '#4 FAMOUS CAPTAIN', bounty: '500,000,000', rank: 4 };
+    if (score >= 500) return { title: '#5 RESPECTED PIRATE', bounty: '100,000,000', rank: 5 };
+    if (score >= 400) return { title: '#6 SUPERNOVA', bounty: '1,000,000', rank: 6 };
+    if (score >= 300) return { title: '#7 BOUNTY HUNTER', bounty: '200,000', rank: 7 };
+    if (score >= 200) return { title: '#8 ROOKIE CREW MEMBER', bounty: '50,000', rank: 8 };
+    return { title: '#9 ERRAND BOY', bounty: '1,000', rank: 9 };
   };
 
   // Rotación automática de elementos (solo si rotating y no finished)
@@ -246,10 +246,10 @@ const TapOneGame: React.FC = () => {
       setFinalScore(score);
       setPlayerRank(rank);
       
-      // Guardar mejor puntuación
-      const bestScore = localStorage.getItem('tapOneBestScore');
-      if (!bestScore || score > parseInt(bestScore)) {
-        localStorage.setItem('tapOneBestScore', score.toString());
+      // Guardar mejor rango (menor número es mejor)
+      const bestRank = localStorage.getItem('tapOneBestRank');
+      if (!bestRank || rank.rank < parseInt(bestRank)) {
+        localStorage.setItem('tapOneBestRank', rank.rank.toString());
       }
       
       // Mostrar resultados tras un breve delay
@@ -264,7 +264,7 @@ const TapOneGame: React.FC = () => {
         <div className="flex items-center gap-2 text-slate-300/90 text-sm mb-2">
           <Link href="/" className="inline-flex items-center gap-1 hover:text-white/90 transition-colors">
             <span className="text-slate-300/80">←</span>
-            <span>Inicio</span>
+            <span>Home</span>
           </Link>
           <span className="opacity-40">/</span>
           <span className="text-slate-100/90">Tap One</span>
@@ -281,7 +281,7 @@ const TapOneGame: React.FC = () => {
                 onClick={handleRestart}
                 className="px-4 md:px-5 py-2 rounded-xl font-semibold text-white bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-lg hover:from-emerald-400 hover:to-emerald-600 transition-colors"
               >
-                Nuevo Juego
+                New Game
               </button>
             )}
           </div>
@@ -290,11 +290,11 @@ const TapOneGame: React.FC = () => {
         {/* Status pill */}
         <div className="mt-3 rounded-xl border border-violet-400/20 bg-violet-600/10 px-4 py-2 text-violet-200/90 text-sm">
           {finished ? (
-            <span>Juego terminado — {categories.length}/{categories.length} seleccionadas.</span>
+            <span>Game completed — {categories.length}/{categories.length} categories selected.</span>
           ) : rotating ? (
-            <span>Objetivo: elige a los mejores en cada categoría. Pulsa <b>¡Para!</b> para detener y elegir.</span>
+            <span>Goal: choose the best in each category. Press <b>Stop!</b> to stop and choose.</span>
           ) : (
-            <span>Selecciona una categoría ({round + 1}/{categories.length}). Las demás volverán a girar.</span>
+            <span>Select a category ({round + 1}/{categories.length}). The others will start spinning again.</span>
           )}
         </div>
       </section>
@@ -311,7 +311,7 @@ const TapOneGame: React.FC = () => {
               onClick={() => handleSelect(i)}
               disabled={!clickable}
               className={`group relative rounded-2xl p-[2px] transition-transform duration-200 ${clickable ? 'hover:scale-[1.02]' : ''}`}
-              aria-label={`Seleccionar ${cat.label}`}
+              aria-label={`Select ${cat.label}`}
               style={{
                 boxShadow: locked[i]
                   ? '0 0 0 2px rgba(139,92,246,0.65), 0 8px 24px rgba(139,92,246,0.25)'
@@ -362,18 +362,18 @@ const TapOneGame: React.FC = () => {
             onClick={handleRestart}
             className="px-6 py-2 rounded-xl font-semibold text-white bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-lg hover:from-emerald-400 hover:to-emerald-600 transition-colors"
           >
-            Nuevo Juego
+            New Game
           </button>
         ) : rotating ? (
           <button
             onClick={handleStop}
             className="px-8 py-3 rounded-xl font-extrabold text-white bg-gradient-to-r from-violet-500 to-fuchsia-600 shadow-[0_10px_24px_rgba(139,92,246,0.35)]"
           >
-            ¡Para!
+            Stop!
           </button>
         ) : (
           <span className="text-base md:text-lg text-violet-200/90 bg-violet-600/10 border border-violet-400/30 rounded-lg px-3 py-2">
-            Selecciona una categoría ({round + 1}/{categories.length})
+            Select a category ({round + 1}/{categories.length})
           </span>
         )}
       </div>
@@ -381,16 +381,21 @@ const TapOneGame: React.FC = () => {
       {/* Summary */}
       {finished && !showResults && (
         <div className="mt-10 text-center">
-          <h2 className="text-xl font-bold mb-4 text-emerald-300">¡Juego terminado!</h2>
+          <h2 className="text-xl font-bold mb-4 text-emerald-300">Game completed!</h2>
           <div className="mx-auto max-w-7xl grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 px-2">
             {categories.map((cat, i) => {
               const idx = selected[i]!;
               const el = cat.elements[idx];
+              const position = idx + 1; // Position in ranking (1-9)
               return (
                 <div key={cat.id} className="rounded-2xl p-[2px] bg-gradient-to-br from-violet-500/60 via-fuchsia-500/50 to-pink-500/50">
-                  <div className="rounded-[14px] bg-slate-900/75 backdrop-blur-md overflow-hidden flex flex-col items-center h-[220px] md:h-[240px]">
-                    <div className="w-full flex-1 flex items-center justify-center">
-                      <img src={el.image} alt={el.name} className="w-full max-w-[220px] md:max-w-[240px] h-[130px] md:h-[150px] object-contain" />
+                  <div className="rounded-[14px] bg-slate-900/75 backdrop-blur-md overflow-hidden flex flex-col items-center h-[220px] md:h-[240px] relative">
+                    {/* Position badge */}
+                    <div className="absolute top-2 left-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs font-black px-2 py-1 rounded-lg shadow-md z-10">
+                      #{position}
+                    </div>
+                    <div className="w-full flex-1 flex items-center justify-center pt-6">
+                      <img src={el.image} alt={el.name} className="w-full max-w-[200px] md:max-w-[220px] h-[120px] md:h-[140px] object-contain" />
                     </div>
                     <div className="w-full text-center text-[12px] font-semibold py-2 bg-gradient-to-r from-violet-700/30 via-fuchsia-700/25 to-pink-700/30">
                       <div className="text-violet-200">{cat.label}</div>
@@ -407,66 +412,98 @@ const TapOneGame: React.FC = () => {
       {/* Results Screen */}
       {showResults && (
         <div className="fixed inset-0 bg-black/95 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="max-w-4xl w-full text-center">
-            {/* Bounty Poster Style */}
-            <div className="bg-gradient-to-b from-amber-100 to-amber-200 text-black p-8 rounded-3xl border-8 border-amber-800 shadow-2xl transform rotate-1 hover:rotate-0 transition-transform duration-500">
-              <div className="border-4 border-black border-dashed p-6 rounded-2xl bg-white/90">
-                {/* Header */}
-                <div className="mb-6">
-                  <h1 className="text-2xl md:text-3xl font-black uppercase tracking-wider mb-2">WANTED</h1>
-                  <div className="w-32 h-1 bg-black mx-auto mb-4"></div>
-                  <h2 className="text-lg md:text-xl font-bold">DEAD OR ALIVE</h2>
-                </div>
+          <div className="max-w-6xl w-full">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Bounty Poster */}
+              <div className="text-center">
+                <div className="bg-gradient-to-b from-amber-100 to-amber-200 text-black p-8 rounded-3xl border-8 border-amber-800 shadow-2xl transform rotate-1 hover:rotate-0 transition-transform duration-500">
+                  <div className="border-4 border-black border-dashed p-6 rounded-2xl bg-white/90">
+                    {/* Header */}
+                    <div className="mb-6">
+                      <h1 className="text-2xl md:text-3xl font-black uppercase tracking-wider mb-2">WANTED</h1>
+                      <div className="w-32 h-1 bg-black mx-auto mb-4"></div>
+                      <h2 className="text-lg md:text-xl font-bold">DEAD OR ALIVE</h2>
+                    </div>
 
-                {/* Rank Title */}
-                <div className="mb-6">
-                  <h3 className="text-2xl md:text-4xl font-black text-red-700 mb-2 drop-shadow-lg tracking-wide leading-tight">
-                    {playerRank.title}
-                  </h3>
-                  <div className="text-sm md:text-base font-bold text-gray-700">
-                    Puntuación: {finalScore} pts ({playerRank.points})
+                    {/* Rank Title */}
+                    <div className="mb-6">
+                      <h3 className="text-xl md:text-3xl font-black text-red-700 mb-2 drop-shadow-lg tracking-wide leading-tight">
+                        {playerRank.title}
+                      </h3>
+                    </div>
+
+                    {/* Bounty Amount */}
+                    <div className="mb-6">
+                      <div className="text-lg md:text-xl font-bold text-gray-800 mb-2">REWARD:</div>
+                      <div className="text-2xl md:text-4xl font-black text-green-700 drop-shadow-lg">
+                        ₿{parseInt(playerRank.bounty).toLocaleString()}
+                      </div>
+                      <div className="text-sm md:text-base font-bold text-gray-700 mt-1">BERRIES</div>
+                    </div>
+
+                    {/* Marine/Government Seal */}
+                    <div className="mb-6">
+                      <div className="w-16 h-16 mx-auto bg-blue-800 rounded-full flex items-center justify-center text-white font-black text-lg">
+                        ⚓
+                      </div>
+                      <div className="text-xs font-bold text-gray-600 mt-2">MARINE HEADQUARTERS</div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                      <button
+                        onClick={handleRestart}
+                        className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold rounded-xl shadow-lg hover:from-blue-500 hover:to-blue-600 transition-colors"
+                      >
+                        🏴‍☠️ New Adventure
+                      </button>
+                      <button
+                        onClick={() => setShowResults(false)}
+                        className="px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 text-white font-bold rounded-xl shadow-lg hover:from-gray-500 hover:to-gray-600 transition-colors"
+                      >
+                        👁️ View Summary
+                      </button>
+                    </div>
                   </div>
                 </div>
 
-                {/* Bounty Amount */}
-                <div className="mb-6">
-                  <div className="text-lg md:text-xl font-bold text-gray-800 mb-2">RECOMPENSA:</div>
-                  <div className="text-3xl md:text-5xl font-black text-green-700 drop-shadow-lg">
-                    ₿{parseInt(playerRank.bounty).toLocaleString()}
+                {/* Best Score */}
+                <div className="mt-6 text-center text-amber-200/80">
+                  <div className="text-sm">
+                    Best Rank: #{localStorage.getItem('tapOneBestRank') || '9'}
                   </div>
-                  <div className="text-sm md:text-base font-bold text-gray-700 mt-1">BERRIES</div>
-                </div>
-
-                {/* Marine/Government Seal */}
-                <div className="mb-6">
-                  <div className="w-16 h-16 mx-auto bg-blue-800 rounded-full flex items-center justify-center text-white font-black text-lg">
-                    ⚓
-                  </div>
-                  <div className="text-xs font-bold text-gray-600 mt-2">MARINE HEADQUARTERS</div>
-                </div>
-
-                {/* Actions */}
-                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                  <button
-                    onClick={handleRestart}
-                    className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold rounded-xl shadow-lg hover:from-blue-500 hover:to-blue-600 transition-colors"
-                  >
-                    🏴‍☠️ Nueva Aventura
-                  </button>
-                  <button
-                    onClick={() => setShowResults(false)}
-                    className="px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 text-white font-bold rounded-xl shadow-lg hover:from-gray-500 hover:to-gray-600 transition-colors"
-                  >
-                    👁️ Ver Resumen
-                  </button>
                 </div>
               </div>
-            </div>
 
-            {/* Best Score */}
-            <div className="mt-6 text-center text-amber-200/80">
-              <div className="text-sm">
-                Mejor puntuación: {localStorage.getItem('tapOneBestScore') || '0'} pts
+              {/* Selection Summary Card */}
+              <div className="bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-3xl border border-slate-700 shadow-2xl">
+                <h3 className="text-2xl font-bold text-center mb-6 text-slate-100">Your Selections</h3>
+                <div className="grid grid-cols-2 gap-4 max-h-[600px] overflow-y-auto">
+                  {categories.map((cat, i) => {
+                    const idx = selected[i]!;
+                    const el = cat.elements[idx];
+                    const position = idx + 1;
+                    return (
+                      <div key={cat.id} className="bg-slate-700/50 rounded-xl p-3 border border-slate-600/50">
+                        <div className="relative">
+                          {/* Position badge */}
+                          <div className="absolute top-1 right-1 bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs font-black px-2 py-1 rounded-lg z-10">
+                            #{position}
+                          </div>
+                          <img 
+                            src={el.image} 
+                            alt={el.name} 
+                            className="w-full h-20 object-contain mb-2" 
+                          />
+                        </div>
+                        <div className="text-center">
+                          <div className="text-xs font-bold text-slate-300 mb-1">{cat.label}</div>
+                          <div className="text-sm font-semibold text-slate-100">{el.name}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
