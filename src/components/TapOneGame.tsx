@@ -167,6 +167,35 @@ const TapOneGame: React.FC = () => {
   const [round, setRound] = useState(0);
   // Estado de fin de juego
   const finished = locked.every(Boolean);
+  // Estado para mostrar los resultados
+  const [showResults, setShowResults] = useState(false);
+  const [finalScore, setFinalScore] = useState(0);
+  const [playerRank, setPlayerRank] = useState({ title: '', bounty: '', points: '' });
+
+  // Sistema de puntuación y rangos
+  const calculateScore = () => {
+    let totalScore = 0;
+    selected.forEach((selectedIndex, categoryIndex) => {
+      if (selectedIndex !== null) {
+        // Puntuación inversa: 1º=100pts, 2º=90pts, ..., 9º=20pts
+        const points = 110 - (selectedIndex + 1) * 10;
+        totalScore += points;
+      }
+    });
+    return totalScore;
+  };
+
+  const getRankAndBounty = (score: number) => {
+    if (score >= 900) return { title: '#1 REY DE LOS PIRATAS', bounty: '5,564,800,000', points: '900-1000' };
+    if (score >= 800) return { title: 'EMPERADOR DEL MAR (YONKO)', bounty: '4,611,100,000', points: '800-899' };
+    if (score >= 700) return { title: 'LEYENDA DE LOS MARES', bounty: '3,457,900,000', points: '700-799' };
+    if (score >= 600) return { title: 'CAPITÁN FAMOSO', bounty: '2,185,000,000', points: '600-699' };
+    if (score >= 500) return { title: 'PIRATA RESPETADO', bounty: '1,210,000,000', points: '500-599' };
+    if (score >= 400) return { title: 'SUPERNOVA', bounty: '780,000,000', points: '400-499' };
+    if (score >= 300) return { title: 'CAZADOR DE RECOMPENSAS', bounty: '340,000,000', points: '300-399' };
+    if (score >= 200) return { title: 'TRIPULANTE NOVATO', bounty: '90,000,000', points: '200-299' };
+    return { title: 'CHICO DE LOS RECADOS', bounty: '10,000', points: '0-199' };
+  };
 
   // Rotación automática de elementos (solo si rotating y no finished)
   useEffect(() => {
@@ -205,7 +234,28 @@ const TapOneGame: React.FC = () => {
     setSelected(categories.map(() => null));
     setRound(0);
     setRotating(true);
+    setShowResults(false);
+    setFinalScore(0);
   };
+
+  // Calcular puntuación al finalizar
+  useEffect(() => {
+    if (finished && !showResults) {
+      const score = calculateScore();
+      const rank = getRankAndBounty(score);
+      setFinalScore(score);
+      setPlayerRank(rank);
+      
+      // Guardar mejor puntuación
+      const bestScore = localStorage.getItem('tapOneBestScore');
+      if (!bestScore || score > parseInt(bestScore)) {
+        localStorage.setItem('tapOneBestScore', score.toString());
+      }
+      
+      // Mostrar resultados tras un breve delay
+      setTimeout(() => setShowResults(true), 1000);
+    }
+  }, [finished, showResults]);
 
   return (
     <div>
@@ -329,7 +379,7 @@ const TapOneGame: React.FC = () => {
       </div>
 
       {/* Summary */}
-      {finished && (
+      {finished && !showResults && (
         <div className="mt-10 text-center">
           <h2 className="text-xl font-bold mb-4 text-emerald-300">¡Juego terminado!</h2>
           <div className="mx-auto max-w-7xl grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 px-2">
@@ -350,6 +400,75 @@ const TapOneGame: React.FC = () => {
                 </div>
               );
             })}
+          </div>
+        </div>
+      )}
+
+      {/* Results Screen */}
+      {showResults && (
+        <div className="fixed inset-0 bg-black/95 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="max-w-4xl w-full text-center">
+            {/* Bounty Poster Style */}
+            <div className="bg-gradient-to-b from-amber-100 to-amber-200 text-black p-8 rounded-3xl border-8 border-amber-800 shadow-2xl transform rotate-1 hover:rotate-0 transition-transform duration-500">
+              <div className="border-4 border-black border-dashed p-6 rounded-2xl bg-white/90">
+                {/* Header */}
+                <div className="mb-6">
+                  <h1 className="text-2xl md:text-3xl font-black uppercase tracking-wider mb-2">WANTED</h1>
+                  <div className="w-32 h-1 bg-black mx-auto mb-4"></div>
+                  <h2 className="text-lg md:text-xl font-bold">DEAD OR ALIVE</h2>
+                </div>
+
+                {/* Rank Title */}
+                <div className="mb-6">
+                  <h3 className="text-2xl md:text-4xl font-black text-red-700 mb-2 drop-shadow-lg tracking-wide leading-tight">
+                    {playerRank.title}
+                  </h3>
+                  <div className="text-sm md:text-base font-bold text-gray-700">
+                    Puntuación: {finalScore} pts ({playerRank.points})
+                  </div>
+                </div>
+
+                {/* Bounty Amount */}
+                <div className="mb-6">
+                  <div className="text-lg md:text-xl font-bold text-gray-800 mb-2">RECOMPENSA:</div>
+                  <div className="text-3xl md:text-5xl font-black text-green-700 drop-shadow-lg">
+                    ₿{parseInt(playerRank.bounty).toLocaleString()}
+                  </div>
+                  <div className="text-sm md:text-base font-bold text-gray-700 mt-1">BERRIES</div>
+                </div>
+
+                {/* Marine/Government Seal */}
+                <div className="mb-6">
+                  <div className="w-16 h-16 mx-auto bg-blue-800 rounded-full flex items-center justify-center text-white font-black text-lg">
+                    ⚓
+                  </div>
+                  <div className="text-xs font-bold text-gray-600 mt-2">MARINE HEADQUARTERS</div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                  <button
+                    onClick={handleRestart}
+                    className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold rounded-xl shadow-lg hover:from-blue-500 hover:to-blue-600 transition-colors"
+                  >
+                    🏴‍☠️ Nueva Aventura
+                  </button>
+                  <button
+                    onClick={() => setShowResults(false)}
+                    className="px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 text-white font-bold rounded-xl shadow-lg hover:from-gray-500 hover:to-gray-600 transition-colors"
+                  >
+                    👁️ Ver Resumen
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Best Score */}
+            <div className="mt-6 text-center text-amber-200/80">
+              <div className="text-sm">
+                Mejor puntuación: {localStorage.getItem('tapOneBestScore') || '0'} pts
+              </div>
+            </div>
           </div>
         </div>
       )}
