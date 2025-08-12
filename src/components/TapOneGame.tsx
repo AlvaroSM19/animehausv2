@@ -1,6 +1,7 @@
 
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import html2canvas from 'html2canvas';
 import Link from 'next/link';
 
 // Modelo de datos para una categoría y sus elementos
@@ -58,6 +59,19 @@ const categories: TapOneCategory[] = [
     ]
   },
   {
+    id: 'sensei', label: 'Sensei', elements: [
+      { name: 'Rayleigh', image: '/images/tapone/sensei/op-t1rayleigh.webp' },
+      { name: 'Garp', image: '/images/tapone/sensei/op-t1garp.webp' },
+      { name: 'Mihawk', image: '/images/tapone/sensei/op-t1mihawk.webp' },
+      { name: 'Whitebeard', image: '/images/tapone/sensei/op-t1whitebeard.webp' },
+      { name: 'Oden', image: '/images/tapone/sensei/op-t1oden.webp' },
+      { name: 'Shanks', image: '/images/tapone/sensei/op-t1shanks.webp' },
+      { name: 'Jinbe', image: '/images/tapone/sensei/op-t1jinbe.webp' },
+      { name: 'Koby', image: '/images/tapone/sensei/op-t1koby.webp' },
+      { name: 'Tiger', image: '/images/tapone/sensei/op-t1tiger.webp' },
+    ]
+  },
+  {
     id: 'logia', label: 'Logia', elements: [
       { name: 'Blackbeard', image: '/images/tapone/logia/op-t1blackbeard.webp' },
       { name: 'Kizaru', image: '/images/tapone/logia/op-t1kizaru.webp' },
@@ -110,19 +124,6 @@ const categories: TapOneCategory[] = [
     ]
   },
   {
-    id: 'sensei', label: 'Sensei', elements: [
-      { name: 'Rayleigh', image: '/images/tapone/sensei/op-t1rayleigh.webp' },
-      { name: 'Garp', image: '/images/tapone/sensei/op-t1garp.webp' },
-      { name: 'Mihawk', image: '/images/tapone/sensei/op-t1mihawk.webp' },
-      { name: 'Whitebeard', image: '/images/tapone/sensei/op-t1whitebeard.webp' },
-      { name: 'Oden', image: '/images/tapone/sensei/op-t1oden.webp' },
-      { name: 'Shanks', image: '/images/tapone/sensei/op-t1shanks.webp' },
-      { name: 'Jinbe', image: '/images/tapone/sensei/op-t1jinbe.webp' },
-      { name: 'Koby', image: '/images/tapone/sensei/op-t1koby.webp' },
-      { name: 'Tiger', image: '/images/tapone/sensei/op-t1tiger.webp' },
-    ]
-  },
-  {
     id: 'ship', label: 'Ship', elements: [
       { name: 'Thousand Sunny', image: '/images/tapone/ship/op-t1thousandsunny.webp' },
       { name: 'Oro Jackson', image: '/images/tapone/ship/op-t1orojackson.webp' },
@@ -151,12 +152,16 @@ const categories: TapOneCategory[] = [
 ];
 
 
-const ROTATE_INTERVAL = 150; // ms (un poco más lento)
+const ROTATE_INTERVAL = 150; // ms (velocidad de rotación visual)
+const AUTO_STOP_MIN = 2500; // 2.5 segundos mínimo
+const AUTO_STOP_MAX = 3500; // 3.5 segundos máximo
 
 const TapOneGame: React.FC = () => {
+  const gameRef = useRef<HTMLDivElement>(null);
 
   // Estado de rotación global
   const [rotating, setRotating] = useState(true);
+  const [autoStopTimer, setAutoStopTimer] = useState<NodeJS.Timeout | null>(null);
   // Índices actuales de cada categoría (para rotar)
   const [indices, setIndices] = useState<number[]>(categories.map(() => 0));
   // Categorías ya seleccionadas (no rotan)
@@ -186,34 +191,73 @@ const TapOneGame: React.FC = () => {
   };
 
   const getRankAndBounty = (score: number) => {
-    if (score >= 900) return { title: '#1 PIRATE KING', bounty: '10,000,000,000', rank: 1 };
-    if (score >= 800) return { title: '#2 EMPEROR OF THE SEA', bounty: '5,000,000,000', rank: 2 };
-    if (score >= 700) return { title: '#3 LEGEND OF THE SEAS', bounty: '2,500,000,000', rank: 3 };
-    if (score >= 600) return { title: '#4 FAMOUS CAPTAIN', bounty: '500,000,000', rank: 4 };
-    if (score >= 500) return { title: '#5 RESPECTED PIRATE', bounty: '100,000,000', rank: 5 };
-    if (score >= 400) return { title: '#6 SUPERNOVA', bounty: '1,000,000', rank: 6 };
-    if (score >= 300) return { title: '#7 BOUNTY HUNTER', bounty: '200,000', rank: 7 };
-    if (score >= 200) return { title: '#8 ROOKIE CREW MEMBER', bounty: '50,000', rank: 8 };
-    return { title: '#9 ERRAND BOY', bounty: '1,000', rank: 9 };
+    if (score >= 950) return { title: '#1 PIRATE KING', bounty: '25,000,000,000', rank: 1 };
+    if (score >= 900) return { title: '#2 EMPEROR OF THE SEA', bounty: '15,000,000,000', rank: 2 };
+    if (score >= 850) return { title: '#3 LEGENDARY ADMIRAL', bounty: '10,000,000,000', rank: 3 };
+    if (score >= 800) return { title: '#4 FLEET ADMIRAL', bounty: '8,000,000,000', rank: 4 };
+    if (score >= 750) return { title: '#5 LEGEND OF THE SEAS', bounty: '6,000,000,000', rank: 5 };
+    if (score >= 700) return { title: '#6 WORLD GOVERNMENT ENEMY', bounty: '4,500,000,000', rank: 6 };
+    if (score >= 650) return { title: '#7 STRONGEST CREATURE', bounty: '3,500,000,000', rank: 7 };
+    if (score >= 600) return { title: '#8 WARLORD OF THE SEA', bounty: '2,800,000,000', rank: 8 };
+    if (score >= 550) return { title: '#9 FAMOUS CAPTAIN', bounty: '2,200,000,000', rank: 9 };
+    if (score >= 500) return { title: '#10 SUPERNOVA ELITE', bounty: '1,800,000,000', rank: 10 };
+    if (score >= 450) return { title: '#11 RESPECTED PIRATE', bounty: '1,400,000,000', rank: 11 };
+    if (score >= 400) return { title: '#12 SUPERNOVA', bounty: '1,000,000,000', rank: 12 };
+    if (score >= 350) return { title: '#13 ELITE BOUNTY HUNTER', bounty: '750,000,000', rank: 13 };
+    if (score >= 300) return { title: '#14 DANGEROUS PIRATE', bounty: '500,000,000', rank: 14 };
+    if (score >= 250) return { title: '#15 BOUNTY HUNTER', bounty: '300,000,000', rank: 15 };
+    if (score >= 200) return { title: '#16 PROMISING ROOKIE', bounty: '150,000,000', rank: 16 };
+    if (score >= 150) return { title: '#17 CREW MEMBER', bounty: '80,000,000', rank: 17 };
+    if (score >= 100) return { title: '#18 ROOKIE PIRATE', bounty: '30,000,000', rank: 18 };
+    if (score >= 50) return { title: '#19 SMALL THREAT', bounty: '5,000,000', rank: 19 };
+    return { title: '#20 ERRAND BOY', bounty: '100,000', rank: 20 };
   };
 
-  // Rotación automática de elementos (solo si rotating y no finished)
+  // Rotación automática de elementos
   useEffect(() => {
     if (!rotating || finished) return;
+    
     const interval = setInterval(() => {
       setIndices(prev => prev.map((idx, i) =>
         locked[i] ? idx : (idx + 1) % categories[i].elements.length
       ));
     }, ROTATE_INTERVAL);
+    
     return () => clearInterval(interval);
   }, [locked, finished, rotating]);
 
-  // Parar la rotación
-  const handleStop = () => setRotating(false);
+  // Auto-stop timer: para automáticamente entre 2.5-3.5 segundos
+  useEffect(() => {
+    if (rotating && !finished) {
+      // Calcular tiempo aleatorio entre MIN y MAX
+      const randomDelay = Math.floor(Math.random() * (AUTO_STOP_MAX - AUTO_STOP_MIN)) + AUTO_STOP_MIN;
+      
+      const timer = setTimeout(() => {
+        setRotating(false);
+      }, randomDelay);
+      
+      setAutoStopTimer(timer);
+      
+      return () => {
+        if (timer) clearTimeout(timer);
+      };
+    }
+  }, [rotating, finished, round]);
+
+  // Limpiar timer al cambiar estado
+  useEffect(() => {
+    return () => {
+      if (autoStopTimer) {
+        clearTimeout(autoStopTimer);
+        setAutoStopTimer(null);
+      }
+    };
+  }, [autoStopTimer]);
 
   // Seleccionar una categoría (solo si está parado)
   const handleSelect = (catIdx: number) => {
     if (locked[catIdx] || finished || rotating) return;
+    
     const newLocked = [...locked];
     newLocked[catIdx] = true;
     const newSelected = [...selected];
@@ -221,9 +265,29 @@ const TapOneGame: React.FC = () => {
     setLocked(newLocked);
     setSelected(newSelected);
     setRound(round + 1);
+    
     // Si no es la última ronda, volver a rotar tras un pequeño delay
     if (newLocked.filter(Boolean).length < categories.length) {
-      setTimeout(() => setRotating(true), 600);
+      setTimeout(() => setRotating(true), 800);
+    }
+  };
+
+  // Funciones de exportación
+  const exportBountyPoster = async () => {
+    if (!gameRef.current) return;
+    
+    try {
+      const canvas = await html2canvas(gameRef.current, {
+        useCORS: true,
+        allowTaint: true
+      });
+      
+      const link = document.createElement('a');
+      link.download = `tap-one-bounty-rank-${playerRank.rank}.png`;
+      link.href = canvas.toDataURL();
+      link.click();
+    } catch (error) {
+      console.error('Export error:', error);
     }
   };
 
@@ -258,7 +322,7 @@ const TapOneGame: React.FC = () => {
   }, [finished, showResults]);
 
   return (
-    <div>
+    <div ref={gameRef}>
       {/* Header: breadcrumb + title + actions */}
       <section className="max-w-7xl mx-auto px-2 sm:px-4 mb-4">
         <div className="flex items-center gap-2 text-slate-300/90 text-sm mb-2">
@@ -292,67 +356,231 @@ const TapOneGame: React.FC = () => {
           {finished ? (
             <span>Game completed — {categories.length}/{categories.length} categories selected.</span>
           ) : rotating ? (
-            <span>Goal: choose the best in each category. Press <b>Stop!</b> to stop and choose.</span>
+            <span>🎰 Categories rotating automatically. Wait for auto-stop, then choose the best!</span>
           ) : (
             <span>Select a category ({round + 1}/{categories.length}). The others will start spinning again.</span>
           )}
         </div>
       </section>
 
-      {/* Grid: prefer 2 rows x 5 columns on desktop */}
-      <div className="mx-auto max-w-7xl grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 px-2">
-        {categories.map((cat, i) => {
-          const idx = locked[i] && selected[i] !== null ? selected[i]! : indices[i];
-          const el = cat.elements[idx];
-          const clickable = !locked[i] && !finished && !rotating;
-          return (
-            <button
-              key={cat.id}
-              onClick={() => handleSelect(i)}
-              disabled={!clickable}
-              className={`group relative rounded-2xl p-[2px] transition-transform duration-200 ${clickable ? 'hover:scale-[1.02]' : ''}`}
-              aria-label={`Select ${cat.label}`}
-              style={{
-                boxShadow: locked[i]
-                  ? '0 0 0 2px rgba(139,92,246,0.65), 0 8px 24px rgba(139,92,246,0.25)'
-                  : '0 12px 24px rgba(0,0,0,0.35)'
-              }}
-            >
-              {/* Gradient border */}
-              <div className={`rounded-2xl bg-gradient-to-br ${locked[i] ? 'from-violet-500/80 via-fuchsia-500/70 to-pink-500/70' : 'from-slate-600/50 via-slate-700/50 to-slate-800/50'}`}>
-                {/* Card body */}
-                <div className="rounded-[14px] bg-slate-900/70 backdrop-blur-md overflow-hidden flex flex-col items-center justify-between h-[230px] md:h-[260px]">
-                  <div className="w-full flex-1 flex items-center justify-center">
-                    <img
-                      src={el.image}
-                      alt={el.name}
-                      className="w-full max-w-[220px] md:max-w-[240px] h-[140px] md:h-[160px] object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)]"
-                      draggable={false}
-                      onError={e => { (e.target as HTMLImageElement).style.opacity = '0.35'; }}
-                    />
-                  </div>
-
-                  {/* Footer label */}
-                  <div className={`w-full py-2 text-center text-[11px] md:text-sm font-extrabold uppercase tracking-wide border-t ${locked[i] ? 'bg-gradient-to-r from-violet-600/30 via-fuchsia-600/25 to-pink-600/30 border-violet-400/30 text-violet-200' : 'bg-gradient-to-r from-slate-700/40 to-slate-800/40 border-slate-600/50 text-slate-200/90'}`}>
-                    {cat.label}
+      {/* Grid: 3 filas x 4 columnas */}
+      <div className="mx-auto max-w-6xl">
+        {/* Fila 1: Strength, Haki, Race, Sensei */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 px-2 mb-5">
+          {categories.slice(0, 4).map((cat, i) => {
+            const idx = locked[i] && selected[i] !== null ? selected[i]! : indices[i];
+            const el = cat.elements[idx];
+            const clickable = !locked[i] && !finished && !rotating;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => handleSelect(i)}
+                disabled={!clickable}
+                className={`group relative rounded-2xl p-[2px] transition-transform duration-200 ${clickable ? 'hover:scale-[1.02]' : ''}`}
+                aria-label={`Select ${cat.label}`}
+                style={{
+                  boxShadow: locked[i]
+                    ? '0 0 0 2px rgba(139,92,246,0.65), 0 8px 24px rgba(139,92,246,0.25)'
+                    : '0 12px 24px rgba(0,0,0,0.35)'
+                }}
+              >
+                <div className={`rounded-2xl bg-gradient-to-br ${locked[i] ? 'from-violet-500/80 via-fuchsia-500/70 to-pink-500/70' : 'from-slate-600/50 via-slate-700/50 to-slate-800/50'}`}>
+                  <div className="rounded-[14px] bg-slate-900/70 backdrop-blur-md overflow-hidden flex flex-col items-center justify-between h-[230px] md:h-[260px]">
+                    <div className="w-full flex-1 flex items-center justify-center">
+                      <img
+                        src={el.image}
+                        alt={el.name}
+                        className="w-full max-w-[220px] md:max-w-[240px] h-[140px] md:h-[160px] object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)]"
+                        draggable={false}
+                        onError={e => { (e.target as HTMLImageElement).style.opacity = '0.35'; }}
+                      />
+                    </div>
+                    <div className={`w-full py-2 text-center text-[11px] md:text-sm font-extrabold uppercase tracking-wide border-t ${locked[i] ? 'bg-gradient-to-r from-violet-600/30 via-fuchsia-600/25 to-pink-600/30 border-violet-400/30 text-violet-200' : 'bg-gradient-to-r from-slate-700/40 to-slate-800/40 border-slate-600/50 text-slate-200/90'}`}>
+                      {cat.label}
+                    </div>
                   </div>
                 </div>
+                {locked[i] && (
+                  <span className="absolute top-2 right-2 inline-flex items-center gap-1 bg-violet-600 text-white text-[11px] px-2 py-1 rounded-xl shadow-md">✓</span>
+                )}
+                {clickable && (
+                  <span className="pointer-events-none absolute inset-0 rounded-2xl ring-2 ring-violet-400/60 group-hover:ring-violet-300/80" />
+                )}
+              </button>
+            );
+          })}
+        </div>
+        
+        {/* Fila 2: Logia, Paramecia, Zoan, Mythical Zoan */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 px-2 mb-5">
+          {categories.slice(4, 8).map((cat, i) => {
+            const catIndex = i + 4;
+            const idx = locked[catIndex] && selected[catIndex] !== null ? selected[catIndex]! : indices[catIndex];
+            const el = cat.elements[idx];
+            const clickable = !locked[catIndex] && !finished && !rotating;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => handleSelect(catIndex)}
+                disabled={!clickable}
+                className={`group relative rounded-2xl p-[2px] transition-transform duration-200 ${clickable ? 'hover:scale-[1.02]' : ''}`}
+                aria-label={`Select ${cat.label}`}
+                style={{
+                  boxShadow: locked[catIndex]
+                    ? '0 0 0 2px rgba(139,92,246,0.65), 0 8px 24px rgba(139,92,246,0.25)'
+                    : '0 12px 24px rgba(0,0,0,0.35)'
+                }}
+              >
+                <div className={`rounded-2xl bg-gradient-to-br ${locked[catIndex] ? 'from-violet-500/80 via-fuchsia-500/70 to-pink-500/70' : 'from-slate-600/50 via-slate-700/50 to-slate-800/50'}`}>
+                  <div className="rounded-[14px] bg-slate-900/70 backdrop-blur-md overflow-hidden flex flex-col items-center justify-between h-[230px] md:h-[260px]">
+                    <div className="w-full flex-1 flex items-center justify-center">
+                      <img
+                        src={el.image}
+                        alt={el.name}
+                        className="w-full max-w-[220px] md:max-w-[240px] h-[140px] md:h-[160px] object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)]"
+                        draggable={false}
+                        onError={e => { (e.target as HTMLImageElement).style.opacity = '0.35'; }}
+                      />
+                    </div>
+                    <div className={`w-full py-2 text-center text-[11px] md:text-sm font-extrabold uppercase tracking-wide border-t ${locked[catIndex] ? 'bg-gradient-to-r from-violet-600/30 via-fuchsia-600/25 to-pink-600/30 border-violet-400/30 text-violet-200' : 'bg-gradient-to-r from-slate-700/40 to-slate-800/40 border-slate-600/50 text-slate-200/90'}`}>
+                      {cat.label}
+                    </div>
+                  </div>
+                </div>
+                {locked[catIndex] && (
+                  <span className="absolute top-2 right-2 inline-flex items-center gap-1 bg-violet-600 text-white text-[11px] px-2 py-1 rounded-xl shadow-md">✓</span>
+                )}
+                {clickable && (
+                  <span className="pointer-events-none absolute inset-0 rounded-2xl ring-2 ring-violet-400/60 group-hover:ring-violet-300/80" />
+                )}
+              </button>
+            );
+          })}
+        </div>
+        
+        {/* Fila 3: Ship, Best Rank, Current Rank, Creature */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 px-2">
+          {/* Ship (índice 8) */}
+          {(() => {
+            const catIndex = 8;
+            const cat = categories[catIndex];
+            const idx = locked[catIndex] && selected[catIndex] !== null ? selected[catIndex]! : indices[catIndex];
+            const el = cat.elements[idx];
+            const clickable = !locked[catIndex] && !finished && !rotating;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => handleSelect(catIndex)}
+                disabled={!clickable}
+                className={`group relative rounded-2xl p-[2px] transition-transform duration-200 ${clickable ? 'hover:scale-[1.02]' : ''}`}
+                aria-label={`Select ${cat.label}`}
+                style={{
+                  boxShadow: locked[catIndex]
+                    ? '0 0 0 2px rgba(139,92,246,0.65), 0 8px 24px rgba(139,92,246,0.25)'
+                    : '0 12px 24px rgba(0,0,0,0.35)'
+                }}
+              >
+                <div className={`rounded-2xl bg-gradient-to-br ${locked[catIndex] ? 'from-violet-500/80 via-fuchsia-500/70 to-pink-500/70' : 'from-slate-600/50 via-slate-700/50 to-slate-800/50'}`}>
+                  <div className="rounded-[14px] bg-slate-900/70 backdrop-blur-md overflow-hidden flex flex-col items-center justify-between h-[230px] md:h-[260px]">
+                    <div className="w-full flex-1 flex items-center justify-center">
+                      <img
+                        src={el.image}
+                        alt={el.name}
+                        className="w-full max-w-[220px] md:max-w-[240px] h-[140px] md:h-[160px] object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)]"
+                        draggable={false}
+                        onError={e => { (e.target as HTMLImageElement).style.opacity = '0.35'; }}
+                      />
+                    </div>
+                    <div className={`w-full py-2 text-center text-[11px] md:text-sm font-extrabold uppercase tracking-wide border-t ${locked[catIndex] ? 'bg-gradient-to-r from-violet-600/30 via-fuchsia-600/25 to-pink-600/30 border-violet-400/30 text-violet-200' : 'bg-gradient-to-r from-slate-700/40 to-slate-800/40 border-slate-600/50 text-slate-200/90'}`}>
+                      {cat.label}
+                    </div>
+                  </div>
+                </div>
+                {locked[catIndex] && (
+                  <span className="absolute top-2 right-2 inline-flex items-center gap-1 bg-violet-600 text-white text-[11px] px-2 py-1 rounded-xl shadow-md">✓</span>
+                )}
+                {clickable && (
+                  <span className="pointer-events-none absolute inset-0 rounded-2xl ring-2 ring-violet-400/60 group-hover:ring-violet-300/80" />
+                )}
+              </button>
+            );
+          })()}
+          
+          {/* Best Rank Display */}
+          <div className="relative rounded-2xl p-[2px] bg-gradient-to-br from-amber-500/60 via-yellow-500/60 to-orange-500/60">
+            <div className="rounded-[14px] bg-slate-900/70 backdrop-blur-md overflow-hidden flex flex-col items-center justify-center h-[230px] md:h-[260px]">
+              <div className="text-center">
+                <h3 className="text-sm font-semibold mb-2 text-amber-300">🏆 Best Rank</h3>
+                <div className="text-3xl mb-2">👑</div>
+                <p className="text-xs text-amber-200/90">
+                  {(() => {
+                    const bestRank = localStorage.getItem('tapOneBestRank');
+                    return bestRank ? `#${bestRank}` : 'Not set';
+                  })()}
+                </p>
               </div>
-
-              {/* Corner badge when locked */}
-              {locked[i] && (
-                <span className="absolute top-2 right-2 inline-flex items-center gap-1 bg-violet-600 text-white text-[11px] px-2 py-1 rounded-xl shadow-md">
-                  ✓
-                </span>
-              )}
-
-              {/* Focus ring when it is the time to select */}
-              {clickable && (
-                <span className="pointer-events-none absolute inset-0 rounded-2xl ring-2 ring-violet-400/60 group-hover:ring-violet-300/80" />
-              )}
-            </button>
-          );
-        })}
+            </div>
+          </div>
+          
+          {/* Current Rank Display */}
+          <div className="relative rounded-2xl p-[2px] bg-gradient-to-br from-emerald-500/60 via-green-500/60 to-teal-500/60">
+            <div className="rounded-[14px] bg-slate-900/70 backdrop-blur-md overflow-hidden flex flex-col items-center justify-center h-[230px] md:h-[260px]">
+              <div className="text-center">
+                <h3 className="text-sm font-semibold mb-2 text-emerald-300">🎯 Current</h3>
+                <div className="text-3xl mb-2">🎮</div>
+                <p className="text-xs text-emerald-200/90">
+                  {finished ? `#${playerRank.rank}` : 'Playing...'}
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          {/* Creature (índice 9) */}
+          {(() => {
+            const catIndex = 9;
+            const cat = categories[catIndex];
+            const idx = locked[catIndex] && selected[catIndex] !== null ? selected[catIndex]! : indices[catIndex];
+            const el = cat.elements[idx];
+            const clickable = !locked[catIndex] && !finished && !rotating;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => handleSelect(catIndex)}
+                disabled={!clickable}
+                className={`group relative rounded-2xl p-[2px] transition-transform duration-200 ${clickable ? 'hover:scale-[1.02]' : ''}`}
+                aria-label={`Select ${cat.label}`}
+                style={{
+                  boxShadow: locked[catIndex]
+                    ? '0 0 0 2px rgba(139,92,246,0.65), 0 8px 24px rgba(139,92,246,0.25)'
+                    : '0 12px 24px rgba(0,0,0,0.35)'
+                }}
+              >
+                <div className={`rounded-2xl bg-gradient-to-br ${locked[catIndex] ? 'from-violet-500/80 via-fuchsia-500/70 to-pink-500/70' : 'from-slate-600/50 via-slate-700/50 to-slate-800/50'}`}>
+                  <div className="rounded-[14px] bg-slate-900/70 backdrop-blur-md overflow-hidden flex flex-col items-center justify-between h-[230px] md:h-[260px]">
+                    <div className="w-full flex-1 flex items-center justify-center">
+                      <img
+                        src={el.image}
+                        alt={el.name}
+                        className="w-full max-w-[220px] md:max-w-[240px] h-[140px] md:h-[160px] object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)]"
+                        draggable={false}
+                        onError={e => { (e.target as HTMLImageElement).style.opacity = '0.35'; }}
+                      />
+                    </div>
+                    <div className={`w-full py-2 text-center text-[11px] md:text-sm font-extrabold uppercase tracking-wide border-t ${locked[catIndex] ? 'bg-gradient-to-r from-violet-600/30 via-fuchsia-600/25 to-pink-600/30 border-violet-400/30 text-violet-200' : 'bg-gradient-to-r from-slate-700/40 to-slate-800/40 border-slate-600/50 text-slate-200/90'}`}>
+                      {cat.label}
+                    </div>
+                  </div>
+                </div>
+                {locked[catIndex] && (
+                  <span className="absolute top-2 right-2 inline-flex items-center gap-1 bg-violet-600 text-white text-[11px] px-2 py-1 rounded-xl shadow-md">✓</span>
+                )}
+                {clickable && (
+                  <span className="pointer-events-none absolute inset-0 rounded-2xl ring-2 ring-violet-400/60 group-hover:ring-violet-300/80" />
+                )}
+              </button>
+            );
+          })()}
+        </div>
       </div>
 
       {/* Bottom Controls */}
@@ -365,12 +593,9 @@ const TapOneGame: React.FC = () => {
             New Game
           </button>
         ) : rotating ? (
-          <button
-            onClick={handleStop}
-            className="px-8 py-3 rounded-xl font-extrabold text-white bg-gradient-to-r from-violet-500 to-fuchsia-600 shadow-[0_10px_24px_rgba(139,92,246,0.35)]"
-          >
-            Stop!
-          </button>
+          <span className="text-base md:text-lg text-amber-200/90 bg-amber-600/10 border border-amber-400/30 rounded-lg px-4 py-3 animate-pulse">
+            ⏱️ Auto-stopping in a few seconds...
+          </span>
         ) : (
           <span className="text-base md:text-lg text-violet-200/90 bg-violet-600/10 border border-violet-400/30 rounded-lg px-3 py-2">
             Select a category ({round + 1}/{categories.length})
@@ -456,6 +681,12 @@ const TapOneGame: React.FC = () => {
                         className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold rounded-xl shadow-lg hover:from-blue-500 hover:to-blue-600 transition-colors"
                       >
                         🏴‍☠️ New Adventure
+                      </button>
+                      <button
+                        onClick={exportBountyPoster}
+                        className="px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white font-bold rounded-xl shadow-lg hover:from-purple-500 hover:to-purple-600 transition-colors"
+                      >
+                        📸 Export Poster
                       </button>
                       <button
                         onClick={() => setShowResults(false)}
