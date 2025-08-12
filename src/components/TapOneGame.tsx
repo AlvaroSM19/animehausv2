@@ -156,6 +156,36 @@ const ROTATE_INTERVAL = 120; // ms (más fluido)
 const AUTO_STOP_MIN = 2200; // 2.2 segundos mínimo
 const AUTO_STOP_MAX = 3200; // 3.2 segundos máximo
 
+// Rank info type and lookup table
+type RankInfo = { title: string; bountyValue: number; rank: number };
+
+const RANKS: RankInfo[] = [
+  { rank: 1, title: '#1 PIRATE KING', bountyValue: 25_000_000_000 },
+  { rank: 2, title: '#2 EMPEROR OF THE SEA', bountyValue: 15_000_000_000 },
+  { rank: 3, title: '#3 LEGENDARY ADMIRAL', bountyValue: 10_000_000_000 },
+  { rank: 4, title: '#4 FLEET ADMIRAL', bountyValue: 8_000_000_000 },
+  { rank: 5, title: '#5 LEGEND OF THE SEAS', bountyValue: 6_000_000_000 },
+  { rank: 6, title: '#6 WORLD GOVERNMENT ENEMY', bountyValue: 4_500_000_000 },
+  { rank: 7, title: '#7 STRONGEST CREATURE', bountyValue: 3_500_000_000 },
+  { rank: 8, title: '#8 WARLORD OF THE SEA', bountyValue: 2_800_000_000 },
+  { rank: 9, title: '#9 FAMOUS CAPTAIN', bountyValue: 2_200_000_000 },
+  { rank: 10, title: '#10 SUPERNOVA ELITE', bountyValue: 1_800_000_000 },
+  { rank: 11, title: '#11 RESPECTED PIRATE', bountyValue: 1_400_000_000 },
+  { rank: 12, title: '#12 SUPERNOVA', bountyValue: 1_000_000_000 },
+  { rank: 13, title: '#13 ELITE BOUNTY HUNTER', bountyValue: 750_000_000 },
+  { rank: 14, title: '#14 DANGEROUS PIRATE', bountyValue: 500_000_000 },
+  { rank: 15, title: '#15 BOUNTY HUNTER', bountyValue: 300_000_000 },
+  { rank: 16, title: '#16 PROMISING ROOKIE', bountyValue: 150_000_000 },
+  { rank: 17, title: '#17 CREW MEMBER', bountyValue: 80_000_000 },
+  { rank: 18, title: '#18 ROOKIE PIRATE', bountyValue: 30_000_000 },
+  { rank: 19, title: '#19 SMALL THREAT', bountyValue: 5_000_000 },
+  { rank: 20, title: '#20 ERRAND BOY', bountyValue: 100_000 },
+];
+
+const getRankInfoByRankNumber = (rank: number): RankInfo => {
+  return RANKS[Math.min(Math.max(rank, 1), 20) - 1];
+};
+
 const TapOneGame: React.FC = () => {
   const gameRef = useRef<HTMLDivElement>(null);
 
@@ -176,17 +206,39 @@ const TapOneGame: React.FC = () => {
   // Estado para mostrar los resultados
   const [showResults, setShowResults] = useState(false);
   const [finalScore, setFinalScore] = useState(0);
-  const [playerRank, setPlayerRank] = useState({ title: '', bounty: '', rank: 0 });
+  const [playerRank, setPlayerRank] = useState<RankInfo>({ title: '', bountyValue: 0, rank: 0 });
   // Estado para manejar localStorage en cliente
   const [isClient, setIsClient] = useState(false);
-  const [bestRank, setBestRank] = useState<string | null>(null);
+  const [bestRank, setBestRank] = useState<RankInfo | null>(null);
+  // Ref to export only the poster area
+  const posterRef = useRef<HTMLDivElement>(null);
 
   // Efecto para detectar si estamos en el cliente
   useEffect(() => {
     setIsClient(true);
-    // Solo acceder a localStorage cuando estemos en el cliente
-    const savedBestRank = localStorage.getItem('tapOneBestRank');
-    setBestRank(savedBestRank);
+    // Client-only: migrate old storage and load best rank
+    try {
+      const savedBestJson = localStorage.getItem('tapOneBest');
+      if (savedBestJson) {
+        const parsed = JSON.parse(savedBestJson) as RankInfo;
+        if (parsed && typeof parsed.rank === 'number') {
+          setBestRank(getRankInfoByRankNumber(parsed.rank));
+          return;
+        }
+      }
+      // Fallback to legacy key storing only rank number
+      const legacyRank = localStorage.getItem('tapOneBestRank');
+      if (legacyRank) {
+        const rankNum = parseInt(legacyRank);
+        if (!isNaN(rankNum)) {
+          const info = getRankInfoByRankNumber(rankNum);
+          setBestRank(info);
+          localStorage.setItem('tapOneBest', JSON.stringify(info));
+        }
+      }
+    } catch (e) {
+      // ignore
+    }
   }, []);
 
   // Sistema de puntuación y rangos
@@ -202,27 +254,28 @@ const TapOneGame: React.FC = () => {
     return totalScore;
   };
 
-  const getRankAndBounty = (score: number) => {
-    if (score >= 950) return { title: '#1 PIRATE KING', bounty: '25,000,000,000', rank: 1 };
-    if (score >= 900) return { title: '#2 EMPEROR OF THE SEA', bounty: '15,000,000,000', rank: 2 };
-    if (score >= 850) return { title: '#3 LEGENDARY ADMIRAL', bounty: '10,000,000,000', rank: 3 };
-    if (score >= 800) return { title: '#4 FLEET ADMIRAL', bounty: '8,000,000,000', rank: 4 };
-    if (score >= 750) return { title: '#5 LEGEND OF THE SEAS', bounty: '6,000,000,000', rank: 5 };
-    if (score >= 700) return { title: '#6 WORLD GOVERNMENT ENEMY', bounty: '4,500,000,000', rank: 6 };
-    if (score >= 650) return { title: '#7 STRONGEST CREATURE', bounty: '3,500,000,000', rank: 7 };
-    if (score >= 600) return { title: '#8 WARLORD OF THE SEA', bounty: '2,800,000,000', rank: 8 };
-    if (score >= 550) return { title: '#9 FAMOUS CAPTAIN', bounty: '2,200,000,000', rank: 9 };
-    if (score >= 500) return { title: '#10 SUPERNOVA ELITE', bounty: '1,800,000,000', rank: 10 };
-    if (score >= 450) return { title: '#11 RESPECTED PIRATE', bounty: '1,400,000,000', rank: 11 };
-    if (score >= 400) return { title: '#12 SUPERNOVA', bounty: '1,000,000,000', rank: 12 };
-    if (score >= 350) return { title: '#13 ELITE BOUNTY HUNTER', bounty: '750,000,000', rank: 13 };
-    if (score >= 300) return { title: '#14 DANGEROUS PIRATE', bounty: '500,000,000', rank: 14 };
-    if (score >= 250) return { title: '#15 BOUNTY HUNTER', bounty: '300,000,000', rank: 15 };
-    if (score >= 200) return { title: '#16 PROMISING ROOKIE', bounty: '150,000,000', rank: 16 };
-    if (score >= 150) return { title: '#17 CREW MEMBER', bounty: '80,000,000', rank: 17 };
-    if (score >= 100) return { title: '#18 ROOKIE PIRATE', bounty: '30,000,000', rank: 18 };
-    if (score >= 50) return { title: '#19 SMALL THREAT', bounty: '5,000,000', rank: 19 };
-    return { title: '#20 ERRAND BOY', bounty: '100,000', rank: 20 };
+  const getRankAndBounty = (score: number): RankInfo => {
+    let rank = 20;
+    if (score >= 950) rank = 1;
+    else if (score >= 900) rank = 2;
+    else if (score >= 850) rank = 3;
+    else if (score >= 800) rank = 4;
+    else if (score >= 750) rank = 5;
+    else if (score >= 700) rank = 6;
+    else if (score >= 650) rank = 7;
+    else if (score >= 600) rank = 8;
+    else if (score >= 550) rank = 9;
+    else if (score >= 500) rank = 10;
+    else if (score >= 450) rank = 11;
+    else if (score >= 400) rank = 12;
+    else if (score >= 350) rank = 13;
+    else if (score >= 300) rank = 14;
+    else if (score >= 250) rank = 15;
+    else if (score >= 200) rank = 16;
+    else if (score >= 150) rank = 17;
+    else if (score >= 100) rank = 18;
+    else if (score >= 50) rank = 19;
+    return getRankInfoByRankNumber(rank);
   };
 
   // Rotación automática de elementos
@@ -287,16 +340,18 @@ const TapOneGame: React.FC = () => {
 
   // Funciones de exportación
   const exportBountyPoster = async () => {
-    if (!gameRef.current) return;
+    // Export only the poster area if available
+    const target = posterRef.current ?? gameRef.current;
+    if (!target) return;
     
     try {
-      const canvas = await html2canvas(gameRef.current, {
+  const canvas = await html2canvas(target, {
         useCORS: true,
         allowTaint: true
       });
       
       const link = document.createElement('a');
-      link.download = `tap-one-bounty-rank-${playerRank.rank}.png`;
+  link.download = `tap-one-bounty-rank-${playerRank.rank}.png`;
       link.href = canvas.toDataURL();
       link.click();
     } catch (error) {
@@ -329,10 +384,18 @@ const TapOneGame: React.FC = () => {
       
       // Guardar mejor rango (menor número es mejor) solo en cliente
       if (isClient) {
-        const currentBestRank = localStorage.getItem('tapOneBestRank');
-        if (!currentBestRank || rank.rank < parseInt(currentBestRank)) {
-          localStorage.setItem('tapOneBestRank', rank.rank.toString());
-          setBestRank(rank.rank.toString());
+        try {
+          const currentBestJson = localStorage.getItem('tapOneBest');
+          let currentBest: RankInfo | null = null;
+          if (currentBestJson) {
+            currentBest = JSON.parse(currentBestJson) as RankInfo;
+          }
+          if (!currentBest || rank.rank < currentBest.rank) {
+            localStorage.setItem('tapOneBest', JSON.stringify(rank));
+            setBestRank(rank);
+          }
+        } catch (e) {
+          // ignore
         }
       }
       
@@ -478,7 +541,7 @@ const TapOneGame: React.FC = () => {
           })}
         </div>
         
-        {/* Fila 3: Ship, Best Rank, Current Rank, Creature */}
+  {/* Fila 3: Ship, Best Rank, Best Rank (detail), Creature */}
   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 px-2">
           {/* Ship (índice 8) */}
           {(() => {
@@ -526,28 +589,42 @@ const TapOneGame: React.FC = () => {
             );
           })()}
           
-          {/* Best Rank Display */}
+          {/* Best Rank Display (compact) */}
           <div className="relative rounded-2xl p-[2px] bg-gradient-to-br from-amber-500/60 via-yellow-500/60 to-orange-500/60">
-            <div className="rounded-[14px] bg-slate-900/70 backdrop-blur-md overflow-hidden flex flex-col items-center justify-center h-[200px] md:h-[220px]">
-              <div className="text-center">
-                <h3 className="text-sm font-semibold mb-2 text-amber-300">🏆 Best Rank</h3>
-                <div className="text-3xl mb-2">👑</div>
-                <p className="text-xs text-amber-200/90">
-                  {isClient && bestRank ? `#${bestRank}` : 'Not set'}
-                </p>
+            <div className="rounded-[14px] bg-slate-900/70 backdrop-blur-md overflow-hidden flex flex-col items-center justify-center h-[200px] md:h-[220px] px-3">
+              <div className="text-center space-y-1">
+                <h3 className="text-sm font-semibold text-amber-300">🏆 Best Rank</h3>
+                {bestRank ? (
+                  <>
+                    <div className="text-2xl md:text-3xl font-extrabold text-amber-200">#{bestRank.rank}</div>
+                    <div className="text-[11px] md:text-xs text-amber-100/90 font-bold leading-snug">{bestRank.title}</div>
+                    <div className="text-[11px] md:text-xs text-emerald-300 font-extrabold">
+                      ₿{bestRank.bountyValue.toLocaleString()} BERRIES
+                    </div>
+                  </>
+                ) : (
+                  <p className="text-xs text-amber-200/90">Not set</p>
+                )}
               </div>
             </div>
           </div>
           
-          {/* Current Rank Display */}
-          <div className="relative rounded-2xl p-[2px] bg-gradient-to-br from-emerald-500/60 via-green-500/60 to-teal-500/60">
-            <div className="rounded-[14px] bg-slate-900/70 backdrop-blur-md overflow-hidden flex flex-col items-center justify-center h-[200px] md:h-[220px]">
-              <div className="text-center">
-                <h3 className="text-sm font-semibold mb-2 text-emerald-300">🎯 Current</h3>
-                <div className="text-3xl mb-2">🎮</div>
-                <p className="text-xs text-emerald-200/90">
-                  {finished ? `#${playerRank.rank}` : 'Playing...'}
-                </p>
+          {/* Best Rank Display (detailed) */}
+          <div className="relative rounded-2xl p-[2px] bg-gradient-to-br from-amber-500/60 via-yellow-500/60 to-orange-500/60">
+            <div className="rounded-[14px] bg-slate-900/70 backdrop-blur-md overflow-hidden flex flex-col items-center justify-center h-[200px] md:h-[220px] px-3">
+              <div className="text-center space-y-1">
+                <h3 className="text-sm font-semibold text-amber-300">� Best Rank</h3>
+                {bestRank ? (
+                  <>
+                    <div className="text-2xl md:text-3xl font-extrabold text-amber-200">#{bestRank.rank}</div>
+                    <div className="text-[11px] md:text-xs text-amber-100/90 font-bold leading-snug">{bestRank.title}</div>
+                    <div className="text-[11px] md:text-xs text-emerald-300 font-extrabold">
+                      ₿{bestRank.bountyValue.toLocaleString()} BERRIES
+                    </div>
+                  </>
+                ) : (
+                  <p className="text-xs text-amber-200/90">Not set</p>
+                )}
               </div>
             </div>
           </div>
@@ -658,7 +735,7 @@ const TapOneGame: React.FC = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Bounty Poster */}
               <div className="text-center">
-                <div className="bg-gradient-to-b from-amber-100 to-amber-200 text-black p-8 rounded-3xl border-8 border-amber-800 shadow-2xl transform rotate-1 hover:rotate-0 transition-transform duration-500">
+                <div ref={posterRef} className="bg-gradient-to-b from-amber-100 to-amber-200 text-black p-8 rounded-3xl border-8 border-amber-800 shadow-2xl transform rotate-1 hover:rotate-0 transition-transform duration-500">
                   <div className="border-4 border-black border-dashed p-6 rounded-2xl bg-white/90">
                     {/* Header */}
                     <div className="mb-6">
@@ -674,11 +751,29 @@ const TapOneGame: React.FC = () => {
                       </h3>
                     </div>
 
+                    {/* Selected characters collage inside poster */}
+                    <div className="mb-6">
+                      <div className="grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-3">
+                        {categories.map((cat, i) => {
+                          const idx = selected[i]!;
+                          const el = cat.elements[idx];
+                          return (
+                            <div key={cat.id} className="bg-amber-200/40 rounded-lg border border-amber-700/40 p-2 flex flex-col items-center">
+                              <img src={el.image} alt={el.name} className="w-full h-16 md:h-20 object-contain" />
+                              <div className="text-[10px] md:text-xs font-bold text-amber-900/90 mt-1 text-center leading-tight truncate w-full" title={`${cat.label} — ${el.name}`}>
+                                {el.name}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
                     {/* Bounty Amount */}
                     <div className="mb-6">
                       <div className="text-lg md:text-xl font-bold text-gray-800 mb-2">REWARD:</div>
                       <div className="text-2xl md:text-4xl font-black text-green-700 drop-shadow-lg">
-                        ₿{parseInt(playerRank.bounty).toLocaleString()}
+                        ₿{playerRank.bountyValue.toLocaleString()}
                       </div>
                       <div className="text-sm md:text-base font-bold text-gray-700 mt-1">BERRIES</div>
                     </div>
@@ -718,7 +813,7 @@ const TapOneGame: React.FC = () => {
                 {/* Best Score */}
                 <div className="mt-6 text-center text-amber-200/80">
                   <div className="text-sm">
-                    Best Rank: #{isClient && bestRank ? bestRank : '20'}
+                    Best Rank: #{bestRank ? bestRank.rank : '—'}
                   </div>
                 </div>
               </div>
