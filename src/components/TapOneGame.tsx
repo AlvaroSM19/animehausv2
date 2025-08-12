@@ -176,6 +176,17 @@ const TapOneGame: React.FC = () => {
   const [showResults, setShowResults] = useState(false);
   const [finalScore, setFinalScore] = useState(0);
   const [playerRank, setPlayerRank] = useState({ title: '', bounty: '', rank: 0 });
+  // Estado para manejar localStorage en cliente
+  const [isClient, setIsClient] = useState(false);
+  const [bestRank, setBestRank] = useState<string | null>(null);
+
+  // Efecto para detectar si estamos en el cliente
+  useEffect(() => {
+    setIsClient(true);
+    // Solo acceder a localStorage cuando estemos en el cliente
+    const savedBestRank = localStorage.getItem('tapOneBestRank');
+    setBestRank(savedBestRank);
+  }, []);
 
   // Sistema de puntuación y rangos
   const calculateScore = () => {
@@ -304,22 +315,25 @@ const TapOneGame: React.FC = () => {
 
   // Calcular puntuación al finalizar
   useEffect(() => {
-    if (finished && !showResults) {
+    if (finished && !showResults && isClient) {
       const score = calculateScore();
       const rank = getRankAndBounty(score);
       setFinalScore(score);
       setPlayerRank(rank);
       
-      // Guardar mejor rango (menor número es mejor)
-      const bestRank = localStorage.getItem('tapOneBestRank');
-      if (!bestRank || rank.rank < parseInt(bestRank)) {
-        localStorage.setItem('tapOneBestRank', rank.rank.toString());
+      // Guardar mejor rango (menor número es mejor) solo en cliente
+      if (isClient) {
+        const currentBestRank = localStorage.getItem('tapOneBestRank');
+        if (!currentBestRank || rank.rank < parseInt(currentBestRank)) {
+          localStorage.setItem('tapOneBestRank', rank.rank.toString());
+          setBestRank(rank.rank.toString());
+        }
       }
       
       // Mostrar resultados tras un breve delay
       setTimeout(() => setShowResults(true), 1000);
     }
-  }, [finished, showResults]);
+  }, [finished, showResults, isClient]);
 
   return (
     <div ref={gameRef}>
@@ -513,10 +527,7 @@ const TapOneGame: React.FC = () => {
                 <h3 className="text-sm font-semibold mb-2 text-amber-300">🏆 Best Rank</h3>
                 <div className="text-3xl mb-2">👑</div>
                 <p className="text-xs text-amber-200/90">
-                  {(() => {
-                    const bestRank = localStorage.getItem('tapOneBestRank');
-                    return bestRank ? `#${bestRank}` : 'Not set';
-                  })()}
+                  {isClient && bestRank ? `#${bestRank}` : 'Not set'}
                 </p>
               </div>
             </div>
@@ -701,7 +712,7 @@ const TapOneGame: React.FC = () => {
                 {/* Best Score */}
                 <div className="mt-6 text-center text-amber-200/80">
                   <div className="text-sm">
-                    Best Rank: #{localStorage.getItem('tapOneBestRank') || '9'}
+                    Best Rank: #{isClient && bestRank ? bestRank : '20'}
                   </div>
                 </div>
               </div>
