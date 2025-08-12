@@ -152,16 +152,17 @@ const categories: TapOneCategory[] = [
 ];
 
 
-const ROTATE_INTERVAL = 150; // ms (velocidad de rotación visual)
-const AUTO_STOP_MIN = 2500; // 2.5 segundos mínimo
-const AUTO_STOP_MAX = 3500; // 3.5 segundos máximo
+const ROTATE_INTERVAL = 120; // ms (más fluido)
+const AUTO_STOP_MIN = 2200; // 2.2 segundos mínimo
+const AUTO_STOP_MAX = 3200; // 3.2 segundos máximo
 
 const TapOneGame: React.FC = () => {
   const gameRef = useRef<HTMLDivElement>(null);
 
   // Estado de rotación global
   const [rotating, setRotating] = useState(true);
-  const [autoStopTimer, setAutoStopTimer] = useState<NodeJS.Timeout | null>(null);
+  // Timer de auto-stop por fase de rotación
+  const autoStopRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   // Índices actuales de cada categoría (para rotar)
   const [indices, setIndices] = useState<number[]>(categories.map(() => 0));
   // Categorías ya seleccionadas (no rotan)
@@ -237,33 +238,29 @@ const TapOneGame: React.FC = () => {
     return () => clearInterval(interval);
   }, [locked, finished, rotating]);
 
-  // Auto-stop timer: para automáticamente entre 2.5-3.5 segundos
+  // Auto-stop timer: para automáticamente entre MIN y MAX (solo cliente)
   useEffect(() => {
+    if (!isClient) return;
+    // Cuando inicia una rotación, programamos un auto-stop
     if (rotating && !finished) {
-      // Calcular tiempo aleatorio entre MIN y MAX
-      const randomDelay = Math.floor(Math.random() * (AUTO_STOP_MAX - AUTO_STOP_MIN)) + AUTO_STOP_MIN;
-      
-      const timer = setTimeout(() => {
+      // Cancelar cualquier timer previo
+      if (autoStopRef.current) {
+        clearTimeout(autoStopRef.current);
+        autoStopRef.current = null;
+      }
+      const randomDelay = AUTO_STOP_MIN + Math.floor(Math.random() * (AUTO_STOP_MAX - AUTO_STOP_MIN + 1));
+      autoStopRef.current = setTimeout(() => {
         setRotating(false);
       }, randomDelay);
-      
-      setAutoStopTimer(timer);
-      
-      return () => {
-        if (timer) clearTimeout(timer);
-      };
     }
-  }, [rotating, finished, round]);
-
-  // Limpiar timer al cambiar estado
-  useEffect(() => {
+    // Cleanup cuando se detiene la rotación o finaliza el juego
     return () => {
-      if (autoStopTimer) {
-        clearTimeout(autoStopTimer);
-        setAutoStopTimer(null);
+      if ((!rotating || finished) && autoStopRef.current) {
+        clearTimeout(autoStopRef.current);
+        autoStopRef.current = null;
       }
     };
-  }, [autoStopTimer]);
+  }, [rotating, finished, round, isClient]);
 
   // Seleccionar una categoría (solo si está parado)
   const handleSelect = (catIdx: number) => {
@@ -279,7 +276,12 @@ const TapOneGame: React.FC = () => {
     
     // Si no es la última ronda, volver a rotar tras un pequeño delay
     if (newLocked.filter(Boolean).length < categories.length) {
-      setTimeout(() => setRotating(true), 800);
+      // limpiar auto-stop previo y re-iniciar rotación limpia
+      if (autoStopRef.current) {
+        clearTimeout(autoStopRef.current);
+        autoStopRef.current = null;
+      }
+      setTimeout(() => setRotating(true), 500);
     }
   };
 
@@ -304,6 +306,10 @@ const TapOneGame: React.FC = () => {
 
   // Reiniciar el juego
   const handleRestart = () => {
+    if (autoStopRef.current) {
+      clearTimeout(autoStopRef.current);
+      autoStopRef.current = null;
+    }
     setIndices(categories.map(() => 0));
     setLocked(categories.map(() => false));
     setSelected(categories.map(() => null));
@@ -380,7 +386,7 @@ const TapOneGame: React.FC = () => {
       {/* Grid: 3 filas x 4 columnas */}
       <div className="mx-auto max-w-6xl">
         {/* Fila 1: Strength, Haki, Race, Sensei */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 px-2 mb-5">
+  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 px-2 mb-4">
           {categories.slice(0, 4).map((cat, i) => {
             const idx = locked[i] && selected[i] !== null ? selected[i]! : indices[i];
             const el = cat.elements[idx];
@@ -399,12 +405,12 @@ const TapOneGame: React.FC = () => {
                 }}
               >
                 <div className={`rounded-2xl bg-gradient-to-br ${locked[i] ? 'from-violet-500/80 via-fuchsia-500/70 to-pink-500/70' : 'from-slate-600/50 via-slate-700/50 to-slate-800/50'}`}>
-                  <div className="rounded-[14px] bg-slate-900/70 backdrop-blur-md overflow-hidden flex flex-col items-center justify-between h-[230px] md:h-[260px]">
+                  <div className="rounded-[14px] bg-slate-900/70 backdrop-blur-md overflow-hidden flex flex-col items-center justify-between h-[200px] md:h-[220px]">
                     <div className="w-full flex-1 flex items-center justify-center">
                       <img
                         src={el.image}
                         alt={el.name}
-                        className="w-full max-w-[220px] md:max-w-[240px] h-[140px] md:h-[160px] object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)]"
+                        className="w-full max-w-[180px] md:max-w-[200px] h-[110px] md:h-[130px] object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)]"
                         draggable={false}
                         onError={e => { (e.target as HTMLImageElement).style.opacity = '0.35'; }}
                       />
@@ -426,7 +432,7 @@ const TapOneGame: React.FC = () => {
         </div>
         
         {/* Fila 2: Logia, Paramecia, Zoan, Mythical Zoan */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 px-2 mb-5">
+  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 px-2 mb-4">
           {categories.slice(4, 8).map((cat, i) => {
             const catIndex = i + 4;
             const idx = locked[catIndex] && selected[catIndex] !== null ? selected[catIndex]! : indices[catIndex];
@@ -446,12 +452,12 @@ const TapOneGame: React.FC = () => {
                 }}
               >
                 <div className={`rounded-2xl bg-gradient-to-br ${locked[catIndex] ? 'from-violet-500/80 via-fuchsia-500/70 to-pink-500/70' : 'from-slate-600/50 via-slate-700/50 to-slate-800/50'}`}>
-                  <div className="rounded-[14px] bg-slate-900/70 backdrop-blur-md overflow-hidden flex flex-col items-center justify-between h-[230px] md:h-[260px]">
+                  <div className="rounded-[14px] bg-slate-900/70 backdrop-blur-md overflow-hidden flex flex-col items-center justify-between h-[200px] md:h-[220px]">
                     <div className="w-full flex-1 flex items-center justify-center">
                       <img
                         src={el.image}
                         alt={el.name}
-                        className="w-full max-w-[220px] md:max-w-[240px] h-[140px] md:h-[160px] object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)]"
+                        className="w-full max-w-[180px] md:max-w-[200px] h-[110px] md:h-[130px] object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)]"
                         draggable={false}
                         onError={e => { (e.target as HTMLImageElement).style.opacity = '0.35'; }}
                       />
@@ -473,7 +479,7 @@ const TapOneGame: React.FC = () => {
         </div>
         
         {/* Fila 3: Ship, Best Rank, Current Rank, Creature */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 px-2">
+  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 px-2">
           {/* Ship (índice 8) */}
           {(() => {
             const catIndex = 8;
@@ -495,12 +501,12 @@ const TapOneGame: React.FC = () => {
                 }}
               >
                 <div className={`rounded-2xl bg-gradient-to-br ${locked[catIndex] ? 'from-violet-500/80 via-fuchsia-500/70 to-pink-500/70' : 'from-slate-600/50 via-slate-700/50 to-slate-800/50'}`}>
-                  <div className="rounded-[14px] bg-slate-900/70 backdrop-blur-md overflow-hidden flex flex-col items-center justify-between h-[230px] md:h-[260px]">
+                  <div className="rounded-[14px] bg-slate-900/70 backdrop-blur-md overflow-hidden flex flex-col items-center justify-between h-[200px] md:h-[220px]">
                     <div className="w-full flex-1 flex items-center justify-center">
                       <img
                         src={el.image}
                         alt={el.name}
-                        className="w-full max-w-[220px] md:max-w-[240px] h-[140px] md:h-[160px] object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)]"
+                        className="w-full max-w-[180px] md:max-w-[200px] h-[110px] md:h-[130px] object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)]"
                         draggable={false}
                         onError={e => { (e.target as HTMLImageElement).style.opacity = '0.35'; }}
                       />
@@ -522,7 +528,7 @@ const TapOneGame: React.FC = () => {
           
           {/* Best Rank Display */}
           <div className="relative rounded-2xl p-[2px] bg-gradient-to-br from-amber-500/60 via-yellow-500/60 to-orange-500/60">
-            <div className="rounded-[14px] bg-slate-900/70 backdrop-blur-md overflow-hidden flex flex-col items-center justify-center h-[230px] md:h-[260px]">
+            <div className="rounded-[14px] bg-slate-900/70 backdrop-blur-md overflow-hidden flex flex-col items-center justify-center h-[200px] md:h-[220px]">
               <div className="text-center">
                 <h3 className="text-sm font-semibold mb-2 text-amber-300">🏆 Best Rank</h3>
                 <div className="text-3xl mb-2">👑</div>
@@ -535,7 +541,7 @@ const TapOneGame: React.FC = () => {
           
           {/* Current Rank Display */}
           <div className="relative rounded-2xl p-[2px] bg-gradient-to-br from-emerald-500/60 via-green-500/60 to-teal-500/60">
-            <div className="rounded-[14px] bg-slate-900/70 backdrop-blur-md overflow-hidden flex flex-col items-center justify-center h-[230px] md:h-[260px]">
+            <div className="rounded-[14px] bg-slate-900/70 backdrop-blur-md overflow-hidden flex flex-col items-center justify-center h-[200px] md:h-[220px]">
               <div className="text-center">
                 <h3 className="text-sm font-semibold mb-2 text-emerald-300">🎯 Current</h3>
                 <div className="text-3xl mb-2">🎮</div>
@@ -567,12 +573,12 @@ const TapOneGame: React.FC = () => {
                 }}
               >
                 <div className={`rounded-2xl bg-gradient-to-br ${locked[catIndex] ? 'from-violet-500/80 via-fuchsia-500/70 to-pink-500/70' : 'from-slate-600/50 via-slate-700/50 to-slate-800/50'}`}>
-                  <div className="rounded-[14px] bg-slate-900/70 backdrop-blur-md overflow-hidden flex flex-col items-center justify-between h-[230px] md:h-[260px]">
+                  <div className="rounded-[14px] bg-slate-900/70 backdrop-blur-md overflow-hidden flex flex-col items-center justify-between h-[200px] md:h-[220px]">
                     <div className="w-full flex-1 flex items-center justify-center">
                       <img
                         src={el.image}
                         alt={el.name}
-                        className="w-full max-w-[220px] md:max-w-[240px] h-[140px] md:h-[160px] object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)]"
+                        className="w-full max-w-[180px] md:max-w-[200px] h-[110px] md:h-[130px] object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)]"
                         draggable={false}
                         onError={e => { (e.target as HTMLImageElement).style.opacity = '0.35'; }}
                       />
