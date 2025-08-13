@@ -18,6 +18,7 @@ const shakeAnimation = `
 
 type Player = 'X' | 'O'
 type GameMode = 'setup' | 'playing' | 'finished'
+type GameVariant = 'menu' | 'single' | 'multi'
 
 interface GridCondition {
   id: string
@@ -38,6 +39,111 @@ interface GameState {
   timeLeft: number
   winner: Player | 'draw' | null
   scores: { X: number; O: number }
+}
+
+// ---------------- Nuevas utilidades para condiciones dinámicas ----------------
+interface SimpleCondition extends GridCondition {
+  category: 'crew' | 'origin' | 'bounty_lt' | 'bounty_gte' | 'haki' | 'devilFruit' | 'noFruit'
+}
+
+function buildDynamicConditions(characters: AnimeCharacter[]): SimpleCondition[] {
+  const conditions: SimpleCondition[] = []
+
+  const MIN_GROUP = 4
+
+  // Crew
+  const crewMap: Record<string, number> = {}
+  characters.forEach(c => { if (c.crew) crewMap[c.crew] = (crewMap[c.crew]||0)+1 })
+  Object.entries(crewMap).forEach(([crew, count]) => {
+    if (count >= MIN_GROUP) {
+      conditions.push({
+        id: `crew:${crew}`,
+        name: crew,
+        description: `Miembros de ${crew}`,
+        check: (ch)=> ch.crew === crew,
+        category: 'crew'
+      })
+    }
+  })
+
+  // Origin
+  const originMap: Record<string, number> = {}
+  characters.forEach(c => { if (c.origin) originMap[c.origin] = (originMap[c.origin]||0)+1 })
+  Object.entries(originMap).forEach(([origin, count]) => {
+    if (count >= MIN_GROUP) {
+      conditions.push({
+        id: `origin:${origin}`,
+        name: origin,
+        description: `Originarios de ${origin}`,
+        check: (ch)=> ch.origin === origin,
+        category: 'origin'
+      })
+    }
+  })
+
+  // Bounty thresholds
+  const ltThresholds = [50_000_000, 100_000_000, 300_000_000]
+  ltThresholds.forEach(th => {
+    const count = characters.filter(c => c.bounty !== null && c.bounty! < th).length
+    if (count >= MIN_GROUP) {
+      conditions.push({
+        id: `bounty_lt:${th}`,
+        name: `< ${th/1_000_000}M`,
+        description: `Recompensa menor a ${th.toLocaleString()}`,
+        check: c => c.bounty !== null && c.bounty! < th,
+        category: 'bounty_lt'
+      })
+    }
+  })
+  const gteThresholds = [300_000_000, 1_000_000_000]
+  gteThresholds.forEach(th => {
+    const count = characters.filter(c => c.bounty !== null && c.bounty! >= th).length
+    if (count >= MIN_GROUP) {
+      conditions.push({
+        id: `bounty_gte:${th}`,
+        name: `≥ ${th/1_000_000}M`,
+        description: `Recompensa al menos ${th.toLocaleString()}`,
+        check: c => c.bounty !== null && c.bounty! >= th,
+        category: 'bounty_gte'
+      })
+    }
+  })
+
+  // Haki (general)
+  const hakiCount = characters.filter(c => (c as any).haki === true || (c as any).hakiTypes?.length > 0).length
+  if (hakiCount >= MIN_GROUP) {
+    conditions.push({
+      id: 'haki',
+      name: 'Haki',
+      description: 'Usuarios de Haki',
+      check: c => (c as any).haki === true || (c as any).hakiTypes?.length > 0,
+      category: 'haki'
+    })
+  }
+
+  // Devil Fruit user / No Fruit
+  const dfUsers = characters.filter(c => c.devilFruit && c.devilFruit !== 'None').length
+  if (dfUsers >= MIN_GROUP) {
+    conditions.push({
+      id: 'devilFruit',
+      name: 'Fruta',
+      description: 'Usuarios de Fruta',
+      check: c => Boolean(c.devilFruit && c.devilFruit !== 'None'),
+      category: 'devilFruit'
+    })
+  }
+  const noDfUsers = characters.filter(c => !c.devilFruit || c.devilFruit === 'None').length
+  if (noDfUsers >= MIN_GROUP) {
+    conditions.push({
+      id: 'noFruit',
+      name: 'Sin Fruta',
+      description: 'Sin Fruta del Diablo',
+      check: c => !c.devilFruit || c.devilFruit === 'None',
+      category: 'noFruit'
+    })
+  }
+
+  return conditions
 }
 
 // Pool de condiciones para que sean aleatorias cada partida
@@ -643,6 +749,7 @@ const ALL_COLUMN_CONDITIONS: GridCondition[] = [
 
 export default function AnimeGridPage() {
   const [characters, setCharacters] = useState<AnimeCharacter[]>([])
+  const [variant, setVariant] = useState<GameVariant>('menu')
   const [grid, setGrid] = useState<GridCell[][]>(() => 
     Array(3).fill(null).map(() => Array(3).fill(null).map(() => ({ 
       player: null, 
@@ -667,6 +774,32 @@ export default function AnimeGridPage() {
   const [colConditions, setColConditions] = useState<GridCondition[]>([])
 
   const generateRandomConditions = useCallback(() => {
+    // Para variante single usamos condiciones dinámicas restringidas
+    if (variant === 'single') {
+      const dynamic = buildDynamicConditions(characters)
+      // Mezclar y elegir 6 diferentes priorizando diversidad de categorías
+      const shuffled = [...dynamic].sort(()=>Math.random()-0.5)
+      const picked: SimpleCondition[] = []
+      const categoryUsage: Record<string, number> = {}
+      for (const cond of shuffled) {
+        const catKey = cond.category
+        if (picked.length < 6) {
+          // Limitar a máximo 2 por categoría
+          if ((categoryUsage[catKey]||0) >= 2) continue
+          picked.push(cond)
+          categoryUsage[catKey] = (categoryUsage[catKey]||0)+1
+        }
+      }
+      while (picked.length < 6 && shuffled.length) {
+        const extra = shuffled.pop()!
+        if (!picked.includes(extra)) picked.push(extra)
+      }
+      const rows = picked.slice(0,3)
+      const cols = picked.slice(3,6)
+      setRowConditions(rows)
+      setColConditions(cols)
+      return
+    }
     // Función Fisher-Yates shuffle mejorada para distribución equitativa
     const shuffleArray = (array: GridCondition[]) => {
       const shuffled = [...array]
@@ -846,39 +979,26 @@ export default function AnimeGridPage() {
   }
 
   const checkWinner = (newGrid: GridCell[][]): Player | 'draw' | null => {
-    // Verificar filas, columnas y diagonales para tic-tac-toe clásico
-    const lines = [
-      // Filas
-      [0, 1, 2], [3, 4, 5], [6, 7, 8],
-      // Columnas  
-      [0, 3, 6], [1, 4, 7], [2, 5, 8],
-      // Diagonales
-      [0, 4, 8], [2, 4, 6]
-    ]
-
-    const flatGrid = newGrid.flat()
-
-    for (const line of lines) {
-      const [a, b, c] = line
-      if (flatGrid[a]?.player && 
-          flatGrid[a].player === flatGrid[b]?.player && 
-          flatGrid[a].player === flatGrid[c]?.player &&
-          flatGrid[a].isValid && flatGrid[b].isValid && flatGrid[c].isValid) {
-        return flatGrid[a].player
+    const flat = newGrid.flat()
+    if (variant === 'single') {
+      // Victoria single: todas las celdas llenas y válidas
+      if (flat.every(c => c.isValid)) return 'X'
+      return null
+    }
+    // Multi: lógica tic tac toe clásica
+    const lines = [ [0,1,2],[3,4,5],[6,7,8], [0,3,6],[1,4,7],[2,5,8], [0,4,8],[2,4,6] ]
+    for (const [a,b,c] of lines) {
+      if (flat[a]?.player && flat[a].player === flat[b]?.player && flat[a].player === flat[c]?.player && flat[a].isValid && flat[b].isValid && flat[c].isValid) {
+        return flat[a].player
       }
     }
-
-    // Verificar empate
-    if (flatGrid.every(cell => cell.player !== null)) {
-      return 'draw'
-    }
-
+    if (flat.every(cell => cell.player !== null)) return 'draw'
     return null
   }
 
   const handleCellClick = (row: number, col: number) => {
-    if (gameState.mode !== 'playing') return
-    if (grid[row][col].player) return
+  if (gameState.mode !== 'playing') return
+  if (grid[row][col].player) return
     
     setSelectedCell({ row, col })
     setShowPicker(true)
@@ -893,11 +1013,7 @@ export default function AnimeGridPage() {
     if (isValid) {
       // Si es correcto, colocar el personaje y marcar la casilla como del jugador actual
       const newGrid = [...grid]
-      newGrid[row][col] = { 
-        player: gameState.currentPlayer, 
-        character, 
-        isValid: true 
-      }
+      newGrid[row][col] = { player: variant==='single' ? 'X' : gameState.currentPlayer, character, isValid: true }
       setGrid(newGrid)
       
       // Verificar ganador
@@ -907,13 +1023,10 @@ export default function AnimeGridPage() {
           ...prev,
           mode: 'finished',
           winner,
-          scores: winner !== 'draw' ? {
-            ...prev.scores,
-            [winner]: prev.scores[winner] + 1
-          } : prev.scores
+          scores: variant==='single' ? prev.scores : (winner !== 'draw' ? { ...prev.scores, [winner]: prev.scores[winner] + 1 } : prev.scores)
         }))
       } else {
-        switchPlayer()
+        if (variant === 'multi') switchPlayer()
       }
       
       setShowPicker(false)
@@ -921,8 +1034,8 @@ export default function AnimeGridPage() {
       setSearchTerm('')
     } else {
       // Si es incorrecto, mostrar animación de error
-      setShowIncorrectAnimation({ row, col, character })
-      console.log(`❌ ${gameState.currentPlayer} falló con ${character.name} en [${row}, ${col}]. Turno para el otro jugador.`)
+  setShowIncorrectAnimation({ row, col, character })
+  console.log(`❌ ${gameState.currentPlayer} falló con ${character.name} en [${row}, ${col}]`)
       
       // Ocultar el picker inmediatamente
       setShowPicker(false)
@@ -932,7 +1045,7 @@ export default function AnimeGridPage() {
       // Después de 1.5 segundos, quitar la animación y cambiar turno
       setTimeout(() => {
         setShowIncorrectAnimation(null)
-        switchPlayer()
+        if (variant==='multi') switchPlayer()
       }, 1500)
     }
   }
@@ -994,18 +1107,42 @@ export default function AnimeGridPage() {
 
         {/* Content with relative positioning */}
         <div className="relative z-10 max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-5xl font-bold mb-4 text-yellow-400 drop-shadow-lg">
-            ⚔️ ONE PIECE TIC TAC TOE ⚔️
-          </h1>
-          <p className="text-lg text-gray-300 mb-6 font-medium">
-            ¡Batalla épica de conocimiento pirata! • 30 segundos por turno
-          </p>
-        </div>
+        {variant==='menu' && (
+          <div className="text-center py-24">
+            <h1 className="text-5xl font-extrabold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-yellow-300 via-orange-400 to-red-500 drop-shadow-xl">ANIME GRID</h1>
+            <p className="text-lg text-gray-300 max-w-xl mx-auto mb-10">Elige un modo de juego: llena todas las casillas cumpliendo las condiciones (Solitario) o compite por líneas válidas (Multijugador).</p>
+            <div className="flex flex-col sm:flex-row gap-8 justify-center">
+              <button onClick={()=>{setVariant('single'); setGameState(p=>({...p, mode:'setup'})); generateRandomConditions();}} className="group relative px-10 py-8 rounded-3xl bg-gradient-to-br from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-700 transition-all shadow-2xl border border-emerald-400/40 w-72">
+                <span className="text-3xl mb-3 block">🧩</span>
+                <span className="text-2xl font-bold block mb-2">Solitario</span>
+                <span className="text-sm text-emerald-100/90 leading-snug">Rellena las 9 casillas con personajes que cumplan las condiciones de fila y columna.</span>
+                <span className="absolute -top-3 -right-3 bg-black/60 backdrop-blur px-3 py-1 rounded-full text-xs font-semibold border border-white/20">Nuevo</span>
+              </button>
+              <button onClick={()=>{setVariant('multi'); setGameState(p=>({...p, mode:'setup'})); generateRandomConditions();}} className="px-10 py-8 rounded-3xl bg-gradient-to-br from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-700 transition-all shadow-2xl border border-indigo-400/40 w-72">
+                <span className="text-3xl mb-3 block">⚔️</span>
+                <span className="text-2xl font-bold block mb-2">Multijugador</span>
+                <span className="text-sm text-indigo-100/90 leading-snug">Turnos de 30s. Coloca personajes correctos para formar líneas y ganar.</span>
+              </button>
+            </div>
+          </div>
+        )}
+        {variant!=='menu' && (
+          <>
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-5xl font-bold mb-4 text-yellow-400 drop-shadow-lg">
+              {variant==='single' ? '🧩 ANIME GRID SOLITARIO' : '⚔️ ONE PIECE TIC TAC TOE ⚔️'}
+            </h1>
+            <p className="text-lg text-gray-300 mb-6 font-medium">
+              {variant==='single' ? 'Rellena todas las casillas. Sin límite de turnos, piensa bien.' : '¡Batalla épica de conocimiento pirata! • 30 segundos por turno'}
+            </p>
+            <button onClick={()=>{setVariant('menu'); setGameState(p=>({...p, mode:'setup', winner:null})); setGrid(Array(3).fill(null).map(()=>Array(3).fill(null).map(()=>({player:null, character:null, isValid:false}))))}} className="text-xs text-gray-400 underline hover:text-gray-200">Volver al menú</button>
+          </div>
+          </>
+        )}
 
-        {/* Game Status & Controls */}
-        <div className="flex items-center justify-center gap-8 mb-8">
+  {variant!=='menu' && (
+  <div className="flex items-center justify-center gap-8 mb-8">
           <div className="flex items-center gap-6 bg-gray-800 px-6 py-4 rounded-xl border-2 border-yellow-600">
             <div className="flex items-center gap-3">
               <Users className="w-6 h-6 text-blue-400" />
@@ -1069,10 +1206,11 @@ export default function AnimeGridPage() {
               Reset
             </button>
           </div>
-        </div>
+  </div>
+  )}
 
-        {/* Winner Announcement */}
-        {gameState.winner && (
+  {/* Winner Announcement */}
+  {variant!=='menu' && gameState.winner && (
           <div className="text-center mb-8">
             <div className={`inline-block px-8 py-4 rounded-2xl border-2 shadow-2xl ${
               gameState.winner === 'draw' 
@@ -1095,8 +1233,9 @@ export default function AnimeGridPage() {
           </div>
         )}
 
-        {/* Grid Container */}
-        <div className="flex justify-center mb-8">
+  {/* Grid Container */}
+  {variant!=='menu' && (
+  <div className="flex justify-center mb-8">
           <div className="bg-gray-900/90 p-8 rounded-3xl shadow-2xl border border-yellow-500/30">
             
             {/* Column Headers */}
@@ -1216,7 +1355,8 @@ export default function AnimeGridPage() {
               ))}
             </div>
           </div>
-        </div>
+  </div>
+  )}
 
         {/* Character Picker Modal */}
         {showPicker && (
