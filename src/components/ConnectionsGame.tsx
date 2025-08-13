@@ -404,87 +404,129 @@ const ConnectionsGame: React.FC<{ difficulty?: number }> = ({ difficulty = 1 }) 
   }, [status, solvedCount, hintsUsed, lives, puzzle]);
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-6">
-      <div className="flex items-center gap-2 text-slate-400 text-sm mb-4">
-        <Link href="/" className="hover:text-white">← Home</Link>
-        <span className="opacity-40">/</span>
-        <span className="text-slate-200">Connections</span>
-      </div>
-
-      <header className="mb-6 flex flex-col sm:flex-row sm:items-end gap-4 justify-between">
-        <div>
-          <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-300 to-blue-400 tracking-wide">Connections</h1>
-          <p className="text-slate-400 text-sm mt-1">Encuentra los 4 grupos de 4 personajes que comparten una categoría.</p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100">
+      {/* Header section */}
+      <section className="max-w-7xl mx-auto px-2 sm:px-4 mb-6">
+        <div className="flex items-center gap-2 text-slate-300/90 text-sm mb-3">
+          <Link href="/" className="inline-flex items-center gap-1 hover:text-white/90 transition-colors">
+            <span className="text-slate-300/80">←</span>
+            <span>Home</span>
+          </Link>
+          <span className="opacity-40">/</span>
+          <span className="text-slate-100/90">Connections</span>
         </div>
-        <div className="flex gap-3 flex-wrap text-sm">
-          <div className="px-3 py-2 rounded-lg bg-slate-800/70 border border-slate-600/40">Vidas: <span className="text-pink-300 font-bold">{lives}</span></div>
-          <div className="px-3 py-2 rounded-lg bg-slate-800/70 border border-slate-600/40">Pistas: <span className="text-amber-300 font-bold">{hintsUsed}/{maxHints}</span></div>
-          <div className="px-3 py-2 rounded-lg bg-slate-800/70 border border-slate-600/40">Resueltos: <span className="text-emerald-300 font-bold">{solvedCount}/4</span></div>
-        </div>
-      </header>
 
-      {/* Categories header (hidden until revealed/solved) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-        {puzzle?.groups.map((g, idx) => (
-          <div key={g.ruleId} className={`rounded-xl p-3 min-h-[72px] flex items-center justify-center text-center border text-xs sm:text-sm font-semibold tracking-wide transition-colors ${g.solved ? 'bg-emerald-600/30 border-emerald-400/40 text-emerald-200' : g.revealed ? 'bg-indigo-600/20 border-indigo-400/40 text-indigo-200' : 'bg-slate-800/60 border-slate-600/40 text-slate-400'}`}> 
-            {g.solved || g.revealed ? g.title : `Categoría Oculta ${idx+1}`}
-          </div>
-        ))}
-      </div>
-
-      {/* Message banner */}
-      {message && (
-        <div className="mb-4 text-center">
-          <div className="inline-block px-4 py-2 rounded-lg bg-gradient-to-r from-violet-600/30 to-fuchsia-600/30 text-violet-200 text-sm font-semibold border border-violet-400/30 animate-fade-in">{message}</div>
-        </div>
-      )}
-
-      {/* Board */}
-      <div ref={boardRef} className={`grid grid-cols-4 gap-3 sm:gap-4 mb-6`}> 
-        {remainingTiles.map(ch => {
-          const sel = selected.includes(ch.id);
-          return (
+        <div className="flex items-center justify-between gap-3 mb-4">
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-wide uppercase bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 via-cyan-300 to-blue-300 drop-shadow">
+            Connections
+          </h1>
+          
+          <div className="shrink-0">
             <button
-              key={ch.id}
-              onClick={() => toggleSelect(ch.id)}
-              disabled={status !== 'playing'}
-              className={`group relative rounded-2xl overflow-hidden border p-2 flex flex-col items-center justify-center h-32 sm:h-36 md:h-40 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-400/70 ${sel ? 'bg-cyan-600/30 border-cyan-400 text-cyan-100 ring-1 ring-cyan-300' : 'bg-slate-800/60 border-slate-600/40 text-slate-200 hover:border-slate-500'} ${status!=='playing' ? 'opacity-60 cursor-not-allowed' : ''}`}
-              aria-pressed={sel}
+              onClick={resetGame}
+              className="px-4 md:px-5 py-2 rounded-xl font-semibold text-white bg-gradient-to-r from-slate-500 to-slate-600 shadow-lg hover:from-slate-400 hover:to-slate-600 transition-colors"
             >
-              <img src={ch.imageUrl} alt={ch.name} className="w-full h-16 object-contain mb-1 pointer-events-none" />
-              <span className="text-[11px] font-semibold text-center leading-tight line-clamp-2">{ch.name}</span>
+              New Game
             </button>
-          );
-        })}
-      </div>
+          </div>
+        </div>
 
-      {/* Controls */}
-      <div className="flex flex-wrap gap-3 justify-center mb-10">
-        <button
-          onClick={submitGroup}
-          disabled={selected.length !== 4 || status !== 'playing'}
-          className={`px-5 py-3 rounded-xl font-bold text-sm tracking-wide shadow-lg transition-colors ${selected.length===4 && status==='playing' ? 'bg-gradient-to-r from-emerald-500 to-emerald-600 text-white hover:from-emerald-400 hover:to-emerald-600' : 'bg-slate-700/50 text-slate-400 cursor-not-allowed'}`}
-        >Confirmar Grupo</button>
-        <button
-          onClick={useHint}
-          disabled={hintsUsed>=maxHints || status!=='playing'}
-          className={`px-5 py-3 rounded-xl font-bold text-sm tracking-wide transition-colors ${hintsUsed<maxHints && status==='playing' ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white hover:from-amber-400 hover:to-amber-600' : 'bg-slate-700/50 text-slate-400 cursor-not-allowed'}`}
-        >Pista</button>
-        <button
-          onClick={shuffleTiles}
-          disabled={status!=='playing'}
-          className={`px-5 py-3 rounded-xl font-bold text-sm tracking-wide transition-colors ${status==='playing' ? 'bg-gradient-to-r from-indigo-500 to-indigo-600 text-white hover:from-indigo-400 hover:to-indigo-600' : 'bg-slate-700/50 text-slate-400 cursor-not-allowed'}`}
-        >Mezclar</button>
-        <button
-          onClick={resetGame}
-          className="px-5 py-3 rounded-xl font-bold text-sm tracking-wide bg-gradient-to-r from-slate-600 to-slate-700 text-white hover:from-slate-500 hover:to-slate-700"
-        >Reset</button>
-        <button
-          onClick={()=>setSelected([])}
-          disabled={selected.length===0 || status!=='playing'}
-          className={`px-5 py-3 rounded-xl font-bold text-sm tracking-wide transition-colors ${selected.length>0 && status==='playing' ? 'bg-gradient-to-r from-pink-500 to-pink-600 text-white hover:from-pink-400 hover:to-pink-600' : 'bg-slate-700/50 text-slate-400 cursor-not-allowed'}`}
-        >Limpiar Selección</button>
-      </div>
+        {/* Status pill */}
+        <div className="mt-3 rounded-xl border border-indigo-400/20 bg-indigo-600/10 px-4 py-2 text-indigo-200/90 text-sm">
+          <span>Encuentra los 4 grupos de 4 personajes que comparten una categoría común.</span>
+        </div>
+
+        {/* Stats */}
+        <div className="flex gap-3 flex-wrap text-sm mt-4">
+          <div className="px-4 py-2 rounded-xl bg-slate-800/60 border border-slate-600/40 backdrop-blur-sm">
+            <span className="text-slate-300">Vidas: </span>
+            <span className="text-pink-300 font-bold">{lives}</span>
+          </div>
+          <div className="px-4 py-2 rounded-xl bg-slate-800/60 border border-slate-600/40 backdrop-blur-sm">
+            <span className="text-slate-300">Pistas: </span>
+            <span className="text-amber-300 font-bold">{hintsUsed}/{maxHints}</span>
+          </div>
+          <div className="px-4 py-2 rounded-xl bg-slate-800/60 border border-slate-600/40 backdrop-blur-sm">
+            <span className="text-slate-300">Resueltos: </span>
+            <span className="text-emerald-300 font-bold">{solvedCount}/4</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Game Board */}
+      <section className="max-w-7xl mx-auto px-2 sm:px-4">
+        {/* Categories header (hidden until revealed/solved) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          {puzzle?.groups.map((g, idx) => (
+            <div key={g.ruleId} className={`rounded-2xl p-4 min-h-[80px] flex items-center justify-center text-center border-2 text-sm font-bold tracking-wide transition-all duration-300 ${g.solved ? 'bg-emerald-600/30 border-emerald-400/60 text-emerald-200 shadow-lg shadow-emerald-500/20' : g.revealed ? 'bg-indigo-600/30 border-indigo-400/60 text-indigo-200 shadow-lg shadow-indigo-500/20' : 'bg-slate-800/60 border-slate-600/50 text-slate-400'}`}> 
+              {g.solved || g.revealed ? g.title : `Categoría Oculta ${idx+1}`}
+            </div>
+          ))}
+        </div>
+
+        {/* Message banner */}
+        {message && (
+          <div className="mb-6 text-center">
+            <div className="inline-block px-6 py-3 rounded-xl bg-gradient-to-r from-violet-600/40 to-fuchsia-600/40 text-violet-200 font-bold border border-violet-400/40 animate-pulse shadow-lg">{message}</div>
+          </div>
+        )}
+
+        {/* Board */}
+        <div ref={boardRef} className="grid grid-cols-4 gap-4 mb-8"> 
+          {remainingTiles.map(ch => {
+            const sel = selected.includes(ch.id);
+            return (
+              <button
+                key={ch.id}
+                onClick={() => toggleSelect(ch.id)}
+                disabled={status !== 'playing'}
+                className={`group relative rounded-2xl overflow-hidden border-2 p-4 flex flex-col items-center justify-center h-40 sm:h-44 md:h-48 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-cyan-400/50 ${sel ? 'bg-cyan-600/40 border-cyan-400 text-cyan-100 ring-2 ring-cyan-300 shadow-xl shadow-cyan-500/25 scale-105' : 'bg-slate-800/70 border-slate-600/50 text-slate-200 hover:border-slate-500 hover:bg-slate-700/70 hover:scale-102'} ${status!=='playing' ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+                aria-pressed={sel}
+                style={{
+                  boxShadow: sel 
+                    ? '0 0 0 2px rgba(34,211,238,0.4), 0 8px 24px rgba(34,211,238,0.25)' 
+                    : '0 4px 16px rgba(0,0,0,0.3)'
+                }}
+              >
+                <img src={ch.imageUrl} alt={ch.name} className="w-full h-24 sm:h-28 md:h-32 object-contain mb-2 pointer-events-none drop-shadow-lg" />
+                <span className="text-xs sm:text-sm font-bold text-center leading-tight line-clamp-2 tracking-wide">{ch.name}</span>
+                {sel && (
+                  <div className="absolute top-2 right-2 w-6 h-6 bg-cyan-400 rounded-full flex items-center justify-center">
+                    <span className="text-white text-sm font-bold">✓</span>
+                  </div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Controls */}
+        <div className="flex flex-wrap gap-4 justify-center mb-12">
+          <button
+            onClick={submitGroup}
+            disabled={selected.length !== 4 || status !== 'playing'}
+            className={`px-6 py-3 rounded-xl font-bold text-sm tracking-wide shadow-lg transition-all duration-300 ${selected.length===4 && status==='playing' ? 'bg-gradient-to-r from-emerald-500 to-emerald-600 text-white hover:from-emerald-400 hover:to-emerald-600 hover:scale-105 shadow-emerald-500/25' : 'bg-slate-700/60 text-slate-400 cursor-not-allowed'}`}
+          >Confirmar Grupo</button>
+          
+          <button
+            onClick={useHint}
+            disabled={hintsUsed>=maxHints || status!=='playing'}
+            className={`px-6 py-3 rounded-xl font-bold text-sm tracking-wide transition-all duration-300 ${hintsUsed<maxHints && status==='playing' ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white hover:from-amber-400 hover:to-amber-600 hover:scale-105 shadow-amber-500/25' : 'bg-slate-700/60 text-slate-400 cursor-not-allowed'}`}
+          >Pista</button>
+          
+          <button
+            onClick={shuffleTiles}
+            disabled={status!=='playing'}
+            className={`px-6 py-3 rounded-xl font-bold text-sm tracking-wide transition-all duration-300 ${status==='playing' ? 'bg-gradient-to-r from-indigo-500 to-indigo-600 text-white hover:from-indigo-400 hover:to-indigo-600 hover:scale-105 shadow-indigo-500/25' : 'bg-slate-700/60 text-slate-400 cursor-not-allowed'}`}
+          >Mezclar</button>
+          
+          <button
+            onClick={()=>setSelected([])}
+            disabled={selected.length===0 || status!=='playing'}
+            className={`px-6 py-3 rounded-xl font-bold text-sm tracking-wide transition-all duration-300 ${selected.length>0 && status==='playing' ? 'bg-gradient-to-r from-pink-500 to-pink-600 text-white hover:from-pink-400 hover:to-pink-600 hover:scale-105 shadow-pink-500/25' : 'bg-slate-700/60 text-slate-400 cursor-not-allowed'}`}
+          >Limpiar</button>
+        </div>
+      </section>
 
       {/* Status overlays */}
       {status==='win' && (
