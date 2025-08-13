@@ -16,6 +16,7 @@ interface GameDef {
 
 const games: GameDef[] = [
   { id: 'tapone', title: 'Tap One', description: 'Elige tu destino: selecciona una categoría en el momento justo', icon: Gamepad2, difficulty: 'Medium', players: '1 Player', time: '2-5 min', status: 'available', href: '/games/tapone', color: 'from-yellow-400 to-orange-500' },
+  { id: 'connections', title: 'Connections', description: 'Encuentra 4 grupos ocultos de 4 personajes', icon: Grid3X3, difficulty: 'Medium', players: '1 Player', time: '3-8 min', status: 'available', href: '/games/connections', color: 'from-indigo-500 to-violet-500' },
   { id: 'grid', title: 'Memory Cards', description: 'Empareja las cartas 4x4 con personajes de One Piece', icon: Grid3X3, difficulty: 'Easy', players: '1 Player', time: '2-5 min', status: 'available', href: '/games/grid', color: 'from-blue-500 to-cyan-500' },
   { id: 'anime-grid', title: 'One Piece Tic Tac Toe', description: 'Tic-tac-toe con condiciones de personajes One Piece', icon: Target, difficulty: 'Hard', players: '1 Player', time: '5-15 min', status: 'available', href: '/games/anime-grid', color: 'from-cyan-500 to-teal-500' },
   { id: 'wordle', title: 'Anime Wordle', description: 'Guess the character name in 6 tries', icon: Brain, difficulty: 'Medium', players: '1 Player', time: '3-8 min', status: 'available', href: '/games/wordle', color: 'from-green-500 to-emerald-500' },
@@ -53,86 +54,15 @@ export default function HomePage() {
 
       {/* Content with relative positioning */}
       <div className="relative z-10">
-        {/* Hero Section */}
-        <section className="relative overflow-hidden">
-        <div className="container mx-auto px-4 py-16 lg:py-24">
-          <div className="text-center space-y-8">
-            <div className="space-y-4">
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-wide">
-                <div className="flex items-center justify-center gap-4">
-                  <span className="bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 bg-clip-text text-transparent drop-shadow">One Piece Quest</span>
-                  {/* Sombrero de Paja One Piece - Más realista */}
-                  <svg 
-                    className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20" 
-                    viewBox="0 0 100 100" 
-                    fill="none"
-                  >
-                    {/* Ala del sombrero */}
-                    <ellipse cx="50" cy="75" rx="48" ry="12" fill="#D4A574" stroke="#B8935F" strokeWidth="1"/>
-                    <ellipse cx="50" cy="73" rx="45" ry="10" fill="#E6C580"/>
-                    
-                    {/* Copa del sombrero */}
-                    <ellipse cx="50" cy="50" rx="25" ry="30" fill="#F2D399"/>
-                    <ellipse cx="50" cy="48" rx="23" ry="28" fill="#F5E0B3"/>
-                    
-                    {/* Banda del sombrero */}
-                    <rect x="27" y="60" width="46" height="6" fill="#8B4513" rx="3"/>
-                    <rect x="27" y="61" width="46" height="4" fill="#A0522D" rx="2"/>
-                    
-                    {/* Textura de paja - líneas entrecruzadas */}
-                    <g opacity="0.6" stroke="#D4A574" strokeWidth="0.8">
-                      <line x1="35" y1="25" x2="37" y2="55"/>
-                      <line x1="42" y1="20" x2="44" y2="58"/>
-                      <line x1="50" y1="18" x2="50" y2="60"/>
-                      <line x1="58" y1="20" x2="56" y2="58"/>
-                      <line x1="65" y1="25" x2="63" y2="55"/>
-                      
-                      <line x1="32" y1="35" x2="68" y2="40"/>
-                      <line x1="30" y1="45" x2="70" y2="48"/>
-                      <line x1="32" y1="55" x2="68" y2="56"/>
-                    </g>
-                    
-                    {/* Sombra en la copa */}
-                    <ellipse cx="45" cy="45" rx="8" ry="12" fill="#E6C580" opacity="0.7"/>
-                    
-                    {/* Highlight en el ala */}
-                    <ellipse cx="50" cy="70" rx="35" ry="6" fill="#F2D399" opacity="0.5"/>
-                  </svg>
-                </div>
-                <span className="mt-2 block text-base md:text-lg font-medium text-amber-300/70">One Piece Games</span>
-              </h1>
-              <p className="text-xl md:text-2xl text-amber-200/70 max-w-3xl mx-auto">
-                Experiencia One Piece con retos, adivinanzas y rankings. ¿Listo para la aventura?
-              </p>
-            </div>
-            <div className="flex flex-wrap justify-center gap-6 text-sm">
-              <div className="flex items-center gap-2 bg-[#101b24]/70 px-4 py-2 rounded-lg border border-amber-700/40 backdrop-blur-sm shadow shadow-black/40">
-                <Users className="w-4 h-4 text-emerald-400" />
-                <span className="text-amber-200/80">246+ Personajes</span>
-              </div>
-              <div className="flex items-center gap-2 bg-[#101b24]/70 px-4 py-2 rounded-lg border border-amber-700/40 backdrop-blur-sm shadow shadow-black/40">
-                <Gamepad2 className="w-4 h-4 text-rose-400" />
-                <span className="text-amber-200/80">7 Modos</span>
-              </div>
-              <div className="flex items-center gap-2 bg-[#101b24]/70 px-4 py-2 rounded-lg border border-amber-700/40 backdrop-blur-sm shadow shadow-black/40">
-                <Trophy className="w-4 h-4 text-amber-400" />
-                <span className="text-amber-200/80">Diversión Infinita</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+    {/* Hero section removed per request */}
 
       {/* Games Section */}
       <section className="py-16 relative">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent drop-shadow">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent drop-shadow">
               Juegos Disponibles
             </h2>
-            <p className="text-lg text-amber-200/70 max-w-2xl mx-auto">
-              Pon a prueba tu conocimiento del mundo One Piece con nuestra colección de mini juegos temáticos
-            </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto mb-16">
             {games.map(game => {
@@ -173,6 +103,21 @@ export default function HomePage() {
                 </div>
               )
             })}
+          </div>
+          {/* Badges moved below games */}
+          <div className="flex flex-wrap justify-center gap-6 text-sm mb-20">
+            <div className="flex items-center gap-2 bg-[#101b24]/70 px-4 py-2 rounded-lg border border-amber-700/40 backdrop-blur-sm shadow shadow-black/40">
+              <Users className="w-4 h-4 text-emerald-400" />
+              <span className="text-amber-200/80">246+ Personajes</span>
+            </div>
+            <div className="flex items-center gap-2 bg-[#101b24]/70 px-4 py-2 rounded-lg border border-amber-700/40 backdrop-blur-sm shadow shadow-black/40">
+              <Gamepad2 className="w-4 h-4 text-rose-400" />
+              <span className="text-amber-200/80">{games.length} Modos</span>
+            </div>
+            <div className="flex items-center gap-2 bg-[#101b24]/70 px-4 py-2 rounded-lg border border-amber-700/40 backdrop-blur-sm shadow shadow-black/40">
+              <Trophy className="w-4 h-4 text-amber-400" />
+              <span className="text-amber-200/80">Diversión Infinita</span>
+            </div>
           </div>
 
           {/* Coming Soon Games */}
@@ -215,8 +160,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Characters Section */}
-      <section className="py-16 bg-black/20 relative">
+  {/* Characters Section (retained) */}
+  <section className="py-16 bg-black/20 relative">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent drop-shadow">Explora el Universo One Piece</h2>
