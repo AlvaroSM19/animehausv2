@@ -404,27 +404,34 @@ const ConnectionsGame: React.FC<{ difficulty?: number }> = ({ difficulty = 1 }) 
   }, [status, solvedCount, hintsUsed, lives, puzzle]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100">
-      {/* Header section */}
-      <section className="max-w-7xl mx-auto px-2 sm:px-4 mb-6">
-        <div className="flex items-center gap-2 text-slate-300/90 text-sm mb-3">
-          <Link href="/" className="inline-flex items-center gap-1 hover:text-white/90 transition-colors">
-            <span className="text-slate-300/80">←</span>
-            <span>Home</span>
-          </Link>
-          <span className="opacity-40">/</span>
-          <span className="text-slate-100/90">Connections</span>
-        </div>
+    <div className="min-h-screen text-slate-100" style={{
+      backgroundImage: 'url(/images/onepiecedle-bg.svg)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed'
+    }}>
+      {/* Overlay for better readability */}
+      <div className="min-h-screen bg-black/20 backdrop-blur-[0.5px]">
+        {/* Header section */}
+        <section className="max-w-7xl mx-auto px-2 sm:px-4 mb-6 pt-4">
+          <div className="flex items-center gap-2 text-white/90 text-sm mb-3">
+            <Link href="/" className="inline-flex items-center gap-1 hover:text-white transition-colors">
+              <span className="text-white/80">←</span>
+              <span>Home</span>
+            </Link>
+            <span className="opacity-40">/</span>
+            <span className="text-white">Connections</span>
+          </div>
 
         <div className="flex items-center justify-between gap-3 mb-4">
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-wide uppercase bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 via-cyan-300 to-blue-300 drop-shadow">
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-wide uppercase bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-orange-300 to-red-400 drop-shadow-lg">
             Connections
           </h1>
           
           <div className="shrink-0">
             <button
               onClick={resetGame}
-              className="px-4 md:px-5 py-2 rounded-xl font-semibold text-white bg-gradient-to-r from-slate-500 to-slate-600 shadow-lg hover:from-slate-400 hover:to-slate-600 transition-colors"
+              className="px-4 md:px-5 py-2 rounded-xl font-semibold text-white bg-black/40 backdrop-blur-md border border-white/20 shadow-lg hover:bg-black/50 transition-all duration-300"
             >
               New Game
             </button>
@@ -432,22 +439,22 @@ const ConnectionsGame: React.FC<{ difficulty?: number }> = ({ difficulty = 1 }) 
         </div>
 
         {/* Status pill */}
-        <div className="mt-3 rounded-xl border border-indigo-400/20 bg-indigo-600/10 px-4 py-2 text-indigo-200/90 text-sm">
+        <div className="mt-3 rounded-xl border border-orange-400/30 bg-black/30 backdrop-blur-md px-4 py-2 text-orange-200 text-sm shadow-lg">
           <span>Encuentra los 4 grupos de 4 personajes que comparten una categoría común.</span>
         </div>
 
         {/* Stats */}
         <div className="flex gap-3 flex-wrap text-sm mt-4">
-          <div className="px-4 py-2 rounded-xl bg-slate-800/60 border border-slate-600/40 backdrop-blur-sm">
-            <span className="text-slate-300">Vidas: </span>
+          <div className="px-4 py-2 rounded-xl bg-black/40 backdrop-blur-md border border-white/20 shadow-lg">
+            <span className="text-white">Vidas: </span>
             <span className="text-pink-300 font-bold">{lives}</span>
           </div>
-          <div className="px-4 py-2 rounded-xl bg-slate-800/60 border border-slate-600/40 backdrop-blur-sm">
-            <span className="text-slate-300">Pistas: </span>
+          <div className="px-4 py-2 rounded-xl bg-black/40 backdrop-blur-md border border-white/20 shadow-lg">
+            <span className="text-white">Pistas: </span>
             <span className="text-amber-300 font-bold">{hintsUsed}/{maxHints}</span>
           </div>
-          <div className="px-4 py-2 rounded-xl bg-slate-800/60 border border-slate-600/40 backdrop-blur-sm">
-            <span className="text-slate-300">Resueltos: </span>
+          <div className="px-4 py-2 rounded-xl bg-black/40 backdrop-blur-md border border-white/20 shadow-lg">
+            <span className="text-white">Resueltos: </span>
             <span className="text-emerald-300 font-bold">{solvedCount}/4</span>
           </div>
         </div>
@@ -458,7 +465,7 @@ const ConnectionsGame: React.FC<{ difficulty?: number }> = ({ difficulty = 1 }) 
         {/* Categories header (hidden until revealed/solved) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {puzzle?.groups.map((g, idx) => (
-            <div key={g.ruleId} className={`rounded-2xl p-4 min-h-[80px] flex items-center justify-center text-center border-2 text-sm font-bold tracking-wide transition-all duration-300 ${g.solved ? 'bg-emerald-600/30 border-emerald-400/60 text-emerald-200 shadow-lg shadow-emerald-500/20' : g.revealed ? 'bg-indigo-600/30 border-indigo-400/60 text-indigo-200 shadow-lg shadow-indigo-500/20' : 'bg-slate-800/60 border-slate-600/50 text-slate-400'}`}> 
+            <div key={g.ruleId} className={`rounded-2xl p-4 min-h-[80px] flex items-center justify-center text-center border-2 text-sm font-bold tracking-wide transition-all duration-300 backdrop-blur-md shadow-lg ${g.solved ? 'bg-emerald-500/30 border-emerald-400/60 text-emerald-100 shadow-emerald-500/20' : g.revealed ? 'bg-amber-500/30 border-amber-400/60 text-amber-100 shadow-amber-500/20' : 'bg-black/30 border-white/20 text-white/70'}`}> 
               {g.solved || g.revealed ? g.title : `Categoría Oculta ${idx+1}`}
             </div>
           ))}
@@ -467,7 +474,7 @@ const ConnectionsGame: React.FC<{ difficulty?: number }> = ({ difficulty = 1 }) 
         {/* Message banner */}
         {message && (
           <div className="mb-6 text-center">
-            <div className="inline-block px-6 py-3 rounded-xl bg-gradient-to-r from-violet-600/40 to-fuchsia-600/40 text-violet-200 font-bold border border-violet-400/40 animate-pulse shadow-lg">{message}</div>
+            <div className="inline-block px-6 py-3 rounded-xl bg-black/50 backdrop-blur-md text-white font-bold border border-white/30 animate-pulse shadow-lg">{message}</div>
           </div>
         )}
 
@@ -480,18 +487,35 @@ const ConnectionsGame: React.FC<{ difficulty?: number }> = ({ difficulty = 1 }) 
                 key={ch.id}
                 onClick={() => toggleSelect(ch.id)}
                 disabled={status !== 'playing'}
-                className={`group relative rounded-2xl overflow-hidden border-2 p-4 flex flex-col items-center justify-center h-40 sm:h-44 md:h-48 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-cyan-400/50 ${sel ? 'bg-cyan-600/40 border-cyan-400 text-cyan-100 ring-2 ring-cyan-300 shadow-xl shadow-cyan-500/25 scale-105' : 'bg-slate-800/70 border-slate-600/50 text-slate-200 hover:border-slate-500 hover:bg-slate-700/70 hover:scale-102'} ${status!=='playing' ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
-                aria-pressed={sel}
+                className={`group relative rounded-2xl overflow-hidden border-2 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-orange-400/50 ${sel ? 'border-orange-400 ring-2 ring-orange-300 scale-105 shadow-xl shadow-orange-500/30' : 'border-white/30 hover:border-white/50 hover:scale-102'} ${status!=='playing' ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
                 style={{
+                  height: 'clamp(180px, 12vw + 140px, 220px)',
                   boxShadow: sel 
-                    ? '0 0 0 2px rgba(34,211,238,0.4), 0 8px 24px rgba(34,211,238,0.25)' 
-                    : '0 4px 16px rgba(0,0,0,0.3)'
+                    ? '0 0 0 2px rgba(251,146,60,0.4), 0 8px 24px rgba(251,146,60,0.25)' 
+                    : '0 4px 16px rgba(0,0,0,0.4)'
                 }}
+                aria-pressed={sel}
               >
-                <img src={ch.imageUrl} alt={ch.name} className="w-full h-24 sm:h-28 md:h-32 object-contain mb-2 pointer-events-none drop-shadow-lg" />
-                <span className="text-xs sm:text-sm font-bold text-center leading-tight line-clamp-2 tracking-wide">{ch.name}</span>
+                {/* Background overlay for glass effect */}
+                <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+                
+                {/* Character image - casi todo el espacio */}
+                <div className="relative z-10 h-full flex flex-col">
+                  <img 
+                    src={ch.imageUrl} 
+                    alt={ch.name} 
+                    className="flex-1 w-full object-contain p-2 pointer-events-none drop-shadow-lg" 
+                  />
+                  
+                  {/* Character name - elegante en la parte inferior */}
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/60 to-transparent p-3">
+                    <span className="text-white text-sm font-bold text-center block leading-tight tracking-wide drop-shadow-lg">{ch.name}</span>
+                  </div>
+                </div>
+
+                {/* Selection indicator */}
                 {sel && (
-                  <div className="absolute top-2 right-2 w-6 h-6 bg-cyan-400 rounded-full flex items-center justify-center">
+                  <div className="absolute top-2 right-2 w-6 h-6 bg-orange-400 rounded-full flex items-center justify-center z-20 shadow-lg">
                     <span className="text-white text-sm font-bold">✓</span>
                   </div>
                 )}
@@ -505,25 +529,25 @@ const ConnectionsGame: React.FC<{ difficulty?: number }> = ({ difficulty = 1 }) 
           <button
             onClick={submitGroup}
             disabled={selected.length !== 4 || status !== 'playing'}
-            className={`px-6 py-3 rounded-xl font-bold text-sm tracking-wide shadow-lg transition-all duration-300 ${selected.length===4 && status==='playing' ? 'bg-gradient-to-r from-emerald-500 to-emerald-600 text-white hover:from-emerald-400 hover:to-emerald-600 hover:scale-105 shadow-emerald-500/25' : 'bg-slate-700/60 text-slate-400 cursor-not-allowed'}`}
+            className={`px-6 py-3 rounded-xl font-bold text-sm tracking-wide shadow-lg transition-all duration-300 backdrop-blur-md border ${selected.length===4 && status==='playing' ? 'bg-emerald-500/40 border-emerald-400/60 text-white hover:bg-emerald-400/50 hover:scale-105 shadow-emerald-500/25' : 'bg-black/40 border-white/20 text-white/50 cursor-not-allowed'}`}
           >Confirmar Grupo</button>
           
           <button
             onClick={useHint}
             disabled={hintsUsed>=maxHints || status!=='playing'}
-            className={`px-6 py-3 rounded-xl font-bold text-sm tracking-wide transition-all duration-300 ${hintsUsed<maxHints && status==='playing' ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white hover:from-amber-400 hover:to-amber-600 hover:scale-105 shadow-amber-500/25' : 'bg-slate-700/60 text-slate-400 cursor-not-allowed'}`}
+            className={`px-6 py-3 rounded-xl font-bold text-sm tracking-wide transition-all duration-300 backdrop-blur-md border ${hintsUsed<maxHints && status==='playing' ? 'bg-amber-500/40 border-amber-400/60 text-white hover:bg-amber-400/50 hover:scale-105 shadow-amber-500/25' : 'bg-black/40 border-white/20 text-white/50 cursor-not-allowed'}`}
           >Pista</button>
           
           <button
             onClick={shuffleTiles}
             disabled={status!=='playing'}
-            className={`px-6 py-3 rounded-xl font-bold text-sm tracking-wide transition-all duration-300 ${status==='playing' ? 'bg-gradient-to-r from-indigo-500 to-indigo-600 text-white hover:from-indigo-400 hover:to-indigo-600 hover:scale-105 shadow-indigo-500/25' : 'bg-slate-700/60 text-slate-400 cursor-not-allowed'}`}
+            className={`px-6 py-3 rounded-xl font-bold text-sm tracking-wide transition-all duration-300 backdrop-blur-md border ${status==='playing' ? 'bg-indigo-500/40 border-indigo-400/60 text-white hover:bg-indigo-400/50 hover:scale-105 shadow-indigo-500/25' : 'bg-black/40 border-white/20 text-white/50 cursor-not-allowed'}`}
           >Mezclar</button>
           
           <button
             onClick={()=>setSelected([])}
             disabled={selected.length===0 || status!=='playing'}
-            className={`px-6 py-3 rounded-xl font-bold text-sm tracking-wide transition-all duration-300 ${selected.length>0 && status==='playing' ? 'bg-gradient-to-r from-pink-500 to-pink-600 text-white hover:from-pink-400 hover:to-pink-600 hover:scale-105 shadow-pink-500/25' : 'bg-slate-700/60 text-slate-400 cursor-not-allowed'}`}
+            className={`px-6 py-3 rounded-xl font-bold text-sm tracking-wide transition-all duration-300 backdrop-blur-md border ${selected.length>0 && status==='playing' ? 'bg-pink-500/40 border-pink-400/60 text-white hover:bg-pink-400/50 hover:scale-105 shadow-pink-500/25' : 'bg-black/40 border-white/20 text-white/50 cursor-not-allowed'}`}
           >Limpiar</button>
         </div>
       </section>
@@ -575,9 +599,9 @@ const ConnectionsGame: React.FC<{ difficulty?: number }> = ({ difficulty = 1 }) 
       )}
 
       {/* Instructions */}
-      <details className="mt-8 text-slate-400 text-sm">
-        <summary className="cursor-pointer font-semibold text-slate-200 mb-2">Cómo jugar</summary>
-        <ul className="list-disc ml-6 space-y-1 mt-2">
+      <details className="mt-8 text-slate-400 text-sm max-w-7xl mx-auto px-2 sm:px-4">
+        <summary className="cursor-pointer font-semibold text-white mb-2">Cómo jugar</summary>
+        <ul className="list-disc ml-6 space-y-1 mt-2 text-slate-200">
           <li>Selecciona 4 personajes que creas comparten una categoría oculta.</li>
           <li>Pulsa &quot;Confirmar Grupo&quot;. Si es correcto se revelará la categoría y se eliminarán esas cartas.</li>
           <li>Usa Pista para revelar el título de una categoría (máx {maxHints}).</li>
@@ -585,6 +609,7 @@ const ConnectionsGame: React.FC<{ difficulty?: number }> = ({ difficulty = 1 }) 
           <li>Completa los 4 grupos para ganar.</li>
         </ul>
       </details>
+      </div>
     </div>
   );
 };
