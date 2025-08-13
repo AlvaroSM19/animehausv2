@@ -404,14 +404,9 @@ const ConnectionsGame: React.FC<{ difficulty?: number }> = ({ difficulty = 1 }) 
   }, [status, solvedCount, hintsUsed, lives, puzzle]);
 
   return (
-    <div className="min-h-screen text-slate-100" style={{
-      backgroundImage: 'url(/images/onepiecedle-bg.svg)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundAttachment: 'fixed'
-    }}>
+    <div className="min-h-screen text-slate-100">
       {/* Overlay for better readability */}
-      <div className="min-h-screen bg-black/20 backdrop-blur-[0.5px]">
+      <div className="min-h-screen bg-black/10 backdrop-blur-[0.5px]">
         {/* Header section */}
         <section className="max-w-7xl mx-auto px-2 sm:px-4 mb-6 pt-4">
           <div className="flex items-center gap-2 text-white/90 text-sm mb-3">
