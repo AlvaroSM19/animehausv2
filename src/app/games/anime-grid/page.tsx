@@ -949,21 +949,20 @@ export default function AnimeGridPage() {
     }
   }, [characters, generateRandomConditions])
 
-  // Timer countdown
+  // Timer countdown (solo multijugador)
   useEffect(() => {
+    if (variant !== 'multi') return
     if (gameState.mode !== 'playing' || gameState.timeLeft <= 0) return
 
     const timer = setTimeout(() => {
       if (gameState.timeLeft <= 1) {
-        // Se acabó el tiempo, cambiar de jugador
         switchPlayer()
       } else {
         setGameState(prev => ({ ...prev, timeLeft: prev.timeLeft - 1 }))
       }
     }, 1000)
-
     return () => clearTimeout(timer)
-  }, [gameState.timeLeft, gameState.mode])
+  }, [gameState.timeLeft, gameState.mode, variant])
 
   const checkCharacterValidForCell = (character: AnimeCharacter, row: number, col: number): boolean => {
     if (!rowConditions[row] || !colConditions[col]) return false
@@ -1130,84 +1129,58 @@ export default function AnimeGridPage() {
           <>
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-5xl font-bold mb-4 text-yellow-400 drop-shadow-lg">
-              {variant==='single' ? '🧩 ANIME GRID SOLITARIO' : '⚔️ ONE PIECE TIC TAC TOE ⚔️'}
-            </h1>
-            <p className="text-lg text-gray-300 mb-6 font-medium">
-              {variant==='single' ? 'Rellena todas las casillas. Sin límite de turnos, piensa bien.' : '¡Batalla épica de conocimiento pirata! • 30 segundos por turno'}
-            </p>
+            <h1 className="text-5xl font-bold mb-4 text-yellow-400 drop-shadow-lg">ANIME GRID</h1>
+            {variant==='single' ? (
+              <p className="text-lg text-gray-300 mb-6 font-medium">Rellena todas las casillas cumpliendo las condiciones. Sin límite de turnos.</p>
+            ) : (
+              <p className="text-lg text-gray-300 mb-6 font-medium">¡Batalla épica de conocimiento pirata! • 30 segundos por turno</p>
+            )}
             <button onClick={()=>{setVariant('menu'); setGameState(p=>({...p, mode:'setup', winner:null})); setGrid(Array(3).fill(null).map(()=>Array(3).fill(null).map(()=>({player:null, character:null, isValid:false}))))}} className="text-xs text-gray-400 underline hover:text-gray-200">Volver al menú</button>
           </div>
           </>
         )}
 
-  {variant!=='menu' && (
-  <div className="flex items-center justify-center gap-8 mb-8">
-          <div className="flex items-center gap-6 bg-gray-800 px-6 py-4 rounded-xl border-2 border-yellow-600">
-            <div className="flex items-center gap-3">
-              <Users className="w-6 h-6 text-blue-400" />
-              <span className="text-lg font-bold">
-                Jugador X: <span className="text-blue-400">{gameState.scores.X}</span>
-              </span>
-            </div>
-            <div className="w-px h-8 bg-gray-600"></div>
-            <div className="flex items-center gap-3">
-              <Users className="w-6 h-6 text-red-400" />
-              <span className="text-lg font-bold">
-                Jugador O: <span className="text-red-400">{gameState.scores.O}</span>
-              </span>
-            </div>
-          </div>
-
-          {gameState.mode === 'playing' && (
-            <div className={`flex items-center gap-3 px-6 py-4 rounded-xl border-2 ${
-              gameState.currentPlayer === 'X' ? 'bg-blue-900 border-blue-400' : 'bg-red-900 border-red-400'
-            }`}>
-              <Clock className="w-6 h-6" />
-              <span className="text-xl font-bold">
-                Turno de {gameState.currentPlayer}: {gameState.timeLeft}s
-              </span>
-            </div>
-          )}
-
-          <div className="flex gap-3">
-            {gameState.mode === 'setup' ? (
-              <button
-                onClick={startNewGame}
-                className="flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors font-bold text-lg shadow-lg"
-              >
-                <Trophy className="w-5 h-5" />
-                Iniciar Batalla
-              </button>
-            ) : (
-              <button
-                onClick={startNewGame}
-                className="flex items-center gap-2 px-6 py-3 bg-yellow-600 hover:bg-yellow-700 text-black rounded-lg transition-colors font-bold text-lg shadow-lg"
-              >
-                <RotateCcw className="w-5 h-5" />
-                Nueva Partida
-              </button>
+        {variant!=='menu' && (
+          <div className="flex flex-col items-center gap-6 mb-8">
+            {variant==='multi' && (
+              <div className="flex items-center gap-6 bg-gray-800 px-6 py-4 rounded-xl border-2 border-yellow-600">
+                <div className="flex items-center gap-3">
+                  <Users className="w-6 h-6 text-blue-400" />
+                  <span className="text-lg font-bold">X: <span className="text-blue-400">{gameState.scores.X}</span></span>
+                </div>
+                <div className="w-px h-8 bg-gray-600" />
+                <div className="flex items-center gap-3">
+                  <Users className="w-6 h-6 text-red-400" />
+                  <span className="text-lg font-bold">O: <span className="text-red-400">{gameState.scores.O}</span></span>
+                </div>
+                {gameState.mode==='playing' && (
+                  <div className={`ml-6 flex items-center gap-2 px-4 py-2 rounded-lg border ${gameState.currentPlayer==='X' ? 'bg-blue-900 border-blue-500' : 'bg-red-900 border-red-500'}`}>
+                    <Clock className="w-5 h-5" />
+                    <span className="font-bold text-sm">Turno {gameState.currentPlayer}: {gameState.timeLeft}s</span>
+                  </div>
+                )}
+              </div>
             )}
-            <button
-              onClick={() => {
-                generateRandomConditions()
-                console.log('🔄 Condiciones regeneradas manualmente')
-              }}
-              className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-bold text-lg shadow-lg"
-            >
-              🎲
-              Cambiar Condiciones
-            </button>
-            <button
-              onClick={resetScores}
-              className="flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors font-bold text-lg shadow-lg"
-            >
-              <X className="w-5 h-5" />
-              Reset
-            </button>
+            <div className="flex gap-3 flex-wrap justify-center">
+              {gameState.mode === 'setup' ? (
+                <button onClick={startNewGame} className="flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors font-bold text-lg shadow-lg">
+                  <Trophy className="w-5 h-5" />
+                  {variant==='multi' ? 'Iniciar Batalla' : 'Comenzar'}
+                </button>
+              ) : (
+                <button onClick={startNewGame} className="flex items-center gap-2 px-6 py-3 bg-yellow-600 hover:bg-yellow-700 text-black rounded-lg transition-colors font-bold text-lg shadow-lg">
+                  <RotateCcw className="w-5 h-5" />
+                  Nueva Partida
+                </button>
+              )}
+              {variant==='multi' && (
+                <button onClick={resetScores} className="flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors font-bold text-lg shadow-lg">
+                  <X className="w-5 h-5" /> Reset
+                </button>
+              )}
+            </div>
           </div>
-  </div>
-  )}
+        )}
 
   {/* Winner Announcement */}
   {variant!=='menu' && gameState.winner && (
