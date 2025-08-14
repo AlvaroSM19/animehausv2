@@ -300,6 +300,45 @@ export default function HigherLowerPage() {
           {/* Main Game Area */}
           <div className="xl:col-span-3">
             <div className="flex flex-col gap-10">
+              {/* Rank Panels (Current & Next) moved from right sidebar */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="relative z-10 p-4 bg-gradient-to-r from-amber-800/40 to-yellow-800/30 rounded-xl border-2 border-amber-500/60 shadow-lg">
+                  <div className="text-center">
+                    <div className="text-4xl mb-2">{getCurrentRank(score).icon}</div>
+                    <div className={`font-bold text-lg ${getCurrentRank(score).color} drop-shadow`}>
+                      {getCurrentRank(score).name}
+                    </div>
+                    <div className="text-xs text-amber-200/70 mt-1 italic">
+                      &quot;{getCurrentRank(score).description}&quot;
+                    </div>
+                    <div className="text-xs text-amber-300/80 mt-2 font-semibold">
+                      Rango Actual
+                    </div>
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-amber-400/10 to-yellow-400/10 rounded-xl blur-sm -z-10" />
+                </div>
+                {getNextRank(score) && (
+                  <div className="relative z-10 p-4 bg-gradient-to-r from-blue-900/30 to-purple-900/20 rounded-xl border border-blue-500/40 shadow-lg">
+                    <div className="text-center">
+                      <div className="text-2xl mb-2">{getNextRank(score)!.icon}</div>
+                      <div className={`font-semibold text-sm ${getNextRank(score)!.color}`}>
+                        Próximo: {getNextRank(score)!.name}
+                      </div>
+                      <div className="text-xs text-blue-200/60 mt-1">
+                        {getNextRank(score)!.minScore - score} puntos restantes
+                      </div>
+                      <div className="mt-3 bg-gray-800/50 rounded-full h-3 border border-gray-600/30 overflow-hidden">
+                        <div
+                          className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 h-3 rounded-full transition-all duration-500 relative overflow-hidden"
+                          style={{ width: `${Math.min(100, (score / getNextRank(score)!.minScore) * 100)}%` }}
+                        >
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
               <div className="flex flex-col md:flex-row items-stretch justify-center gap-8">
                 {/* Current Character Card */}
                 <div className="bg-[#101b24]/70 border border-amber-700/40 rounded-xl backdrop-blur-sm p-5 w-full md:w-72 lg:w-80 flex flex-col shadow-md shadow-black/50">
@@ -410,7 +449,7 @@ export default function HigherLowerPage() {
             </div>
           </div>
 
-          {/* Rank System Panel */}
+          {/* Rank System Panel (full list only) */}
           <div className="xl:col-span-1">
             <div className="bg-gradient-to-b from-amber-900/30 to-yellow-900/20 border border-amber-600/50 rounded-xl backdrop-blur-sm p-6 shadow-2xl shadow-black/50 sticky top-24 relative overflow-hidden">
               {/* Background Pattern */}
@@ -428,49 +467,7 @@ export default function HigherLowerPage() {
                 <div className="mt-2 h-1 bg-gradient-to-r from-transparent via-amber-400 to-transparent rounded-full"></div>
               </div>
               
-              {/* Current Rank Showcase */}
-              <div className="relative z-10 mb-6 p-4 bg-gradient-to-r from-amber-800/40 to-yellow-800/30 rounded-xl border-2 border-amber-500/60 shadow-lg transform hover:scale-105 transition-transform duration-300">
-                <div className="text-center">
-                  <div className="text-4xl mb-2 animate-bounce">{getCurrentRank(score).icon}</div>
-                  <div className={`font-bold text-lg ${getCurrentRank(score).color} drop-shadow`}>
-                    {getCurrentRank(score).name}
-                  </div>
-                  <div className="text-xs text-amber-200/70 mt-1 italic">
-                    &quot;{getCurrentRank(score).description}&quot;
-                  </div>
-                  <div className="text-xs text-amber-300/80 mt-2 font-semibold">
-                    Rango Actual
-                  </div>
-                </div>
-                {/* Glow effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-amber-400/20 to-yellow-400/20 rounded-xl blur-sm -z-10"></div>
-              </div>
-
-              {/* Next Rank Progress */}
-              {getNextRank(score) && (
-                <div className="relative z-10 mb-6 p-4 bg-gradient-to-r from-blue-900/30 to-purple-900/20 rounded-xl border border-blue-500/40 shadow-lg hover:border-purple-400/60 transition-colors duration-300">
-                  <div className="text-center">
-                    <div className="text-2xl mb-2">{getNextRank(score)!.icon}</div>
-                    <div className={`font-semibold text-sm ${getNextRank(score)!.color}`}>
-                      Próximo: {getNextRank(score)!.name}
-                    </div>
-                    <div className="text-xs text-blue-200/60 mt-1">
-                      {getNextRank(score)!.minScore - score} puntos restantes
-                    </div>
-                    {/* Animated Progress bar */}
-                    <div className="mt-3 bg-gray-800/50 rounded-full h-3 border border-gray-600/30 overflow-hidden">
-                      <div 
-                        className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 h-3 rounded-full transition-all duration-500 relative overflow-hidden"
-                        style={{
-                          width: `${Math.min(100, (score / getNextRank(score)!.minScore) * 100)}%`
-                        }}
-                      >
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+              {/* Current & Next rank panels moved to left side */}
 
               {/* Ranks List */}
               <div className="relative z-10 space-y-2 max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-amber-600/50 scrollbar-track-transparent pr-2">

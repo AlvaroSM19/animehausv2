@@ -332,11 +332,11 @@ export default function GridGamePage() {
                   character.isFlipped || character.isMatched || showPreview ? 'rotate-y-180' : 'rotate-y-0'
                 }`}>
                   {/* Back (default visible face with One Piece Card) */}
-                  <div className="absolute w-full h-full backface-hidden flex items-center justify-center rounded-xl overflow-hidden">
+                  <div className="absolute w-full h-full backface-hidden flex items-center justify-center rounded-xl overflow-hidden bg-[#0a2e42]">
                     <img
                       src="/images/card-back.svg"
                       alt="One Piece Card Back"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain p-1"
                       onError={(e) => { 
                         // Fallback to original design if image fails to load
                         e.currentTarget.style.display = 'none'
@@ -362,9 +362,6 @@ export default function GridGamePage() {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
                         <div className="absolute bottom-0 left-0 right-0 p-3">
                           <h3 className="text-amber-100 font-semibold text-sm drop-shadow">{character.name}</h3>
-                          {character.crew && (
-                            <p className="text-amber-200/70 text-[10px] uppercase tracking-wide">{character.crew}</p>
-                          )}
                         </div>
                       </div>
                     </div>
