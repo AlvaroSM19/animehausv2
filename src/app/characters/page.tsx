@@ -171,90 +171,70 @@ export default function CharactersPage() {
           {filteredCharacters.map((character) => (
             <div
               key={character.id}
-              className="bg-[#06394f]/70 border border-amber-700/40 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-amber-500/20 transition-all duration-300 hover:scale-[1.02] backdrop-blur-sm shadow shadow-black/40"
+              className="relative rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.015] shadow-[0_6px_18px_-4px_rgba(0,0,0,0.6)] border-4 border-[#3e2a18] bg-[radial-gradient(ellipse_at_top_left,_#f5e3c4,_#e2c698_55%,_#d2b17d)] text-[#3b2816] before:absolute before:inset-0 before:pointer-events-none before:bg-[repeating-linear-gradient(45deg,rgba(0,0,0,0.04)_0_6px,transparent_6px_12px)] before:opacity-30 after:absolute after:inset-0 after:bg-[linear-gradient(to_bottom,rgba(0,0,0,0.15),rgba(0,0,0,0))] after:pointer-events-none"
             >
-              {/* Character Image with Frame */}
-              <div className="relative p-4">
-                <div className="relative h-32 w-32 mx-auto bg-gradient-to-br from-amber-500/20 to-transparent border-2 border-amber-600/60 rounded-xl overflow-hidden shadow-inner shadow-black/40">
-                  <img
-                    src={character.imageUrl}
-                    alt={character.name}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.currentTarget.src = '/images/characters/placeholder.svg'
-                    }}
-                  />
-                  {/* Golden frame effect */}
-                  <div className="absolute inset-0 border-2 border-amber-400/30 rounded-xl pointer-events-none"></div>
-                </div>
-                
-                {/* Bounty Badge */}
-                {character.bounty && character.bounty > 0 && (
-                  <div className="absolute top-2 right-2 bg-gradient-to-br from-green-500 to-emerald-600 text-white px-2 py-1 rounded-lg text-xs font-bold shadow shadow-black/40">
-                    {formatBounty(character.bounty || null)}
+              {/* Poster inner content */}
+              <div className="relative flex flex-col h-full">
+                {/* Top bar decorative */}
+                <div className="h-3 w-full bg-[repeating-linear-gradient(90deg,#3e2a18_0_12px,#00000022_12px_13px)] opacity-30" />
+                <div className="p-5 flex-1 flex flex-col">
+                  <div className="relative mx-auto w-36 h-40 mb-4 border-4 border-[#3e2a18] rounded shadow-inner overflow-hidden bg-[#e4c79e]">
+                    <img
+                      src={character.imageUrl}
+                      alt={character.name}
+                      className="w-full h-full object-cover filter sepia-[55%] contrast-110 brightness-95"
+                      onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/characters/placeholder.svg' }}
+                    />
+                    <div className="absolute inset-0 mix-blend-multiply bg-[radial-gradient(circle_at_center,rgba(0,0,0,0)_60%,rgba(0,0,0,0.35))]" />
                   </div>
-                )}
-              </div>
-
-              {/* Character Info - Compact */}
-              <div className="px-4 pb-4 space-y-2">
-                {/* Name */}
-                <h3 className="text-lg font-bold text-amber-200 text-center tracking-wide">{character.name}</h3>
-                
-                {/* Crew */}
-                <div className="text-center">
-                  <span className="text-xs uppercase tracking-wide text-amber-300/60">Crew</span>
-                  <p className="text-sm font-medium text-amber-100">{character.crew || 'Unknown'}</p>
-                </div>
-
-                {/* Origin */}
-                {character.origin && (
-                  <div className="text-center">
-                    <span className="text-xs uppercase tracking-wide text-amber-300/60">Origin</span>
-                    <p className="text-sm text-amber-200/80">{character.origin}</p>
-                  </div>
-                )}
-
-                {/* Haki Types - Compact Pills */}
-                {character.hakiTypes && character.hakiTypes.length > 0 && (
-                  <div className="text-center">
-                    <span className="text-xs uppercase tracking-wide text-amber-300/60 block mb-1">Haki</span>
-                    <div className="flex flex-wrap justify-center gap-1">
-                      {character.hakiTypes.slice(0, 3).map((haki) => (
-                        <span
-                          key={haki}
-                          className="px-2 py-1 bg-blue-500/30 text-blue-300 text-xs rounded-full border border-blue-500/40 font-medium"
-                        >
-                          {haki === 'Armament Haki' ? 'Armament' : 
-                           haki === 'Observation Haki' ? 'Observation' :
-                           haki === 'Conqueror\'s Haki' ? 'Conqueror' : haki}
-                        </span>
-                      ))}
+                  {character.bounty && character.bounty > 0 && (
+                    <div className="absolute top-2 right-2 px-2 py-1 rounded border border-[#3e2a18] bg-[#c19b63] text-[10px] font-extrabold tracking-wide shadow-sm">
+                      {formatBounty(character.bounty || null)}
                     </div>
+                  )}
+                  <h3 className="text-center text-xl font-extrabold tracking-widest mb-2 text-[#3b2816] drop-shadow-sm">
+                    {character.name}
+                  </h3>
+                  <div className="text-center mb-2">
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-[#6f4b27] block">Crew</span>
+                    <p className="text-sm font-semibold text-[#3b2816]">{character.crew || 'Unknown'}</p>
                   </div>
-                )}
-
-                {/* Devil Fruit */}
-                {character.devilFruit && (
-                  <div className="text-center bg-red-500/20 border border-red-500/40 rounded-lg p-2">
-                    <span className="text-xs uppercase tracking-wide text-red-300/80 block">Devil Fruit</span>
-                    <p className="text-xs text-red-200 font-medium">{character.devilFruit}</p>
+                  {character.origin && (
+                    <div className="text-center mb-2">
+                      <span className="text-[10px] uppercase tracking-[0.2em] text-[#6f4b27] block">Origin</span>
+                      <p className="text-xs text-[#4d341d]">{character.origin}</p>
+                    </div>
+                  )}
+                  {character.hakiTypes && character.hakiTypes.length > 0 && (
+                    <div className="text-center mb-2">
+                      <span className="text-[10px] uppercase tracking-[0.2em] text-[#6f4b27] block mb-1">Haki</span>
+                      <div className="flex flex-wrap justify-center gap-1">
+                        {character.hakiTypes.slice(0,3).map(haki => (
+                          <span key={haki} className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#b78d5f]/30 border border-[#b78d5f]/60 text-[#3b2816]">
+                            {haki === 'Armament Haki' ? 'Armament' : haki === 'Observation Haki' ? 'Observation' : haki === 'Conqueror\'s Haki' ? 'Conqueror' : haki}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {character.devilFruit && (
+                    <div className="text-center mb-2 border border-[#8d341f] bg-[#c96d52]/30 rounded p-2">
+                      <span className="text-[10px] uppercase tracking-[0.2em] text-[#7b2d1a] block">Devil Fruit</span>
+                      <p className="text-[11px] font-medium text-[#5a1f11]">{character.devilFruit}</p>
+                    </div>
+                  )}
+                  <div className="flex justify-center mt-auto pt-2">
+                    <span className={`px-3 py-1 text-[11px] rounded-full font-extrabold tracking-wide border-2 ${
+                      character.bounty && character.bounty > 0
+                        ? 'border-[#3e2a18] bg-[#d9b07a] text-[#3b2816]' : character.haki
+                        ? 'border-[#3e2a18] bg-[#c3a072] text-[#3b2816]' : 'border-[#3e2a18] bg-[#c8b18c] text-[#3b2816]'
+                    }`}>
+                      {character.bounty && character.bounty > 0 ? 'Wanted' : character.haki ? 'Haki User' : 'Civilian'}
+                    </span>
                   </div>
-                )}
-
-                {/* Status Indicator */}
-                <div className="flex justify-center pt-1">
-                  <span className={`px-3 py-1 text-xs rounded-full font-bold border ${
-                    character.bounty && character.bounty > 0
-                      ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' 
-                      : character.haki 
-                      ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
-                      : 'bg-gray-500/20 text-gray-300 border-gray-500/40'
-                  }`}>
-                    {character.bounty && character.bounty > 0 ? 'Wanted' :
-                     character.haki ? 'Haki User' : 'Civilian'}
-                  </span>
                 </div>
+                {/* Bottom bar decorative */}
+                <div className="h-3 w-full bg-[repeating-linear-gradient(90deg,#3e2a18_0_12px,#00000022_12px_13px)] opacity-30" />
               </div>
             </div>
           ))}
