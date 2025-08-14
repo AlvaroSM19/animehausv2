@@ -43,3 +43,92 @@
   font-weight: bold;
   text-shadow: 0 0 5px rgba(251, 191, 36, 0.5);
 }
+
+/* Parchment themed card backs */
+.card-back-parchment {
+  background: linear-gradient(135deg, #5a3d17 0%, #8a6124 28%, #cfa864 60%, #e6c98a 85%);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(80,40,10,0.6);
+  box-shadow: inset 0 0 0 1px rgba(255,240,200,0.15), 0 4px 10px -2px rgba(0,0,0,0.6);
+}
+.card-back-parchment:before,
+.card-back-parchment:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(25deg, rgba(70,40,10,0.15) 0 2px, transparent 2px 11px),
+    linear-gradient(to bottom, rgba(255,240,200,0.12), rgba(120,70,30,0.15));
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+.card-back-parchment-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Inter', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.cbp-ring {
+  position: absolute;
+  width: 78%;
+  height: 78%;
+  border: 3px double rgba(60,30,5,0.5);
+  border-radius: 16px;
+  box-shadow: 0 0 0 1px rgba(255,230,170,0.25), inset 0 0 12px rgba(50,25,5,0.4);
+}
+.cbp-emblem {
+  position: relative;
+  width: 52%;
+  height: 52%;
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,220,150,0.8), rgba(180,110,40,0.25) 70%),
+    linear-gradient(145deg, rgba(120,65,20,0.4), rgba(255,210,140,0.2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 6px rgba(40,20,5,0.55), 0 4px 8px -2px rgba(0,0,0,0.5);
+}
+.cbp-emblem:before {
+  content: "✪";
+  font-size: 2.2rem;
+  color: #3a2410;
+  text-shadow: 0 1px 2px rgba(255,230,180,0.6), 0 0 6px rgba(60,30,10,0.5);
+}
+.cbp-title {
+  position: absolute;
+  bottom: 10%;
+  font-size: 0.58rem;
+  font-weight: 800;
+  color: #2d1c0b;
+  background: rgba(255,220,150,0.55);
+  padding: 2px 6px;
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px rgba(60,30,5,0.3), 0 2px 4px -1px rgba(0,0,0,0.45);
+  letter-spacing: 3px;
+}
+
+/* Front parchment frame behind image, keeping image colors */
+.card-front-parchment {
+  background: linear-gradient(135deg, rgba(70,45,15,0.85), rgba(160,105,40,0.55));
+  border: 1px solid rgba(110,70,25,0.6);
+  position: relative;
+}
+.card-front-parchment:before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border: 1px solid rgba(255,230,180,0.18);
+  border-radius: 0.65rem;
+  pointer-events: none;
+}
+

@@ -230,19 +230,7 @@ export default function GridGamePage() {
 
   return (
     <div className="min-h-screen relative text-amber-100">
-      {/* Memory Cards Background */}
-      <div className="fixed inset-0 z-0">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url('/images/memory-cards-bg.svg')`
-          }}
-        ></div>
-        {/* Dark overlay to make text readable */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/65 to-black/80"></div>
-      </div>
-
-      {/* Content with relative positioning */}
+      {/* Eliminado fondo propio: usamos wallpaper global */}
       <div className="relative z-10">
         {/* Header */}
         <div className="border-b border-amber-700/40 bg-[#042836]/70 backdrop-blur-sm sticky top-0 z-40 shadow-lg shadow-black/40">
@@ -331,27 +319,17 @@ export default function GridGamePage() {
                 <div className={`relative w-full h-full transition-transform duration-500 transform-style-preserve-3d ${
                   character.isFlipped || character.isMatched || showPreview ? 'rotate-y-180' : 'rotate-y-0'
                 }`}>
-                  {/* Back (default visible face with One Piece Card) */}
-                  <div className="absolute w-full h-full backface-hidden flex items-center justify-center rounded-xl overflow-hidden bg-[#0a2e42]">
-                    <img
-                      src="/images/card-back.svg"
-                      alt="One Piece Card Back"
-                      className="w-full h-full object-contain p-1"
-                      onError={(e) => { 
-                        // Fallback to original design if image fails to load
-                        e.currentTarget.style.display = 'none'
-                        const fallback = e.currentTarget.nextElementSibling as HTMLElement
-                        if (fallback) fallback.style.display = 'flex'
-                      }}
-                    />
-                    {/* Fallback design */}
-                    <div className="memory-card bg-gradient-to-br from-amber-500/10 to-transparent border border-dashed border-amber-500/30 rounded-xl w-full h-full items-center justify-center" style={{ display: 'none' }}>
-                      <span className="question-mark text-amber-300 drop-shadow-lg select-none">?</span>
+                  {/* Back (nuevo diseño pergamino) */}
+                  <div className="absolute w-full h-full backface-hidden rounded-xl overflow-hidden card-back-parchment">
+                    <div className="card-back-parchment-inner">
+                      <div className="cbp-ring" />
+                      <div className="cbp-emblem" />
+                      <div className="cbp-title">ONE PIECE</div>
                     </div>
                   </div>
                   {/* Front (image) */}
                   <div className="absolute w-full h-full backface-hidden rotate-y-180">
-                    <div className="w-full h-full bg-[#074860]/80 border border-amber-700/40 rounded-xl overflow-hidden hover:shadow-lg shadow shadow-black/40">
+                    <div className="w-full h-full card-front-parchment rounded-xl overflow-hidden hover:shadow-lg shadow shadow-black/40">
                       <div className="relative h-full">
                         <img
                           src={character.imageUrl}
@@ -359,7 +337,7 @@ export default function GridGamePage() {
                           className="w-full h-full object-cover"
                           onError={(e) => { e.currentTarget.src = '/placeholder-character.jpg' }}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
                         <div className="absolute bottom-0 left-0 right-0 p-3">
                           <h3 className="text-amber-100 font-semibold text-sm drop-shadow">{character.name}</h3>
                         </div>
