@@ -319,17 +319,15 @@ export default function GridGamePage() {
                 <div className={`relative w-full h-full transition-transform duration-500 transform-style-preserve-3d ${
                   character.isFlipped || character.isMatched || showPreview ? 'rotate-y-180' : 'rotate-y-0'
                 }`}>
-                  {/* Back (nuevo diseño pergamino) */}
-                  <div className="absolute w-full h-full backface-hidden rounded-xl overflow-hidden card-back-parchment">
-                    <div className="card-back-parchment-inner">
-                      <div className="cbp-ring" />
-                      <div className="cbp-emblem" />
-                      <div className="cbp-title">ONE PIECE</div>
-                    </div>
+                  {/* Back purple compass design */}
+                  <div className="absolute w-full h-full backface-hidden rounded-xl overflow-hidden card-back-purple">
+                    <div className="compass-ring" />
+                    <div className="compass-needle" />
+                    <div className="game-title">ONE PIECE</div>
                   </div>
                   {/* Front (image) */}
                   <div className="absolute w-full h-full backface-hidden rotate-y-180">
-                    <div className="w-full h-full card-front-parchment rounded-xl overflow-hidden hover:shadow-lg shadow shadow-black/40">
+                    <div className="w-full h-full card-front-frame rounded-xl overflow-hidden hover:shadow-lg shadow shadow-black/40">
                       <div className="relative h-full">
                         <img
                           src={character.imageUrl}

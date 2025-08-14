@@ -1,0 +1,32 @@
+/* Parchment effect for character cards */
+.parchment-card {
+  position: relative;
+  background: linear-gradient(135deg, #5a3d17 0%, #8a6124 25%, #cfa864 58%, #e6c98a 82%);
+  color: #2d1c0b;
+}
+.parchment-card:before,
+.parchment-card:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.parchment-card:before {
+  background:
+    repeating-linear-gradient(25deg, rgba(70,40,10,0.09) 0 2px, transparent 2px 11px),
+    linear-gradient(to bottom, rgba(255,240,200,0.18), rgba(120,70,30,0.15));
+  mix-blend-mode: overlay;
+  opacity: .55;
+}
+.parchment-card:after {
+  background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.35), rgba(255,255,255,0) 60%),
+              linear-gradient(to bottom right, rgba(0,0,0,0.25), rgba(0,0,0,0));
+  mix-blend-mode: soft-light;
+  opacity: .35;
+}
+.parchment-card .parchment-frame {
+  position: relative;
+  border: 4px solid #3e2a18;
+  background: #e4c79e;
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.25);
+}

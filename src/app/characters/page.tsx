@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import { Search, Filter, Users } from 'lucide-react'
+import './styles.css'
 import { 
   getAllCharacters, 
   getAllCrews, 
@@ -171,14 +172,14 @@ export default function CharactersPage() {
           {filteredCharacters.map((character) => (
             <div
               key={character.id}
-              className="relative rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.015] shadow-[0_6px_18px_-4px_rgba(0,0,0,0.6)] border-4 border-[#3e2a18] bg-transparent text-[#3b2816] before:absolute before:inset-0 before:pointer-events-none before:bg-[repeating-linear-gradient(45deg,rgba(0,0,0,0.04)_0_6px,transparent_6px_12px)] before:opacity-30 after:absolute after:inset-0 after:bg-[linear-gradient(to_bottom,rgba(0,0,0,0.15),rgba(0,0,0,0))] after:pointer-events-none"
+              className="relative rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.015] shadow-[0_6px_18px_-4px_rgba(0,0,0,0.6)] parchment-card text-[#3b2816]"
             >
               {/* Poster inner content */}
               <div className="relative flex flex-col h-full">
                 {/* Top bar decorative */}
                 <div className="h-3 w-full bg-[repeating-linear-gradient(90deg,#3e2a18_0_12px,#00000022_12px_13px)] opacity-30" />
                 <div className="p-5 flex-1 flex flex-col">
-                  <div className="relative mx-auto w-36 h-40 mb-4 border-4 border-[#3e2a18] rounded shadow-inner overflow-hidden bg-[#e4c79e]">
+                  <div className="parchment-frame relative mx-auto w-36 h-40 mb-4 rounded shadow-inner overflow-hidden">
                     <img
                       src={character.imageUrl}
                       alt={character.name}

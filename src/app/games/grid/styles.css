@@ -44,91 +44,51 @@
   text-shadow: 0 0 5px rgba(251, 191, 36, 0.5);
 }
 
-/* Parchment themed card backs */
-.card-back-parchment {
-  background: linear-gradient(135deg, #5a3d17 0%, #8a6124 28%, #cfa864 60%, #e6c98a 85%);
+/* Memory card back purple compass design */
+.card-back-purple {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(80,40,10,0.6);
-  box-shadow: inset 0 0 0 1px rgba(255,240,200,0.15), 0 4px 10px -2px rgba(0,0,0,0.6);
-}
-.card-back-parchment:before,
-.card-back-parchment:after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    repeating-linear-gradient(25deg, rgba(70,40,10,0.15) 0 2px, transparent 2px 11px),
-    linear-gradient(to bottom, rgba(255,240,200,0.12), rgba(120,70,30,0.15));
-  mix-blend-mode: overlay;
-  pointer-events: none;
-}
-.card-back-parchment-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  background: radial-gradient(circle at 30% 30%, #25386a, #121b33 65%) , linear-gradient(135deg,#0f1a33,#1d2b52);
+  border: 2px solid rgba(255,215,128,0.55);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08), 0 4px 10px -2px rgba(0,0,0,0.7);
+  display:flex;
+  align-items:center;
+  justify-content:center;
   font-family: 'Inter', sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 2px;
 }
-.cbp-ring {
-  position: absolute;
-  width: 78%;
-  height: 78%;
-  border: 3px double rgba(60,30,5,0.5);
-  border-radius: 16px;
-  box-shadow: 0 0 0 1px rgba(255,230,170,0.25), inset 0 0 12px rgba(50,25,5,0.4);
+.card-back-purple:before {
+  content: "";
+  position:absolute;inset:0;
+  background: repeating-linear-gradient(45deg,rgba(255,255,255,0.05) 0 6px,transparent 6px 12px);
+  opacity:.3;
+  pointer-events:none;
 }
-.cbp-emblem {
-  position: relative;
-  width: 52%;
-  height: 52%;
-  border-radius: 12px;
-  background:
-    radial-gradient(circle at 30% 30%, rgba(255,220,150,0.8), rgba(180,110,40,0.25) 70%),
-    linear-gradient(145deg, rgba(120,65,20,0.4), rgba(255,210,140,0.2));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: inset 0 0 6px rgba(40,20,5,0.55), 0 4px 8px -2px rgba(0,0,0,0.5);
+.card-back-purple .compass-ring {
+  position:absolute;
+  width:72%;height:72%;
+  border:2px solid rgba(255,215,128,0.55);
+  border-radius:50%;
+  box-shadow:0 0 8px -2px rgba(255,215,128,0.5), inset 0 0 12px -2px rgba(255,215,128,0.3);
 }
-.cbp-emblem:before {
-  content: "✪";
-  font-size: 2.2rem;
-  color: #3a2410;
-  text-shadow: 0 1px 2px rgba(255,230,180,0.6), 0 0 6px rgba(60,30,10,0.5);
+.card-back-purple .compass-needle {
+  position:absolute;
+  width:8%;height:60%;
+  background:linear-gradient(to bottom,rgba(255,215,128,0.9),rgba(180,130,40,0.4));
+  transform:rotate(12deg);
+  top:20%;left:50%;margin-left:-4%;border-radius:2px;
+  box-shadow:0 0 4px rgba(255,215,128,0.6);
 }
-.cbp-title {
-  position: absolute;
-  bottom: 10%;
-  font-size: 0.58rem;
-  font-weight: 800;
-  color: #2d1c0b;
-  background: rgba(255,220,150,0.55);
-  padding: 2px 6px;
-  border-radius: 6px;
-  box-shadow: 0 0 0 1px rgba(60,30,5,0.3), 0 2px 4px -1px rgba(0,0,0,0.45);
-  letter-spacing: 3px;
+.card-back-purple .game-title {
+  position:absolute;bottom:10%;
+  font-size:0.55rem;letter-spacing:3px;font-weight:800;
+  color:#f8e4b0;
+  text-shadow:0 1px 2px #000,0 0 6px rgba(255,215,128,0.45);
 }
 
-/* Front parchment frame behind image, keeping image colors */
-.card-front-parchment {
-  background: linear-gradient(135deg, rgba(70,45,15,0.85), rgba(160,105,40,0.55));
-  border: 1px solid rgba(110,70,25,0.6);
-  position: relative;
+/* Front frame basic border, no parchment tint */
+.card-front-frame {
+  position:relative;
+  background: #021b27;
+  border:1px solid rgba(255,255,255,0.08);
 }
-.card-front-parchment:before {
-  content: "";
-  position: absolute;
-  inset: 3px;
-  border: 1px solid rgba(255,230,180,0.18);
-  border-radius: 0.65rem;
-  pointer-events: none;
-}
+.card-front-frame:before {content:"";position:absolute;inset:2px;border:1px solid rgba(255,255,255,0.1);border-radius:0.65rem;pointer-events:none;}
 
