@@ -94,9 +94,9 @@ export default function RootLayout({
   <div className="relative flex min-h-screen flex-col z-20 wallpaper-content">
           <header className="sticky top-0 z-50 w-full border-b backdrop-blur supports-[backdrop-filter]:bg-background/60 relative overflow-hidden">
             {/* One Piece themed background */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#041c2c] via-[#064663] to-[#0a2847] opacity-95 header-bg-overlay"></div>
-            <div className="absolute inset-0 opacity-30 header-pattern-overlay" style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f59e0b' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+            <div className="absolute inset-0 bg-gradient-to-r from-[#3b2816] via-[#b7853f] to-[#e6cf9a] opacity-95 header-bg-overlay"></div>
+            <div className="absolute inset-0 opacity-25 header-pattern-overlay" style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%238a6124' stroke-width='1' stroke-opacity='0.15'%3E%3Cpath d='M0 60h120M60 0v120'/%3E%3C/g%3E%3C/svg%3E")`
             }}></div>
             
             {/* Pirate flag silhouettes */}
@@ -120,8 +120,8 @@ export default function RootLayout({
             <div className="container flex h-14 items-center relative z-10">
               <div className="mr-4 hidden md:flex">
                 <a className="mr-6 flex items-center space-x-2" href="/">
-                  <span className="hidden font-bold sm:inline-block gradient-text text-xl">
-                    One Piece Quest
+                  <span className="hidden font-extrabold sm:inline-block text-xl tracking-wide bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent drop-shadow">
+                    ONEPIECEHAUS
                   </span>
                 </a>
                 <nav className="flex items-center space-x-6 text-sm font-medium">
@@ -130,12 +130,6 @@ export default function RootLayout({
                     href="/characters"
                   >
                     Characters
-                  </a>
-                  <a
-                    className="transition-colors hover:text-foreground/80 text-foreground/60"
-                    href="/leaderboard"
-                  >
-                    Leaderboard
                   </a>
                 </nav>
               </div>
@@ -168,8 +162,8 @@ export default function RootLayout({
               
               <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
                 <div className="w-full flex-1 md:w-auto md:flex-none">
-                  <a className="inline-flex items-center rounded-lg font-bold text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground py-2 px-4 gradient-text md:hidden" href="/">
-                    One Piece Quest
+                  <a className="inline-flex items-center rounded-lg font-extrabold text-sm tracking-wide transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground py-2 px-4 bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent md:hidden" href="/">
+                    ONEPIECEHAUS
                   </a>
                 </div>
                 <nav className="flex items-center space-x-2">

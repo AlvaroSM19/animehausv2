@@ -60,12 +60,7 @@ export default function HomePage() {
           <div className="absolute -top-10 -left-10 w-72 h-72 opacity-[0.04] rotate-12 bg-[radial-gradient(circle_at_center,rgba(255,216,128,0.6),transparent_60%)] rounded-full" />
           <div className="absolute bottom-0 right-0 w-[38rem] h-[38rem] opacity-[0.05] -rotate-6 bg-[conic-gradient(from_45deg,rgba(255,196,90,0.4),transparent_55%)]" />
         </div>
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500 bg-clip-text text-transparent drop-shadow [text-shadow:0_0_12px_rgba(255,196,90,0.18)]">
-              Juegos Disponibles
-            </h2>
-          </div>
+  <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto mb-16">
             {games.map(game => {
               const IconComponent = game.icon
