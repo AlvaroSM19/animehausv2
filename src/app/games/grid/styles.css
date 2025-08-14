@@ -47,13 +47,14 @@
 /* Memory card back purple compass design */
 .card-back-purple {
   position: relative;
-  background: radial-gradient(circle at 30% 30%, #25386a, #121b33 65%) , linear-gradient(135deg,#0f1a33,#1d2b52);
+  background: radial-gradient(circle at 30% 30%, #25386a, #121b33 65%), linear-gradient(135deg,#0f1a33,#1d2b52);
   border: 2px solid rgba(255,215,128,0.55);
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08), 0 4px 10px -2px rgba(0,0,0,0.7);
   display:flex;
   align-items:center;
   justify-content:center;
   font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
 }
 .card-back-purple:before {
   content: "";
@@ -88,7 +89,9 @@
 .card-front-frame {
   position:relative;
   background: #021b27;
-  border:1px solid rgba(255,255,255,0.08);
+  border:2px solid rgba(255,215,128,0.35);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06), 0 2px 6px -2px rgba(0,0,0,0.6);
+  box-sizing: border-box;
 }
-.card-front-frame:before {content:"";position:absolute;inset:2px;border:1px solid rgba(255,255,255,0.1);border-radius:0.65rem;pointer-events:none;}
+.card-front-frame:before {content:"";position:absolute;inset:2px;border:1px solid rgba(255,215,128,0.25);border-radius:0.65rem;pointer-events:none;}
 

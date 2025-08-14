@@ -294,51 +294,41 @@ export default function HigherLowerPage() {
           </div>
         </div>
 
-      {/* Game Area */}
+      {/* Game Area with left rank summary, center game, right list */}
       <div className="container mx-auto px-4 py-10">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 xl:grid-cols-4 gap-8">
-          {/* Main Game Area */}
-          <div className="xl:col-span-3">
-            <div className="flex flex-col gap-10">
-              {/* Rank Panels (Current & Next) moved from right sidebar */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="relative z-10 p-4 bg-gradient-to-r from-amber-800/40 to-yellow-800/30 rounded-xl border-2 border-amber-500/60 shadow-lg">
-                  <div className="text-center">
-                    <div className="text-4xl mb-2">{getCurrentRank(score).icon}</div>
-                    <div className={`font-bold text-lg ${getCurrentRank(score).color} drop-shadow`}>
-                      {getCurrentRank(score).name}
-                    </div>
-                    <div className="text-xs text-amber-200/70 mt-1 italic">
-                      &quot;{getCurrentRank(score).description}&quot;
-                    </div>
-                    <div className="text-xs text-amber-300/80 mt-2 font-semibold">
-                      Rango Actual
-                    </div>
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-r from-amber-400/10 to-yellow-400/10 rounded-xl blur-sm -z-10" />
+        <div className="max-w-7xl mx-auto grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+          {/* Left Rank Summary */}
+          <aside className="xl:col-span-3 space-y-6 order-1">
+            <div className="relative p-5 bg-gradient-to-br from-amber-800/40 to-yellow-800/30 rounded-xl border-2 border-amber-500/60 shadow-lg">
+              <div className="text-center">
+                <div className="text-4xl mb-2">{getCurrentRank(score).icon}</div>
+                <div className={`font-bold text-lg ${getCurrentRank(score).color} drop-shadow`}>
+                  {getCurrentRank(score).name}
                 </div>
-                {getNextRank(score) && (
-                  <div className="relative z-10 p-4 bg-gradient-to-r from-blue-900/30 to-purple-900/20 rounded-xl border border-blue-500/40 shadow-lg">
-                    <div className="text-center">
-                      <div className="text-2xl mb-2">{getNextRank(score)!.icon}</div>
-                      <div className={`font-semibold text-sm ${getNextRank(score)!.color}`}>
-                        Próximo: {getNextRank(score)!.name}
-                      </div>
-                      <div className="text-xs text-blue-200/60 mt-1">
-                        {getNextRank(score)!.minScore - score} puntos restantes
-                      </div>
-                      <div className="mt-3 bg-gray-800/50 rounded-full h-3 border border-gray-600/30 overflow-hidden">
-                        <div
-                          className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 h-3 rounded-full transition-all duration-500 relative overflow-hidden"
-                          style={{ width: `${Math.min(100, (score / getNextRank(score)!.minScore) * 100)}%` }}
-                        >
-                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse" />
-                        </div>
-                      </div>
+                <div className="text-xs text-amber-200/70 mt-1 italic">&quot;{getCurrentRank(score).description}&quot;</div>
+                <div className="text-xs text-amber-300/80 mt-2 font-semibold">Rango Actual</div>
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-r from-amber-400/10 to-yellow-400/10 rounded-xl blur-sm -z-10" />
+            </div>
+            {getNextRank(score) && (
+              <div className="relative p-5 bg-gradient-to-br from-blue-900/30 to-purple-900/20 rounded-xl border border-blue-500/40 shadow-lg">
+                <div className="text-center">
+                  <div className="text-3xl mb-2">{getNextRank(score)!.icon}</div>
+                  <div className={`font-semibold text-sm ${getNextRank(score)!.color}`}>Próximo: {getNextRank(score)!.name}</div>
+                  <div className="text-xs text-blue-200/60 mt-1">{getNextRank(score)!.minScore - score} puntos restantes</div>
+                  <div className="mt-3 bg-gray-800/50 rounded-full h-3 border border-gray-600/30 overflow-hidden">
+                    <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 h-3 rounded-full transition-all duration-500 relative overflow-hidden" style={{ width: `${Math.min(100, (score / getNextRank(score)!.minScore) * 100)}%` }}>
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse" />
                     </div>
                   </div>
-                )}
+                </div>
               </div>
+            )}
+          </aside>
+
+          {/* Main Game Area */}
+          <div className="xl:col-span-6 order-3 xl:order-2">
+            <div className="flex flex-col gap-10">
               <div className="flex flex-col md:flex-row items-stretch justify-center gap-8">
                 {/* Current Character Card */}
                 <div className="bg-[#101b24]/70 border border-amber-700/40 rounded-xl backdrop-blur-sm p-5 w-full md:w-72 lg:w-80 flex flex-col shadow-md shadow-black/50">
@@ -418,7 +408,7 @@ export default function HigherLowerPage() {
                     )}
                   </div>
                   <div className="mt-4 text-center space-y-1">
-                    <h3 className="text-lg font-bold tracking-wide {showResult ? 'text-amber-300' : 'text-amber-300'}">{nextCharacter?.name}</h3>
+                    <h3 className="text-lg font-bold tracking-wide text-amber-300">{nextCharacter?.name}</h3>
                     {nextCharacter?.crew && (
                       <p className="text-xs uppercase tracking-wider text-amber-500/70">{nextCharacter.crew}</p>
                     )}
@@ -449,8 +439,8 @@ export default function HigherLowerPage() {
             </div>
           </div>
 
-          {/* Rank System Panel (full list only) */}
-          <div className="xl:col-span-1">
+          {/* Rank System Panel (full list) */}
+          <div className="xl:col-span-3 order-2 xl:order-3">
             <div className="bg-gradient-to-b from-amber-900/30 to-yellow-900/20 border border-amber-600/50 rounded-xl backdrop-blur-sm p-6 shadow-2xl shadow-black/50 sticky top-24 relative overflow-hidden">
               {/* Background Pattern */}
               <div className="absolute inset-0 opacity-10">

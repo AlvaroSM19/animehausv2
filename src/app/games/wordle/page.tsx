@@ -191,19 +191,8 @@ export default function WordlePage() {
 
   return (
     <div className="min-h-screen relative">
-      {/* Wordle Adventure Background */}
-      <div className="fixed inset-0 z-0">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url('/images/wordle-bg.svg')`
-          }}
-        ></div>
-        {/* Dark overlay to make text readable */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/65 to-black/80"></div>
-      </div>
-
-      {/* Content with relative positioning */}
+      {/* Removed custom background: inherit global wallpaper */}
+      <div className="absolute inset-0 bg-black/60 pointer-events-none" aria-hidden="true" />
       <div className="relative z-10">
         {/* Header */}
         <div className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
