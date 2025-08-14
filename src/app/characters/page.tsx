@@ -86,20 +86,20 @@ export default function CharactersPage() {
   }, [characters, searchQuery, selectedCrew, selectedOrigin, sortBy])
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#05344d] via-[#065e7c] to-[#f5d9a5] text-amber-100">
+    <div className="min-h-screen relative text-amber-100">
       {/* Header */}
-      <div className="border-b border-amber-700/40 bg-[#042836]/70 backdrop-blur-sm sticky top-0 z-40 shadow-lg shadow-black/40">
+  <div className="border-b border-amber-700/40 bg-black/40 backdrop-blur-sm sticky top-0 z-40 shadow-lg shadow-black/40">
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
             {/* Search */}
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-amber-300/80 w-4 h-4" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-amber-300/80 w-4 h-4" />
               <input
                 type="text"
                 placeholder="Search characters..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-[#06394f]/60 border border-amber-700/40 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 text-amber-100 placeholder-amber-300/50 shadow shadow-black/40"
+                className="w-full pl-10 pr-4 py-2 bg-black/40 border border-amber-700/40 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 text-amber-100 placeholder-amber-300/50 shadow shadow-black/40"
               />
             </div>
 
@@ -116,7 +116,7 @@ export default function CharactersPage() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="px-4 py-2 bg-[#06394f]/60 border border-amber-700/40 rounded-lg text-amber-100 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 shadow shadow-black/40"
+              className="px-4 py-2 bg-black/40 border border-amber-700/40 rounded-lg text-amber-100 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 shadow shadow-black/40"
             >
               <option value="name">Name A-Z</option>
               <option value="bounty">Bounty (High to Low)</option>
@@ -132,14 +132,14 @@ export default function CharactersPage() {
 
           {/* Filters Panel */}
           {showFilters && (
-            <div className="mt-4 p-4 bg-[#06394f]/70 rounded-lg border border-amber-700/40 shadow shadow-black/40">
+            <div className="mt-4 p-4 bg-black/40 rounded-lg border border-amber-700/40 shadow shadow-black/40">
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-amber-200 mb-2">Crew</label>
                   <select
                     value={selectedCrew}
                     onChange={(e) => setSelectedCrew(e.target.value)}
-                    className="w-full px-3 py-2 bg-[#074860]/80 border border-amber-700/40 rounded-lg text-amber-100 focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                    className="w-full px-3 py-2 bg-black/40 border border-amber-700/40 rounded-lg text-amber-100 focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                   >
                     <option value="all">All Crews</option>
                     {crews.map(crew => (
@@ -152,7 +152,7 @@ export default function CharactersPage() {
                   <select
                     value={selectedOrigin}
                     onChange={(e) => setSelectedOrigin(e.target.value)}
-                    className="w-full px-3 py-2 bg-[#074860]/80 border border-amber-700/40 rounded-lg text-amber-100 focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                    className="w-full px-3 py-2 bg-black/40 border border-amber-700/40 rounded-lg text-amber-100 focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                   >
                     <option value="all">All Origins</option>
                     {origins.slice(0, 20).map(origin => (
