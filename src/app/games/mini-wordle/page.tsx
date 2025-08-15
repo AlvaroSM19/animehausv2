@@ -5,8 +5,7 @@ import Link from 'next/link'
 import { ArrowLeft, RotateCcw, HelpCircle, Trophy } from 'lucide-react'
 import { getAllCharacters, type AnimeCharacter } from '../../../lib/anime-data'
 
-// Simple compact Wordle-like game (5 letters, 6 attempts) using character names
-const WORD_LENGTH = 5
+// Mini Wordle ahora admite cualquier longitud de nombre (antes fijo 5). Máximo intentos se mantiene.
 const MAX_GUESSES = 6
 
 type LetterState = 'correct' | 'present' | 'absent' | 'empty'
@@ -23,10 +22,8 @@ export default function MiniWordlePage() {
   const [showHelp, setShowHelp] = useState(false)
 
   const validCharacters = useMemo(() => {
-    return getAllCharacters().filter(c => {
-      const n = c.name.replace(/\s+/g,'').toLowerCase()
-      return n.length === WORD_LENGTH && /^[a-z]+$/.test(n)
-    })
+    // Todos los personajes cuyo nombre (sin espacios) solo contenga letras a-z
+    return getAllCharacters().filter(c => /^[a-z]+$/i.test(c.name.replace(/\s+/g,'')))
   }, [])
 
   const pickWord = useCallback(() => {
@@ -48,13 +45,13 @@ export default function MiniWordlePage() {
     const res: GuessLetter[] = []
     const targetArr = targetWord.split('')
     const guessArr = guess.split('')
-
+    const L = targetWord.length
     // First pass exact
-    for (let i=0;i<WORD_LENGTH;i++) {
+    for (let i=0;i<L;i++) {
       if (guessArr[i] === targetArr[i]) { res[i] = {letter: guessArr[i], state:'correct'}; targetArr[i] = '_' } else res[i] = {letter: guessArr[i], state:'absent'}
     }
     // Second pass present
-    for (let i=0;i<WORD_LENGTH;i++) {
+    for (let i=0;i<L;i++) {
       if (res[i].state === 'correct') continue
       const idx = targetArr.indexOf(guessArr[i])
       if (idx !== -1) { res[i].state = 'present'; targetArr[idx] = '_' }
@@ -63,7 +60,8 @@ export default function MiniWordlePage() {
   }
 
   const submitGuess = () => {
-    if (currentGuess.length !== WORD_LENGTH || gameState !== 'playing') return
+    const L = targetWord.length
+    if (currentGuess.length !== L || gameState !== 'playing') return
     const guess = currentGuess.toLowerCase()
     const evaluated = evaluateGuess(guess)
     setRows(prev => [...prev, evaluated])
@@ -80,7 +78,7 @@ export default function MiniWordlePage() {
     })
     if (evaluated.every(l => l.state === 'correct')) {
       setGameState('won')
-    } else if (rowIndex + 1 >= MAX_GUESSES) {
+  } else if (rowIndex + 1 >= MAX_GUESSES) {
       setGameState('lost')
     } else {
       setRowIndex(r => r + 1)
@@ -92,7 +90,7 @@ export default function MiniWordlePage() {
     if (gameState !== 'playing') return
     if (k === 'Enter') return submitGuess()
     if (k === 'Backspace') return setCurrentGuess(g => g.slice(0,-1))
-    if (/^[a-zA-Z]$/.test(k) && currentGuess.length < WORD_LENGTH) {
+  if (/^[a-zA-Z]$/.test(k) && currentGuess.length < targetWord.length) {
       setCurrentGuess(g => g + k.toLowerCase())
     }
   }
@@ -138,26 +136,28 @@ export default function MiniWordlePage() {
       <div className="max-w-4xl mx-auto p-4">
         {showHelp && (
           <div className="mb-6 p-4 rounded-lg bg-[#06394f]/60 border border-amber-700/40 text-sm leading-relaxed shadow shadow-black/40">
-            Adivina el nombre del personaje (5 letras). Tienes {MAX_GUESSES} intentos.
+            Adivina el nombre del personaje. La palabra tiene {targetWord.length} letras. Tienes {MAX_GUESSES} intentos.
             Verde = letra correcta en posición correcta. Amarillo = letra existe en otra posición.
           </div>
         )}
 
         {/* Grid */}
-        <div className="grid gap-2 w-fit mx-auto mb-8" style={{gridTemplateColumns:`repeat(${WORD_LENGTH}, 3rem)`}}>
-          {Array.from({length: MAX_GUESSES}).map((_, r) => {
-            const row = rows[r] || []
-            return Array.from({length: WORD_LENGTH}).map((_, c) => {
-              let letter = row[c]?.letter || (r === rowIndex ? currentGuess[c] : '') || ''
-              let state: LetterState = row[c]?.state || 'empty'
-              return (
-                <div key={r+'-'+c} className={`w-12 h-12 flex items-center justify-center font-semibold uppercase rounded border text-lg tracking-wide select-none transition-colors ${getBg(state)} shadow shadow-black/30` }>
-                  {letter}
-                </div>
-              )
-            })
-          })}
-        </div>
+        {targetWord && (
+          <div className="grid gap-2 w-fit mx-auto mb-8" style={{gridTemplateColumns:`repeat(${targetWord.length}, 3rem)`}}>
+            {Array.from({length: MAX_GUESSES}).map((_, r) => {
+              const row = rows[r] || []
+              return Array.from({length: targetWord.length}).map((_, c) => {
+                let letter = row[c]?.letter || (r === rowIndex ? currentGuess[c] : '') || ''
+                let state: LetterState = row[c]?.state || 'empty'
+                return (
+                  <div key={r+'-'+c} className={`w-12 h-12 flex items-center justify-center font-semibold uppercase rounded border text-lg tracking-wide select-none transition-colors ${getBg(state)} shadow shadow-black/30` }>
+                    {letter}
+                  </div>
+                )
+              })
+            })}
+          </div>
+        )}
 
         {/* Keyboard */}
         <div className="space-y-2 max-w-xl mx-auto">

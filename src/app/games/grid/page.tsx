@@ -308,7 +308,7 @@ export default function GridGamePage() {
         <div className="max-w-5xl mx-auto grid lg:grid-cols-12 gap-6 items-start">
           {/* Grid */}
           <div className="lg:col-span-8">
-            <div className="grid grid-cols-4 gap-2 mb-8 max-w-md mx-auto">
+            <div className="grid grid-cols-4 gap-4 mb-8 max-w-3xl mx-auto">
             {characters.map((character) => (
               <div
                 key={character.id}

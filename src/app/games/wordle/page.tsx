@@ -231,7 +231,7 @@ export default function WordlePage() {
 
       {/* Game Area */}
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-md mx-auto">
+  <div className="max-w-xl mx-auto flex flex-col items-center">
           {/* Hint Section */}
           {showHint && (
             <div className="mb-6 p-4 bg-card border border-border rounded-lg">
@@ -246,9 +246,9 @@ export default function WordlePage() {
           )}
 
           {/* Game Grid */}
-          <div className="mb-6">
+          <div className="mb-8 flex flex-col items-center">
             {Array.from({ length: MAX_GUESSES }, (_, rowIndex) => (
-              <div key={rowIndex} className="flex gap-2 mb-2">
+              <div key={rowIndex} className="flex gap-3 mb-3">
                 {Array.from({ length: WORD_LENGTH }, (_, colIndex) => {
                   let letter = ''
                   let state: LetterState = 'empty'
@@ -276,13 +276,13 @@ export default function WordlePage() {
           </div>
 
           {/* Virtual Keyboard */}
-          <div className="space-y-2">
+          <div className="space-y-3 mt-2">
             {['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'].map((row, rowIndex) => (
-              <div key={rowIndex} className="flex gap-1 justify-center">
+              <div key={rowIndex} className="flex gap-2 justify-center">
                 {rowIndex === 2 && (
                   <button
                     onClick={() => handleKeyPress('ENTER')}
-                    className="px-3 py-2 bg-muted text-muted-foreground rounded text-sm font-medium hover:bg-muted/80 transition-colors"
+                    className="px-4 py-3 bg-muted text-muted-foreground rounded text-sm font-semibold hover:bg-muted/80 transition-colors"
                   >
                     ENTER
                   </button>
@@ -293,7 +293,7 @@ export default function WordlePage() {
                     <button
                       key={letter}
                       onClick={() => handleKeyPress(letter)}
-                      className={`w-8 h-10 text-sm font-medium rounded transition-all duration-300 ${getLetterStateClass(letterState)}`}
+                      className={`w-10 h-12 text-sm font-semibold rounded-md transition-all duration-300 ${getLetterStateClass(letterState)}`}
                     >
                       {letter}
                     </button>
@@ -302,7 +302,7 @@ export default function WordlePage() {
                 {rowIndex === 2 && (
                   <button
                     onClick={() => handleKeyPress('BACKSPACE')}
-                    className="px-3 py-2 bg-muted text-muted-foreground rounded text-sm font-medium hover:bg-muted/80 transition-colors"
+                    className="px-4 py-3 bg-muted text-muted-foreground rounded text-sm font-semibold hover:bg-muted/80 transition-colors"
                   >
                     ⌫
                   </button>

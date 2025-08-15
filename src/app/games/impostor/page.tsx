@@ -151,7 +151,9 @@ export default function ImpostorGamePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#05344d] via-[#065e7c] to-[#f5d9a5] text-amber-100">
+    <div className="min-h-screen text-amber-100 relative">
+      {/* Remove SVG/gradient background; rely on global wallpaper with subtle overlay for readability */}
+      <div className="fixed inset-0 pointer-events-none bg-gradient-to-b from-black/65 via-black/55 to-black/70" />
       {/* Header */}
       <div className="border-b border-amber-700/40 bg-[#042836]/70 backdrop-blur-sm sticky top-0 z-40 shadow-lg shadow-black/40">
         <div className="container mx-auto px-4 py-4">
@@ -162,7 +164,7 @@ export default function ImpostorGamePage() {
                 className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
-                Inicio
+                Home
               </Link>
               <h1 className="text-2xl font-extrabold tracking-wide bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent drop-shadow">Impostor</h1>
             </div>
@@ -223,12 +225,12 @@ export default function ImpostorGamePage() {
             <div className="text-center bg-[#06394f]/70 border border-amber-700/40 rounded-xl p-8 shadow shadow-black/40">
               {lastAnswerCorrect ? (
                 <>
-                  <h2 className="text-3xl font-bold mb-4 text-green-400">¡Correcto! ✓</h2>
-                  <p className="text-amber-200/70">+{Math.max(1, Math.floor(time / 3))} puntos</p>
+                  <h2 className="text-3xl font-bold mb-4 text-green-400">Correct! ✓</h2>
+                  <p className="text-amber-200/70">+{Math.max(1, Math.floor(time / 3))} points</p>
                 </>
               ) : (
                 <>
-                  <h2 className="text-3xl font-bold mb-4 text-red-400">¡Incorrecto! ✗</h2>
+                  <h2 className="text-3xl font-bold mb-4 text-red-400">Wrong! ✗</h2>
                   <p className="text-amber-200/70">Game Over</p>
                 </>
               )}

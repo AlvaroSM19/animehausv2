@@ -248,16 +248,9 @@ export default function HigherLowerPage() {
       `}</style>
       
       <div className="min-h-screen relative text-foreground">
-      {/* Higher Lower Background */}
-      <div className="fixed inset-0 z-0">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url('/images/higher-lower-bg.svg')`
-          }}
-        ></div>
-        {/* Dark overlay to make text readable */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black/85"></div>
+      {/* Se elimina el background SVG para dejar ver el wallpaper global. Añadimos solo un velo sutil para legibilidad sin ocultar el fondo principal. */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70 mix-blend-normal" />
       </div>
 
       {/* Content with relative positioning */}
@@ -331,7 +324,7 @@ export default function HigherLowerPage() {
             <div className="flex flex-col gap-10">
               <div className="flex flex-col md:flex-row items-stretch justify-center gap-8">
                 {/* Current Character Card */}
-                <div className="bg-[#101b24]/70 border border-amber-700/40 rounded-xl backdrop-blur-sm p-5 w-full md:w-72 lg:w-80 flex flex-col shadow-md shadow-black/50">
+                <div className="bg-[#101b24]/70 border border-amber-700/40 rounded-xl backdrop-blur-sm p-5 w-full md:w-80 lg:w-96 flex flex-col shadow-md shadow-black/50">
                   <div className="aspect-[3/4] w-full rounded-lg overflow-hidden bg-black/40 border border-amber-700/30 flex items-center justify-center">
                     {currentCharacter && (
                       <img
@@ -396,7 +389,7 @@ export default function HigherLowerPage() {
                 </div>
 
                 {/* Next Character Card */}
-                <div className="bg-[#101b24]/70 border border-amber-700/40 rounded-xl backdrop-blur-sm p-5 w-full md:w-72 lg:w-80 flex flex-col shadow-md shadow-black/50">
+                <div className="bg-[#101b24]/70 border border-amber-700/40 rounded-xl backdrop-blur-sm p-5 w-full md:w-80 lg:w-96 flex flex-col shadow-md shadow-black/50">
                   <div className="aspect-[3/4] w-full rounded-lg overflow-hidden bg-black/40 border border-amber-700/30 flex items-center justify-center">
                     {nextCharacter && (
                       <img

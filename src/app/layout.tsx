@@ -99,23 +99,7 @@ export default function RootLayout({
               backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%238a6124' stroke-width='1' stroke-opacity='0.15'%3E%3Cpath d='M0 60h120M60 0v120'/%3E%3C/g%3E%3C/svg%3E")`
             }}></div>
             
-            {/* Pirate flag silhouettes */}
-            <div className="absolute top-0 left-10 w-8 h-8 opacity-10">
-              <svg viewBox="0 0 100 100" className="w-full h-full fill-amber-400">
-                <rect x="10" y="20" width="2" height="60" fill="currentColor"/>
-                <path d="M12,20 Q40,15 68,20 Q65,35 68,50 Q40,55 12,50 Z" fill="currentColor"/>
-                <circle cx="35" cy="30" r="3" fill="#000"/>
-                <circle cx="50" cy="30" r="3" fill="#000"/>
-                <path d="M30,40 Q42,45 55,40" stroke="#000" strokeWidth="2" fill="none"/>
-              </svg>
-            </div>
-            
-            <div className="absolute top-0 right-10 w-6 h-6 opacity-8">
-              <svg viewBox="0 0 100 100" className="w-full h-full fill-amber-300">
-                <circle cx="50" cy="50" r="40" fill="currentColor"/>
-                <path d="M20,50 Q50,30 80,50 Q50,70 20,50" fill="#064663"/>
-              </svg>
-            </div>
+            {/* Decorative flag & eye removed as requested */}
             
             <div className="container flex h-14 items-center relative z-10">
               <div className="mr-4 hidden md:flex">
@@ -124,12 +108,18 @@ export default function RootLayout({
                     ONEPIECEHAUS
                   </span>
                 </a>
-                <nav className="flex items-center space-x-6 text-sm font-medium">
+                <nav className="flex items-center space-x-6 text-sm font-semibold tracking-wide">
                   <a
-                    className="transition-colors hover:text-foreground/80 text-foreground/60"
+                    className="text-amber-100/80 hover:text-amber-50 transition-colors drop-shadow"
+                    href="/"
+                  >
+                    GAMES
+                  </a>
+                  <a
+                    className="text-amber-100/80 hover:text-amber-50 transition-colors drop-shadow"
                     href="/characters"
                   >
-                    Characters
+                    CHARACTERS
                   </a>
                 </nav>
               </div>
@@ -166,7 +156,7 @@ export default function RootLayout({
                     ONEPIECEHAUS
                   </a>
                 </div>
-                <nav className="flex items-center space-x-2">
+                <nav className="flex items-center space-x-4">
                   <WallpaperSelector />
                 </nav>
               </div>

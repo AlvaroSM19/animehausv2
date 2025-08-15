@@ -88,7 +88,7 @@ export default function CharactersPage() {
   return (
     <div className="min-h-screen relative text-amber-100">
       {/* Header */}
-  <div className="border-b border-amber-700/40 bg-black/40 backdrop-blur-sm sticky top-0 z-40 shadow-lg shadow-black/40">
+  <div className="border-b border-amber-700/40 bg-black/55 backdrop-blur-md sticky top-0 z-50 shadow-lg shadow-black/50">
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
             {/* Search */}
@@ -189,8 +189,8 @@ export default function CharactersPage() {
                     <div className="absolute inset-0 mix-blend-multiply bg-[radial-gradient(circle_at_center,rgba(0,0,0,0)_60%,rgba(0,0,0,0.18))]" />
                   </div>
                   {character.bounty && character.bounty > 0 && (
-                    <div className="absolute top-2 right-2 px-2 py-1 rounded border border-[#3e2a18] bg-[#c19b63] text-[10px] font-extrabold tracking-wide shadow-sm">
-                      {formatBounty(character.bounty || null)}
+                    <div className="absolute -top-3 -right-3 px-3 py-2 rounded-xl border-2 border-[#3e2a18] bg-[#cda160] text-xs md:text-sm font-black tracking-wider shadow-[0_2px_6px_rgba(0,0,0,0.4)] rotate-2">
+                      <span className="drop-shadow-[0_0_4px_rgba(0,0,0,0.35)]">{formatBounty(character.bounty || null)}</span>
                     </div>
                   )}
                   <h3 className="text-center text-2xl font-black tracking-widest mb-2 text-[#2d1a0b] drop-shadow-lg uppercase">

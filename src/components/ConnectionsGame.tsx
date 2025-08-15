@@ -256,7 +256,7 @@ function generatePuzzle(difficulty: number): Puzzle {
 const ConnectionsGame: React.FC<{ difficulty?: number }> = ({ difficulty = 1 }) => {
   const [puzzle, setPuzzle] = useState<Puzzle | null>(null);
   const [selected, setSelected] = useState<string[]>([]);
-  const [lives, setLives] = useState(3);
+  const [lives, setLives] = useState(5);
   const [hintsUsed, setHintsUsed] = useState(0);
   const [status, setStatus] = useState<'playing'|'win'|'lose'>('playing');
   const [message, setMessage] = useState<string | null>(null);
@@ -272,7 +272,7 @@ const ConnectionsGame: React.FC<{ difficulty?: number }> = ({ difficulty = 1 }) 
       setPuzzle(p);
       setStartTime(Date.now());
       setSelected([]);
-      setLives(3);
+  setLives(5);
       setHintsUsed(0);
       setStatus('playing');
       setMessage(null);
@@ -367,7 +367,7 @@ const ConnectionsGame: React.FC<{ difficulty?: number }> = ({ difficulty = 1 }) 
       setPuzzle(p);
       setStartTime(Date.now());
       setSelected([]);
-      setLives(3);
+  setLives(5);
       setHintsUsed(0);
       setStatus('playing');
       setMessage(null);
@@ -600,7 +600,7 @@ const ConnectionsGame: React.FC<{ difficulty?: number }> = ({ difficulty = 1 }) 
           <li>Selecciona 4 personajes que creas comparten una categoría oculta.</li>
           <li>Pulsa &quot;Confirmar Grupo&quot;. Si es correcto se revelará la categoría y se eliminarán esas cartas.</li>
           <li>Usa Pista para revelar el título de una categoría (máx {maxHints}).</li>
-          <li>Tienes 3 vidas. Cada fallo consume 1 vida.</li>
+          <li>Tienes 5 vidas. Cada fallo consume 1 vida.</li>
           <li>Completa los 4 grupos para ganar.</li>
         </ul>
       </details>

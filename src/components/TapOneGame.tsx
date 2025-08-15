@@ -589,41 +589,43 @@ const TapOneGame: React.FC = () => {
             );
           })()}
           
-          {/* Best Rank Display (compact) */}
-          <div className="relative rounded-2xl p-[2px] bg-gradient-to-br from-amber-500/60 via-yellow-500/60 to-orange-500/60">
-            <div className="rounded-[14px] bg-slate-900/70 backdrop-blur-md overflow-hidden flex flex-col items-center justify-center h-[200px] md:h-[220px] px-3">
-              <div className="text-center space-y-1">
-                <h3 className="text-sm font-semibold text-amber-300">🏆 Best Rank</h3>
-                {bestRank ? (
-                  <>
-                    <div className="text-2xl md:text-3xl font-extrabold text-amber-200">#{bestRank.rank}</div>
-                    <div className="text-[11px] md:text-xs text-amber-100/90 font-bold leading-snug">{bestRank.title}</div>
-                    <div className="text-[11px] md:text-xs text-emerald-300 font-extrabold">
-                      ₿{bestRank.bountyValue.toLocaleString()} BERRIES
-                    </div>
-                  </>
-                ) : (
-                  <p className="text-xs text-amber-200/90">Not set</p>
-                )}
+          {/* Best Rank Display (single wide) */}
+          <div className="relative rounded-2xl p-[2px] bg-gradient-to-br from-amber-500/60 via-yellow-500/60 to-orange-500/60 col-span-2">
+            <div className="rounded-[14px] bg-slate-900/70 backdrop-blur-md overflow-hidden h-[200px] md:h-[220px] flex flex-col md:flex-row items-stretch">
+              <div className="flex-1 flex items-center justify-center px-4 py-5">
+                <div className="text-center md:text-left space-y-2">
+                  <h3 className="text-sm font-semibold text-amber-300 flex items-center gap-1 justify-center md:justify-start"><span>🏆</span><span>Best Rank</span></h3>
+                  {bestRank ? (
+                    <>
+                      <div className="flex flex-col md:flex-row md:items-end gap-1 md:gap-3">
+                        <div className="text-3xl md:text-4xl font-extrabold text-amber-200 drop-shadow">#{bestRank.rank}</div>
+                        <div className="text-[11px] md:text-xs text-amber-100/90 font-bold leading-snug md:leading-tight max-w-xs">{bestRank.title}</div>
+                      </div>
+                      <div className="text-[11px] md:text-xs text-emerald-300 font-extrabold tracking-wide">
+                        ₿{bestRank.bountyValue.toLocaleString()} BERRIES
+                      </div>
+                    </>
+                  ) : (
+                    <p className="text-xs text-amber-200/90">Not set</p>
+                  )}
+                </div>
               </div>
-            </div>
-          </div>
-          
-          {/* Best Rank Display (detailed) */}
-          <div className="relative rounded-2xl p-[2px] bg-gradient-to-br from-amber-500/60 via-yellow-500/60 to-orange-500/60">
-            <div className="rounded-[14px] bg-slate-900/70 backdrop-blur-md overflow-hidden flex flex-col items-center justify-center h-[200px] md:h-[220px] px-3">
-              <div className="text-center space-y-1">
-                <h3 className="text-sm font-semibold text-amber-300">� Best Rank</h3>
+              {/* Decorative separator (desktop) */}
+              <div className="hidden md:block w-px bg-gradient-to-b from-amber-400/40 via-amber-300/30 to-amber-400/40 my-6"></div>
+              <div className="md:w-1/2 flex items-center justify-center px-4 pb-4 md:pb-0">
                 {bestRank ? (
-                  <>
-                    <div className="text-2xl md:text-3xl font-extrabold text-amber-200">#{bestRank.rank}</div>
-                    <div className="text-[11px] md:text-xs text-amber-100/90 font-bold leading-snug">{bestRank.title}</div>
-                    <div className="text-[11px] md:text-xs text-emerald-300 font-extrabold">
-                      ₿{bestRank.bountyValue.toLocaleString()} BERRIES
-                    </div>
-                  </>
+                  <div className="grid grid-cols-3 gap-2 w-full max-w-md">
+                    {/* Mini legend explaining progression */}
+                    {RANKS.slice(0,3).map(r => (
+                      <div key={r.rank} className={`rounded-lg border px-2 py-2 text-center ${r.rank === bestRank.rank ? 'bg-amber-500/30 border-amber-300 text-amber-100' : 'bg-amber-500/10 border-amber-400/30 text-amber-200/80'}`}> 
+                        <div className="text-[10px] font-black">#{r.rank}</div>
+                        <div className="text-[9px] font-semibold truncate max-w-[80px] mx-auto">{r.title.replace(/^#\d+\s*/, '')}</div>
+                      </div>
+                    ))}
+                    <div className="col-span-3 text-[10px] text-amber-200/60 font-semibold mt-1 text-center">Top ranks preview</div>
+                  </div>
                 ) : (
-                  <p className="text-xs text-amber-200/90">Not set</p>
+                  <div className="text-amber-300/80 text-xs font-semibold">Play to set your first rank!</div>
                 )}
               </div>
             </div>

@@ -361,19 +361,7 @@ export default function AnimeGridPage() {
       `}</style>
       
       <div className="min-h-screen relative text-white p-6 font-sans">
-        {/* Tic Tac Toe Battle Background */}
-        <div className="fixed inset-0 z-0">
-          <div 
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{
-              backgroundImage: `url('/images/anime-grid-bg.svg')`
-            }}
-          ></div>
-          {/* Dark overlay to make text readable */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black/85"></div>
-        </div>
-
-        {/* Content with relative positioning */}
+        {/* Fondo propio eliminado para mostrar wallpaper global */}
         <div className="relative z-10 max-w-6xl mx-auto">
         {variant==='menu' && (
           <div className="text-center py-24">
@@ -477,8 +465,8 @@ export default function AnimeGridPage() {
 
   {/* Grid Container */}
   {variant!=='menu' && (
-  <div className="flex justify-center mb-8">
-          <div className="bg-gray-900/90 p-8 rounded-3xl shadow-2xl border border-yellow-500/30">
+          <div className="flex justify-center mb-8">
+          <div className="bg-gray-900/80 backdrop-blur-sm p-8 rounded-3xl shadow-2xl border border-yellow-500/30">
             
             {/* Column Headers */}
             {gameState.mode !== 'setup' && colConditions.length > 0 && (
@@ -530,7 +518,7 @@ export default function AnimeGridPage() {
                                 ? (cell.isValid 
                                   ? 'bg-gradient-to-br from-green-600 to-green-700 border-green-400 shadow-green-500/25' 
                                   : 'bg-gradient-to-br from-red-600 to-red-700 border-red-400 shadow-red-500/25') 
-                                : 'bg-gradient-to-br from-gray-700 to-gray-800 border-gray-500 hover:border-yellow-400 hover:shadow-yellow-500/25'
+                                : 'bg-gradient-to-br from-purple-800 to-purple-900 border-purple-600/70 hover:border-yellow-400 hover:shadow-yellow-500/25'
                           }
                         `}
                       >
@@ -574,18 +562,16 @@ export default function AnimeGridPage() {
                             </div>
                           </div>
                         ) : (
-                          <div className="text-center">
+                          <div className="w-full h-full flex flex-col items-center justify-center relative select-none">
                             {gameState.mode === 'setup' ? (
                               <>
                                 <div className="text-3xl mb-1">🎯</div>
-                                <div className="text-xs text-gray-400 font-medium">Listo</div>
+                                <div className="text-xs text-gray-300 font-semibold">Listo</div>
                               </>
                             ) : (
                               <>
-                                <div className="text-3xl mb-1 text-gray-400">?</div>
-                                <div className="text-xs text-gray-400 font-medium">
-                                  {gameState.mode === 'playing' ? 'Elegir' : 'Vacío'}
-                                </div>
+                                <span className="text-5xl font-black text-yellow-300 drop-shadow-[0_4px_6px_rgba(0,0,0,0.6)]">?</span>
+                                <span className="mt-1 text-[10px] font-extrabold tracking-wider text-yellow-200/90">ONE PIECE</span>
                               </>
                             )}
                           </div>
@@ -603,84 +589,82 @@ export default function AnimeGridPage() {
         {/* Character Picker Modal */}
         {showPicker && (
           <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-            <div className="bg-gray-800 rounded-2xl p-6 max-w-4xl w-full max-h-[85vh] overflow-hidden flex flex-col border-2 border-yellow-600 shadow-2xl">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className={`text-2xl font-bold ${
-                  gameState.currentPlayer === 'X' ? 'text-blue-400' : 'text-red-400'
-                }`}>
-                  🏴‍☠️ Jugador {gameState.currentPlayer} - Elige tu Pirata
-                </h3>
-                <button
-                  onClick={() => setShowPicker(false)}
-                  className="text-red-400 hover:text-red-300 bg-red-900/20 hover:bg-red-900/40 p-2 rounded-lg transition-colors"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
+            <div className="bg-gray-800 rounded-2xl p-6 max-w-3xl w-full max-h-[80vh] overflow-hidden flex flex-col border-2 border-yellow-600 shadow-2xl relative">
+              <button
+                onClick={() => setShowPicker(false)}
+                className="absolute top-4 right-4 text-red-400 hover:text-red-300 bg-red-900/20 hover:bg-red-900/40 p-2 rounded-lg transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
 
               {selectedCell && (
-                <div className="mb-6 p-4 bg-purple-900/30 rounded-lg border border-purple-600">
-                  <p className="text-lg text-center text-white font-medium">
-                    🎯 Necesitas: <span className="font-bold text-orange-400">{rowConditions[selectedCell.row]?.name}</span>
+                <div className="mb-4 p-4 bg-purple-900/30 rounded-lg border border-purple-600">
+                  <p className="text-sm text-center text-white font-medium">
+                    Necesitas: <span className="font-bold text-orange-400">{rowConditions[selectedCell.row]?.name}</span>
                     {' + '}
                     <span className="font-bold text-blue-400">{colConditions[selectedCell.col]?.name}</span>
                   </p>
-                  <p className="text-sm text-center text-gray-300 mt-2">
-                    ⏰ Tiempo restante: <span className="font-bold text-yellow-400">{gameState.timeLeft}s</span>
-                  </p>
+                  {variant==='multi' && (
+                    <p className="text-xs text-center text-gray-300 mt-1">
+                      Tiempo restante: <span className="font-bold text-yellow-400">{gameState.timeLeft}s</span>
+                    </p>
+                  )}
                   {(() => {
                     const validCharacters = characters.filter(char => 
                       checkCharacterValidForCell(char, selectedCell.row, selectedCell.col)
                     )
                     return (
-                      <p className="text-sm text-center text-green-300 mt-1">
-                        💡 Personajes válidos disponibles: <span className="font-bold">{validCharacters.length}</span>
+                      <p className="text-xs text-center text-green-300 mt-1">
+                        Personajes válidos disponibles: <span className="font-bold">{validCharacters.length}</span>
                       </p>
                     )
                   })()}
                 </div>
               )}
 
-              <div className="relative mb-6">
+              <div className="relative mb-4">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-yellow-400 w-5 h-5" />
                 <input
                   type="text"
-                  placeholder="Buscar por nombre de pirata..."
+                  placeholder="Escribe al menos 2 letras..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-6 py-3 bg-gray-700 border-2 border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 text-lg font-medium"
+                  className="w-full pl-12 pr-6 py-3 bg-gray-700 border-2 border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 text-base font-medium"
                 />
               </div>
 
-              <div className="flex-1 overflow-y-auto">
-                <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-6 gap-4">
-                  {filteredCharacters.slice(0, 60).map((character) => (
-                    <button
-                      key={character.name}
-                      onClick={() => handleCharacterSelect(character)}
-                      className="p-3 rounded-xl border-2 border-gray-600 bg-gray-700 hover:bg-gray-600 hover:border-yellow-400 text-center transition-all duration-200 hover:scale-105 shadow-lg"
-                    >
-                      {character.imageUrl ? (
-                        <img 
-                          src={character.imageUrl} 
-                          alt={character.name}
-                          className="w-16 h-16 object-cover rounded-full mx-auto mb-2 border-2 border-gray-500"
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                          }}
-                        />
-                      ) : (
-                        <div className="w-16 h-16 bg-gray-600 rounded-full mx-auto mb-2 flex items-center justify-center border-2 border-gray-500">
-                          <span className="text-xl">🏴‍☠️</span>
-                        </div>
-                      )}
-                      <div className="font-bold text-sm text-white leading-tight">{character.name}</div>
-                      <div className="text-xs text-gray-400 mt-1 truncate">
-                        {character.crew || 'Independiente'}
-                      </div>
-                    </button>
-                  ))}
-                </div>
+              <div className="flex-1 overflow-y-auto rounded-md">
+                {searchTerm.trim().length < 2 ? (
+                  <div className="h-full flex items-center justify-center text-gray-400 text-sm font-medium">
+                    Escribe al menos 2 letras para buscar.
+                  </div>
+                ) : (
+                  <ul className="divide-y divide-gray-700/60">
+                    {filteredCharacters.slice(0,150).map(character => (
+                      <li key={character.name}>
+                        <button
+                          onClick={() => handleCharacterSelect(character)}
+                          className="w-full flex items-center gap-4 px-4 py-3 hover:bg-gray-700/60 transition-colors text-left"
+                        >
+                          {character.imageUrl ? (
+                            <img
+                              src={character.imageUrl}
+                              alt={character.name}
+                              className="w-12 h-12 object-cover rounded-lg border-2 border-gray-600 shadow"
+                              onError={(e)=>{(e.currentTarget as HTMLImageElement).style.display='none'}}
+                            />
+                          ) : (
+                            <div className="w-12 h-12 rounded-lg bg-gray-600 flex items-center justify-center border-2 border-gray-500">🏴‍☠️</div>
+                          )}
+                          <span className="font-semibold text-white text-sm tracking-wide">{character.name}</span>
+                        </button>
+                      </li>
+                    ))}
+                    {filteredCharacters.length === 0 && (
+                      <li className="px-4 py-6 text-center text-gray-400 text-sm">Sin resultados</li>
+                    )}
+                  </ul>
+                )}
               </div>
             </div>
           </div>
@@ -691,7 +675,7 @@ export default function AnimeGridPage() {
           <h3 className="text-xl font-bold text-yellow-400 mb-3">📋 Reglas</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-gray-300 font-medium">
             <p>🎯 Cada casilla necesita un personaje que cumpla AMBAS condiciones (fila + columna)</p>
-            <p>⏰ Tienes 30 segundos por turno para elegir tu personaje</p>
+            {variant==='multi' && <p>⏰ Tienes 30 segundos por turno para elegir tu personaje</p>}
             <p>🏆 Consigue 3 en línea con personajes VÁLIDOS para ganar</p>
           </div>
           <p className="text-yellow-300 font-bold mt-4">
