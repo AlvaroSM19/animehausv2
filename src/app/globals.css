@@ -154,6 +154,76 @@ body.has-custom-bg .homepage-flag-bg {
 .op-card:hover:before { opacity: 0.85; }
 .op-card-disabled { filter: grayscale(12%) brightness(.92); }
 
+/* --- Enhanced Game Tiles (homepage) --- */
+.op-game-tile {
+  --tile-bg: linear-gradient(145deg, rgba(12,34,50,0.88) 0%, rgba(14,46,68,0.82) 55%, rgba(120,84,30,0.20) 100%);
+  background: var(--tile-bg);
+  border: 1.5px solid rgba(255,200,120,0.25);
+  box-shadow:
+    0 2px 6px -2px rgba(0,0,0,0.65),
+    0 0 0 1px rgba(255,210,130,0.05) inset,
+    0 0 0 0 rgba(var(--glow-rgb,255,196,120),0.6),
+    0 0 0 0 rgba(var(--glow-rgb,255,196,120),0.35) inset;
+  transition: box-shadow .5s ease, border-color .5s ease, transform .4s ease;
+  position: relative;
+}
+.op-game-tile:before, .op-game-tile:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.op-game-tile:before { /* subtle parchment & light */
+  background:
+    radial-gradient(circle at 26% 18%, rgba(255,235,190,0.25), transparent 60%),
+    radial-gradient(circle at 80% 75%, rgba(255,188,110,0.15), transparent 65%);
+  mix-blend-mode: overlay;
+  opacity: .55;
+  transition: opacity .6s ease;
+}
+.op-game-tile:after { /* animated rope & gold frame glow */
+  background:
+    conic-gradient(from 0deg, rgba(255,220,150,0.15), transparent 55%, rgba(255,220,150,0.15)),
+    linear-gradient(140deg, rgba(255,220,150,0.08), transparent 40%, rgba(255,200,120,0.08));
+  mask: linear-gradient(#000,#000) content-box, linear-gradient(#000,#000);
+  -webkit-mask: linear-gradient(#000,#000) content-box, linear-gradient(#000,#000);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  padding: 1px; /* frame thickness */
+  opacity: 0;
+  transform: scale(.95);
+  filter: blur(.5px) brightness(1.15);
+  transition: opacity .5s ease, transform .5s ease;
+}
+.op-game-tile:hover {
+  border-color: color-mix(in srgb, var(--glow, #ffc874) 60%, #ffecb3);
+  box-shadow:
+    0 10px 28px -8px rgba(0,0,0,0.75),
+    0 0 0 1px rgba(255,220,160,0.12) inset,
+    0 0 14px 2px var(--glow, #ffc874),
+    0 0 28px 10px color-mix(in srgb, var(--glow, #ffc874) 35%, transparent),
+    0 0 0 1px var(--glow, #ffc874) inset;
+}
+.op-game-tile:hover:before { opacity: .85; }
+.op-game-tile:hover:after { opacity: .9; transform: scale(1); }
+
+/* Fancy corner ornaments (anchors & skull hints) */
+.op-game-tile .op-corners { pointer-events: none; }
+.op-game-tile .op-corners span { position:absolute; width:18px; height:18px; display:block; }
+.op-game-tile .op-corners span:before {
+  content:""; position:absolute; inset:0; border:2px solid var(--glow, #ffc874); border-radius:4px; opacity:.55; transform:rotate(45deg) scale(.75); box-shadow:0 0 6px -1px var(--glow, #ffc874); transition:all .5s ease;
+}
+.op-game-tile:hover .op-corners span:before { opacity:.95; transform:rotate(45deg) scale(.95); }
+.op-game-tile .op-corners .tl { top:6px; left:6px; }
+.op-game-tile .op-corners .tr { top:6px; right:6px; }
+.op-game-tile .op-corners .bl { bottom:6px; left:6px; }
+.op-game-tile .op-corners .br { bottom:6px; right:6px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .op-game-tile, .op-game-tile:after { transition: none; }
+}
+
 .op-badge {
   position: relative;
   overflow: hidden;

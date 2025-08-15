@@ -12,24 +12,25 @@ interface GameDef {
   status: 'available' | 'coming-soon'
   href: string
   color: string
+  glow: string  // hex o hsl para borde y efectos
 }
 
 const games: GameDef[] = [
-  { id: 'tapone', title: 'Tap One', description: 'Elige tu destino: selecciona una categoría en el momento justo', icon: Gamepad2, difficulty: 'Medium', players: '1 Player', time: '2-5 min', status: 'available', href: '/games/tapone', color: 'from-yellow-400 to-orange-500' },
-  { id: 'connections', title: 'Connections', description: 'Encuentra 4 grupos ocultos de 4 personajes', icon: Grid3X3, difficulty: 'Medium', players: '1 Player', time: '3-8 min', status: 'available', href: '/games/connections', color: 'from-indigo-500 to-violet-500' },
-  { id: 'grid', title: 'Memory Cards', description: 'Empareja las cartas 4x4 con personajes de One Piece', icon: Grid3X3, difficulty: 'Easy', players: '1 Player', time: '2-5 min', status: 'available', href: '/games/grid', color: 'from-blue-500 to-cyan-500' },
-  { id: 'anime-grid', title: 'One Piece Tic Tac Toe', description: 'Tic-tac-toe con condiciones de personajes One Piece', icon: Target, difficulty: 'Hard', players: '1 Player', time: '5-15 min', status: 'available', href: '/games/anime-grid', color: 'from-cyan-500 to-teal-500' },
-  { id: 'wordle', title: 'Anime Wordle', description: 'Guess the character name in 6 tries', icon: Brain, difficulty: 'Medium', players: '1 Player', time: '3-8 min', status: 'available', href: '/games/wordle', color: 'from-green-500 to-emerald-500' },
-  { id: 'higher-lower', title: 'Higher or Lower', description: 'Guess if the next bounty is higher or lower', icon: TrendingUp, difficulty: 'Medium', players: '1 Player', time: '5-10 min', status: 'available', href: '/games/higher-lower', color: 'from-orange-500 to-red-500' },
-  { id: 'onepiecedle', title: 'OnePiecedle', description: 'Deduce el personaje por atributos (crew, origen, haki...)', icon: Trophy, difficulty: 'Medium', players: '1 Player', time: '3-8 min', status: 'available', href: '/games/onepiecedle', color: 'from-purple-600 to-fuchsia-500' },
-  { id: 'crew-quiz', title: 'Adivina la Crew', description: 'Escribe todos los miembros de tripulaciones y grupos', icon: Clock, difficulty: 'Hard', players: '1 Player', time: '2-10 min', status: 'available', href: '/games/crew-quiz', color: 'from-emerald-600 to-teal-600' },
-  { id: 'impostor', title: 'Impostor', description: 'Find the character that doesn\'t belong to the group', icon: Search, difficulty: 'Hard', players: '1 Player', time: '2-4 min', status: 'available', href: '/games/impostor', color: 'from-purple-500 to-pink-500' }
+  { id: 'tapone', title: 'Tap One', description: 'Elige tu destino: selecciona una categoría en el momento justo', icon: Gamepad2, difficulty: 'Medium', players: '1 Player', time: '2-5 min', status: 'available', href: '/games/tapone', color: 'from-yellow-400 to-orange-500', glow: '#ffb347' },
+  { id: 'connections', title: 'Connections', description: 'Encuentra 4 grupos ocultos de 4 personajes', icon: Grid3X3, difficulty: 'Medium', players: '1 Player', time: '3-8 min', status: 'available', href: '/games/connections', color: 'from-indigo-500 to-violet-500', glow: '#8b74ff' },
+  { id: 'grid', title: 'Memory Cards', description: 'Empareja las cartas 4x4 con personajes de One Piece', icon: Grid3X3, difficulty: 'Easy', players: '1 Player', time: '2-5 min', status: 'available', href: '/games/grid', color: 'from-blue-500 to-cyan-500', glow: '#3bbdff' },
+  { id: 'anime-grid', title: 'One Piece Tic Tac Toe', description: 'Tic-tac-toe con condiciones de personajes One Piece', icon: Target, difficulty: 'Hard', players: '1 Player', time: '5-15 min', status: 'available', href: '/games/anime-grid', color: 'from-cyan-500 to-teal-500', glow: '#1dd4c9' },
+  { id: 'wordle', title: 'Anime Wordle', description: 'Guess the character name in 6 tries', icon: Brain, difficulty: 'Medium', players: '1 Player', time: '3-8 min', status: 'available', href: '/games/wordle', color: 'from-green-500 to-emerald-500', glow: '#4ade80' },
+  { id: 'higher-lower', title: 'Higher or Lower', description: 'Guess if the next bounty is higher or lower', icon: TrendingUp, difficulty: 'Medium', players: '1 Player', time: '5-10 min', status: 'available', href: '/games/higher-lower', color: 'from-orange-500 to-red-500', glow: '#ff6b3d' },
+  { id: 'onepiecedle', title: 'OnePiecedle', description: 'Deduce el personaje por atributos (crew, origen, haki...)', icon: Trophy, difficulty: 'Medium', players: '1 Player', time: '3-8 min', status: 'available', href: '/games/onepiecedle', color: 'from-purple-600 to-fuchsia-500', glow: '#d163ff' },
+  { id: 'crew-quiz', title: 'Adivina la Crew', description: 'Escribe todos los miembros de tripulaciones y grupos', icon: Clock, difficulty: 'Hard', players: '1 Player', time: '2-10 min', status: 'available', href: '/games/crew-quiz', color: 'from-emerald-600 to-teal-600', glow: '#34d399' },
+  { id: 'impostor', title: 'Impostor', description: 'Find the character that doesn\'t belong to the group', icon: Search, difficulty: 'Hard', players: '1 Player', time: '2-4 min', status: 'available', href: '/games/impostor', color: 'from-purple-500 to-pink-500', glow: '#ff5fae' }
 ]
 
 const comingSoonGames: GameDef[] = [
-  { id: 'guess-character', title: 'Guess the Character', description: 'Identify characters from silhouettes or hints', icon: Eye, difficulty: 'Hard', players: '1 Player', time: '3-7 min', status: 'coming-soon', href: '/games/guess-character', color: 'from-purple-500 to-pink-500' },
-  { id: 'crew-match', title: 'Crew Matcher', description: 'Match characters to their correct crews', icon: Users, difficulty: 'Easy', players: '1 Player', time: '2-4 min', status: 'coming-soon', href: '/games/crew-match', color: 'from-indigo-500 to-blue-500' },
-  { id: 'power-ranking', title: 'Power Ranking', description: 'Rank characters by their power level', icon: Zap, difficulty: 'Hard', players: '1 Player', time: '5-12 min', status: 'coming-soon', href: '/games/power-ranking', color: 'from-yellow-500 to-orange-500' }
+  { id: 'guess-character', title: 'Guess the Character', description: 'Identify characters from silhouettes or hints', icon: Eye, difficulty: 'Hard', players: '1 Player', time: '3-7 min', status: 'coming-soon', href: '/games/guess-character', color: 'from-purple-500 to-pink-500', glow: '#d163ff' },
+  { id: 'crew-match', title: 'Crew Matcher', description: 'Match characters to their correct crews', icon: Users, difficulty: 'Easy', players: '1 Player', time: '2-4 min', status: 'coming-soon', href: '/games/crew-match', color: 'from-indigo-500 to-blue-500', glow: '#4f74ff' },
+  { id: 'power-ranking', title: 'Power Ranking', description: 'Rank characters by their power level', icon: Zap, difficulty: 'Hard', players: '1 Player', time: '5-12 min', status: 'coming-soon', href: '/games/power-ranking', color: 'from-yellow-500 to-orange-500', glow: '#ffb347' }
 ]
 
 export default function HomePage() {
@@ -68,9 +69,10 @@ export default function HomePage() {
               return (
                 <div
                   key={game.id}
-                  className={`group op-card relative rounded-xl overflow-hidden transition-all duration-400 backdrop-blur-sm ${
+                  style={{ ['--glow' as any]: game.glow }}
+                  className={`group op-card op-game-tile relative rounded-2xl overflow-hidden transition-all duration-400 backdrop-blur-sm ${
                     isAvailable
-                      ? 'hover:shadow-xl hover:-translate-y-1 hover:before:opacity-95 hover:border-amber-400/60'
+                      ? 'hover:-translate-y-1'
                       : 'opacity-60 op-card-disabled'
                   }`}
                 >

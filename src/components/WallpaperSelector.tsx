@@ -11,102 +11,15 @@ interface Wallpaper {
 }
 
 const wallpapers: Wallpaper[] = [
-  {
-    id: 'default',
-    name: 'Océano Profundo',
-    preview: 'default',
-    file: 'default'
-  },
-  {
-    id: 'barco',
-    name: 'Barco',
-    preview: 'barco',
-    file: '/images/wallpapers/op-barco.webp'
-  },
-  {
-    id: 'luffy',
-    name: 'Luffy',
-    preview: 'luffy',
-    file: '/images/wallpapers/op-fluffy.webp'
-  },
-  {
-    id: 'gear5',
-    name: 'Gear 5',
-    preview: 'gear5',
-    file: '/images/wallpapers/op-fgear5.webp'
-  },
-  {
-    id: 'zoro',
-    name: 'Zoro',
-    preview: 'zoro',
-    file: '/images/wallpapers/op-fzoro.webp'
-  },
-  {
-    id: 'law',
-    name: 'Trafalgar Law',
-    preview: 'law',
-    file: '/images/wallpapers/op-flaw.webp'
-  },
-  {
-    id: 'mugiwara',
-    name: 'Mugiwaras',
-    preview: 'mugiwara',
-    file: '/images/wallpapers/op-fmugiwara.webp'
-  },
-  {
-    id: 'brothers',
-    name: 'Hermanos ASL',
-    preview: 'brothers',
-    file: '/images/wallpapers/op-fbrothers.webp'
-  },
-  {
-    id: 'wano-real',
-    name: 'Wano Arc',
-    preview: 'wano-real',
-    file: '/images/wallpapers/op-fwano.webp'
-  },
-  {
-    id: 'wano-kaido',
-    name: 'Wano vs Kaido',
-    preview: 'wano-kaido',
-    file: '/images/wallpapers/op-fwanok.webp'
-  },
-  {
-    id: 'kampai',
-    name: 'Kampai!',
-    preview: 'kampai',
-    file: '/images/wallpapers/op-fkampai.webp'
-  },
-  {
-    id: 'face',
-    name: 'One Piece Face',
-    preview: 'face',
-    file: '/images/wallpapers/op-face.webp'
-  },
-  {
-    id: 'sunny',
-    name: 'Thousand Sunny',
-    preview: 'sunny',
-    file: '/images/wallpapers/sunny-bg.svg'
-  },
-  {
-    id: 'wano-svg',
-    name: 'País de Wano (Arte)',
-    preview: 'wano-svg',
-    file: '/images/wallpapers/wano-bg.svg'
-  },
-  {
-    id: 'marine',
-    name: 'Marineford',
-    preview: 'marine',
-    file: '/images/wallpapers/marine-bg.svg'
-  },
-  {
-    id: 'whole-cake',
-    name: 'Whole Cake Island',
-    preview: 'cake',
-    file: '/images/wallpapers/cake-bg.svg'
-  }
+  { id: 'default', name: 'Océano Profundo', preview: 'default', file: 'default' },
+  { id: 'barco', name: 'Barco', preview: 'barco', file: '/images/wallpapers/op-barco.webp' },
+  { id: 'characters', name: 'Personajes', preview: 'characters', file: '/images/wallpapers/op-characters.webp' },
+  { id: 'logo', name: 'Logo One Piece', preview: 'logo', file: '/images/wallpapers/op-logo.webp' },
+  { id: 'luffy1', name: 'Luffy 1', preview: 'luffy1', file: '/images/wallpapers/op-luffy1.webp' },
+  { id: 'luffy2', name: 'Luffy 2', preview: 'luffy2', file: '/images/wallpapers/op-luffy2.webp' },
+  { id: 'luffy3', name: 'Luffy 3', preview: 'luffy3', file: '/images/wallpapers/op-luffy3.webp' },
+  { id: 'luffyboa', name: 'Luffy & Boa', preview: 'luffyboa', file: '/images/wallpapers/op-luffyboa.webp' },
+  { id: 'wanted', name: 'Wanted', preview: 'wanted', file: '/images/wallpapers/op-wanted.webp' }
 ]
 
 export default function WallpaperSelector() {
