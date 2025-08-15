@@ -499,7 +499,7 @@ export default function CrewQuizPage() {
           {gameState.gameStatus === 'finished' && gameState.currentQuestion && (
             <div className="space-y-6">
               <div className="p-8 bg-[#06394f]/60 border border-emerald-600/40 rounded-lg text-center shadow shadow-black/40">
-                <h2 className="text-3xl font-bold text-emerald-300 mb-4">Time's up!</h2>
+                <h2 className="text-3xl font-bold text-emerald-300 mb-4">Time&apos;s up!</h2>
                 <div className="text-6xl font-bold text-amber-300 mb-2">{gameState.score}%</div>
                 <p className="text-amber-200/80 mb-6">
                   You found {gameState.correctAnswers.length} of {gameState.currentQuestion.answers.length} answers

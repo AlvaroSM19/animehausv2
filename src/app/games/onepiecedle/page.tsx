@@ -250,7 +250,7 @@ export default function OnePiecedlePage() {
       <div className="w-full max-w-3xl mx-auto p-4 flex-1 flex flex-col">
         {showHelp && (
           <div className="mb-6 p-4 rounded-lg bg-[#06394f]/60 border border-amber-700/40 text-sm leading-relaxed shadow shadow-black/40">
-            Guess the target character in up to {MAX_ATTEMPTS} attempts. Green = attribute matches, Red = no match. For Bounty, the number shows the guessed character's bounty and the arrow shows if the target is higher (green ↑), lower (red ↓) or equal (✓). Correct character wins instantly.
+            Guess the target character in up to {MAX_ATTEMPTS} attempts. Green = attribute matches, Red = no match. For Bounty, the number shows the guessed character&apos;s bounty and the arrow shows if the target is higher (green ↑), lower (red ↓) or equal (✓). Correct character wins instantly.
           </div>
         )}
 
