@@ -247,45 +247,50 @@ export default function HigherLowerPage() {
         }
       `}</style>
       
-      <div className="min-h-screen relative text-foreground">
-      {/* Se elimina el background SVG para dejar ver el wallpaper global. Añadimos solo un velo sutil para legibilidad sin ocultar el fondo principal. */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70 mix-blend-normal" />
+      <div className="min-h-screen text-amber-100 relative">
+      {/* Remove local gradient/SVG background to show global wallpaper; add subtle dark overlay for readability */}
+      <div className="fixed inset-0 pointer-events-none bg-gradient-to-b from-black/65 via-black/55 to-black/70 -z-10" />
+      {/* Header */}
+      <div className="border-b border-amber-700/40 bg-[#042836]/70 backdrop-blur-sm sticky top-0 z-40 shadow-lg shadow-black/40">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Link 
+                href="/"
+                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                Home
+              </Link>
+              <h1 className="text-2xl font-extrabold tracking-wide bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent drop-shadow">HIGHER OR LOWER</h1>
+            </div>
+            <div className="flex items-center gap-6 text-sm">
+              <div className="flex items-center gap-2">
+                <Trophy className="w-4 h-4 text-yellow-400" />
+                <span>Score: {score}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Zap className="w-4 h-4 text-orange-400" />
+                <span>Streak: {streak}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Target className="w-4 h-4 text-blue-400" />
+                <span>Best: {maxStreak}</span>
+              </div>
+              <button
+                onClick={initializeGame}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 text-black font-semibold shadow shadow-black/40 hover:brightness-110 transition"
+              >
+                <RotateCcw className="w-4 h-4" />
+                New Game
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Content with relative positioning */}
       <div className="relative z-10">
-        {/* Header */}
-        <div className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
-          <div className="container mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Link 
-                  href="/"
-                  className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <ArrowLeft className="w-5 h-5" />
-                  Back to Home
-                </Link>
-                <h1 className="text-2xl font-extrabold tracking-wide bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 bg-clip-text text-transparent drop-shadow">Higher or Lower</h1>
-              </div>
-              <div className="flex items-center gap-6 text-sm">
-                <div className="flex items-center gap-2">
-                  <Trophy className="w-4 h-4 text-yellow-400" />
-                  <span>Score: {score}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-orange-400" />
-                  <span>Streak: {streak}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Target className="w-4 h-4 text-blue-400" />
-                  <span>Best: {maxStreak}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
       {/* Game Area with left rank summary, center game, right list */}
       <div className="container mx-auto px-4 py-10">

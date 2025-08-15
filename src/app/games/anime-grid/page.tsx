@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { getAllCharacters, type AnimeCharacter } from '../../../lib/anime-data'
-import { Search, RotateCcw, Trophy, Clock, Users, X } from 'lucide-react'
+import { Search, RotateCcw, Trophy, Clock, Users, X, ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
 
 // Estilos CSS para la animación de error
 const shakeAnimation = `
@@ -185,24 +186,150 @@ export default function AnimeGridPage() {
   const [colConditions, setColConditions] = useState<GridCondition[]>([])
 
   const generateRandomConditions = useCallback(() => {
-    // Siempre usamos el set simplificado EXACTO pedido: Origen, Crew, Haki, Fruta, Bounty ≥, Bounty <
-    // Elegimos thresholds dinámicamente (pueden variar entre partidas) para dar variedad.
-    const bountyGteThresholds = [300_000_000, 500_000_000, 1_000_000_000]
-    const bountyLtThresholds = [50_000_000, 100_000_000, 200_000_000]
-    const gte = bountyGteThresholds[Math.floor(Math.random()*bountyGteThresholds.length)]
-    const lt = bountyLtThresholds[Math.floor(Math.random()*bountyLtThresholds.length)]
+    // NUEVA LÓGICA: condiciones específicas (Crew > Big Mom Pirates, Origin > East Blue, etc.)
+    // 1. Construir listas de crews y origins con grupos suficientemente grandes
+    const MIN_GROUP = 3
+    const charList = getAllCharacters()
+    const crewCounts: Record<string, number> = {}
+    const originCounts: Record<string, number> = {}
+    const hakiTypeCounts: Record<string, number> = {}
+    const fruitTypeCounts: Record<string, number> = {}
 
-    const conditions: GridCondition[] = [
-      { id: 'origin', name: 'Origen', description: 'Tiene origen definido', check: c => Boolean(c.origin) },
-      { id: 'crew', name: 'Crew', description: 'Pertenece a una tripulación', check: c => Boolean(c.crew) },
-      { id: 'haki', name: 'Haki', description: 'Usuario de algún Haki', check: c => (c as any).haki === true || (c as any).hakiTypes?.length > 0 },
-      { id: 'fruit', name: 'Fruta', description: 'Usuario de Fruta del Diablo', check: c => Boolean(c.devilFruit && c.devilFruit !== 'None') },
-      { id: `bounty_gte_${gte}`, name: `Bounty ≥ ${(gte/1_000_000)}M`, description: `Recompensa ≥ ${gte.toLocaleString()}`, check: c => Boolean(c.bounty && c.bounty >= gte) },
-      { id: `bounty_lt_${lt}`, name: `Bounty < ${(lt/1_000_000)}M`, description: `Recompensa < ${lt.toLocaleString()}`, check: c => Boolean(c.bounty && c.bounty < lt) }
+    // Clasificador simple de tipo de fruta (similar a onepiecedle)
+    const classifyFruit = (c: AnimeCharacter): string | null => {
+      if (!c.devilFruit) return null
+      const f = c.devilFruit.toLowerCase()
+      if (/(mera mera|moku moku|suna suna|goro goro|hie hie|yami yami|pika pika|magu magu|gasu gasu|yuki yuki|beta beta|numa numa)/.test(f)) return 'Logia'
+      if (/(hito hito|inu inu|neko neko|zou zou|tori tori|ushi ushi|uma uma|hebi hebi|mushi mushi|ryu ryu|sara sara)/.test(f)) {
+        if (/(phoenix|phoenix|nika|mythical|yamata)/.test(f)) return 'Mythical Zoan'
+        return 'Zoan'
+      }
+      return 'Paramecia'
+    }
+
+    charList.forEach(c => {
+      if (c.crew) crewCounts[c.crew] = (crewCounts[c.crew] ?? 0) + 1
+      if (c.origin) {
+        const prev = originCounts[c.origin] || 0
+        originCounts[c.origin] = prev + 1
+      }
+      // Haki types
+      (c as any).hakiTypes?.forEach((t: string) => {
+        const norm = t.toLowerCase()
+        hakiTypeCounts[norm] = (hakiTypeCounts[norm]||0)+1
+      })
+      const ft = classifyFruit(c)
+      if (ft) fruitTypeCounts[ft] = (fruitTypeCounts[ft]||0)+1
+    })
+
+  const crewConditions: GridCondition[] = Object.entries(crewCounts)
+      .filter(([_, n]) => n >= MIN_GROUP)
+      .map(([crew]) => ({
+        id: `crew:${crew}`,
+    name: `Crew: ${crew}`,
+    description: `Characters from the crew ${crew}`,
+        check: ch => ch.crew === crew
+      }))
+
+  const originConditions: GridCondition[] = Object.entries(originCounts)
+      .filter(([_, n]) => n >= MIN_GROUP)
+      .map(([origin]) => ({
+        id: `origin:${origin}`,
+    name: `Origin: ${origin}`,
+    description: `Born in ${origin}`,
+        check: ch => ch.origin === origin
+      }))
+
+    const hakiConditions: GridCondition[] = Object.entries(hakiTypeCounts)
+      .filter(([_, n]) => n >= MIN_GROUP)
+      .map(([type]) => {
+        const label = type.charAt(0).toUpperCase()+type.slice(1)
+        return {
+          id: `haki:${type}`,
+          name: `Haki: ${label}`,
+          description: `Must have ${label} Haki`,
+          check: ch => (ch as any).hakiTypes?.map((t:string)=>t.toLowerCase()).includes(type)
+        } satisfies GridCondition
+      })
+
+    // Combinaciones de Haki (Armament + Observation, etc.) si hay suficientes que tengan ambos
+    const hakiCombos: [string[], string][] = [
+      [['armament','observation'],'Armament + Observation'],
+      [['conqueror','armament'],'Conqueror + Armament'],
+      [['conqueror','observation'],'Conqueror + Observation'],
+      [['conqueror','armament','observation'],'All Three']
+    ]
+    hakiCombos.forEach(([types,label]) => {
+      const count = charList.filter(c => {
+        const set = new Set(((c as any).hakiTypes||[]).map((t:string)=>t.toLowerCase()))
+        return types.every(t=>set.has(t))
+      }).length
+      if (count >= MIN_GROUP) {
+        hakiConditions.push({
+          id: `hakiCombo:${types.join('+')}`,
+          name: `Haki: ${label}`,
+          description: `Must have ${label}`,
+          check: c => {
+            const set = new Set(((c as any).hakiTypes||[]).map((t:string)=>t.toLowerCase()))
+            return types.every(t=>set.has(t))
+          }
+        })
+      }
+    })
+
+  const fruitConditions: GridCondition[] = Object.entries(fruitTypeCounts)
+      .filter(([_, n]) => n >= MIN_GROUP)
+      .map(([ft]) => ({
+        id: `fruit:${ft}`,
+    name: `Fruit: ${ft}`,
+    description: `${ft} type users`,
+        check: ch => classifyFruit(ch) === ft
+      }))
+
+    // Pool global priorizando variedad
+    let pool: GridCondition[] = [
+      ...crewConditions,
+      ...originConditions,
+      ...hakiConditions,
+      ...fruitConditions
     ]
 
-    // Mezclar para variar qué categorías quedan en filas vs columnas
-    const shuffled = [...conditions].sort(()=>Math.random()-0.5)
+    // Si el pool es insuficiente (dataset pequeño), fallback a lógica anterior para no romper el juego
+    if (pool.length < 6) {
+      const fallback: GridCondition[] = [
+        { id: 'origin_any', name: 'Origin (Any)', description: 'Has an origin', check: c => Boolean(c.origin) },
+        { id: 'crew_any', name: 'Crew (Any)', description: 'Belongs to a crew', check: c => Boolean(c.crew) },
+        { id: 'haki_any', name: 'Haki (Any)', description: 'Any Haki user', check: c => (c as any).hakiTypes?.length > 0 },
+        { id: 'fruit_any', name: 'Fruit (Any)', description: 'Devil Fruit user', check: c => Boolean(c.devilFruit && c.devilFruit !== 'None') },
+        { id: 'fruit_none', name: 'No Fruit', description: 'No Devil Fruit', check: c => !c.devilFruit || c.devilFruit === 'None' },
+        { id: 'bounty_300m', name: 'Bounty ≥ 300M', description: 'Bounty ≥ 300M', check: c => Boolean(c.bounty && c.bounty >= 300_000_000) }
+      ]
+      pool = fallback
+    }
+
+    // Seleccionar 6 condiciones distintas priorizando 2 crew, 2 origin, 1 haki, 1 fruit cuando sea posible
+    const pickRandom = <T,>(arr: T[], n: number) => {
+      const copy = [...arr].sort(()=>Math.random()-0.5)
+      return copy.slice(0, Math.min(n, copy.length))
+    }
+    let selection: GridCondition[] = []
+    selection.push(...pickRandom(crewConditions,2))
+    selection.push(...pickRandom(originConditions,2))
+    selection.push(...pickRandom(hakiConditions,1))
+    selection.push(...pickRandom(fruitConditions,1))
+    // Si faltan hasta 6, rellenar con pool general
+    if (selection.length < 6) {
+      const ids = new Set(selection.map(c=>c.id))
+      for (const c of pool.sort(()=>Math.random()-0.5)) {
+        if (selection.length >= 6) break
+        if (!ids.has(c.id)) { selection.push(c); ids.add(c.id) }
+      }
+    }
+    // Si por algún motivo excedimos, recortar aleatoriamente
+    selection = selection.sort(()=>Math.random()-0.5).slice(0,6)
+
+    // Mezclar y asignar filas/columnas
+    const shuffled = [...selection].sort(()=>Math.random()-0.5)
     setRowConditions(shuffled.slice(0,3))
     setColConditions(shuffled.slice(3,6))
   }, [])
@@ -360,9 +487,40 @@ export default function AnimeGridPage() {
         }
       `}</style>
       
-      <div className="min-h-screen relative text-white p-6 font-sans">
+      <div className="min-h-screen text-amber-100 relative">
+        {/* Remove local gradient/SVG background to show global wallpaper; add subtle dark overlay for readability */}
+        <div className="fixed inset-0 pointer-events-none bg-gradient-to-b from-black/65 via-black/55 to-black/70 -z-10" />
+        {/* Header */}
+        <div className="border-b border-amber-700/40 bg-[#042836]/70 backdrop-blur-sm sticky top-0 z-40 shadow-lg shadow-black/40">
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Link 
+                  href="/"
+                  className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                  Home
+                </Link>
+                <h1 className="text-2xl font-extrabold tracking-wide bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent drop-shadow">ONE PIECE TIC TAC TOE</h1>
+              </div>
+              <div className="flex gap-2">
+                {variant !== 'menu' && (
+                  <button
+                    onClick={startNewGame}
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 text-black font-semibold shadow shadow-black/40 hover:brightness-110 transition"
+                  >
+                    <RotateCcw className="w-4 h-4" />
+                    New Game
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Fondo propio eliminado para mostrar wallpaper global */}
-        <div className="relative z-10 max-w-6xl mx-auto">
+        <div className="relative z-10 max-w-6xl mx-auto p-6">
         {variant==='menu' && (
           <div className="text-center py-24">
             <h1 className="text-5xl font-extrabold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-yellow-300 via-orange-400 to-red-500 drop-shadow-xl">ANIME GRID</h1>

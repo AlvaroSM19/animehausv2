@@ -95,3 +95,28 @@
 }
 .card-front-frame:before {content:"";position:absolute;inset:2px;border:1px solid rgba(255,215,128,0.25);border-radius:0.65rem;pointer-events:none;}
 
+/* Flip helpers to guarantee faces render */
+.card-3d-wrapper {position:relative;width:100%;height:100%;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;}
+.card-face {position:absolute;inset:0;width:100%;height:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+.card-face.back {transform:rotateY(0deg);}
+.card-face.front {transform:rotateY(180deg);}
+
+/* Matched card visual treatment: darker, subtle overlay, keep mostly opaque */
+.matched-card { position: relative; }
+/* Subtle dark veil to distinguish matched cards without hiding content */
+/* Quitamos velo en cartas emparejadas para mostrar completamente la imagen */
+.matched-card:after { display: none; }
+/* Keep front visible; only slight dim - ensure front shows properly */
+/* Mantener carta revelada: usar flip normal (rotate-y-180 proviene de la lógica) y asegurar visibilidad */
+.matched-card .card-3d-wrapper { 
+  filter: none; 
+}
+/* Asegurar que la cara frontal esté por encima de cualquier resto */
+.matched-card .card-face.front { z-index: 2; position: relative; }
+/* Hide the back face when matched to prevent upside-down text */
+.matched-card .card-face.back { 
+  display: none; 
+}
+.matched-card:hover { transform: none; }
+
+

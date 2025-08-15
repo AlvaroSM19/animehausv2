@@ -96,8 +96,9 @@ export default function GridGamePage() {
   const [firstChoice, setFirstChoice] = useState<GameCard | null>(null)
   const [secondChoice, setSecondChoice] = useState<GameCard | null>(null)
   const [canClick, setCanClick] = useState(true)
-  const [showPreview, setShowPreview] = useState(true) // Estado para la vista previa inicial
+  const [showPreview, setShowPreview] = useState(false) // Vista previa solo después de aceptar reglas
   const [previewTimeLeft, setPreviewTimeLeft] = useState(2.5) // Tiempo restante de vista previa
+  const [showRules, setShowRules] = useState(true) // Mostrar reglas antes de comenzar
 
   // Load best score from localStorage on client-side
   useEffect(() => {
@@ -109,7 +110,7 @@ export default function GridGamePage() {
 
   // Vista previa inicial - mostrar todas las cartas por 2.5 segundos
   useEffect(() => {
-    if (showPreview) {
+    if (showPreview && !showRules) {
       setCanClick(false) // Deshabilitar clics durante la vista previa
       setPreviewTimeLeft(2.5) // Resetear contador
       
@@ -185,10 +186,11 @@ export default function GridGamePage() {
 
       if (isMatch) {
         setScore(prev => prev + 10)
+        // Mark both as matched and guarantee they remain visually flipped
         setCharacters(prev => 
           prev.map(card => 
             card.id === firstChoice.id || card.id === clickedCard.id
-              ? { ...card, isMatched: true }
+              ? { ...card, isMatched: true, isFlipped: true }
               : card
           )
         )
@@ -230,7 +232,7 @@ export default function GridGamePage() {
 
   return (
     <div className="min-h-screen relative text-amber-100">
-      {/* Eliminado fondo propio: usamos wallpaper global */}
+  {/* Removed internal background: we use global wallpaper */}
       <div className="relative z-10">
         {/* Header */}
         <div className="border-b border-amber-700/40 bg-[#042836]/70 backdrop-blur-sm sticky top-0 z-40 shadow-lg shadow-black/40">
@@ -242,7 +244,7 @@ export default function GridGamePage() {
                 className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
-                Inicio
+                Home
               </Link>
               <h1 className="text-2xl font-extrabold tracking-wide bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent drop-shadow">Memory Cards</h1>
             </div>
@@ -259,15 +261,42 @@ export default function GridGamePage() {
         </div>
       </div>
 
-      {/* Game Stats */}
+      {/* Pre-game Rules */}
+      {showRules && (
+        <div className="container mx-auto px-4 py-10">
+          <div className="max-w-lg mx-auto bg-[#06394f]/80 border border-amber-700/50 rounded-2xl p-8 shadow-xl shadow-black/50 backdrop-blur-sm space-y-6">
+            <div>
+              <h2 className="text-2xl font-extrabold tracking-wide bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent mb-2">Matching Rules</h2>
+              <p className="text-sm text-amber-200/75 leading-relaxed mb-4">Memorize and find the 8 hidden matching pairs. A pair is formed when two cards share <span className="text-amber-300">any</span> of the following:</p>
+              <ul className="list-disc list-inside text-sm text-amber-100/90 space-y-1 pl-1">
+                <li>Same character (duplicate card)</li>
+                <li>Same crew</li>
+                <li>Same origin</li>
+                <li>Identical Haki types set</li>
+              </ul>
+              <p className="text-xs text-amber-200/60 mt-4 leading-relaxed">Matched cards stay revealed and give you <span className="text-amber-300 font-semibold">+10 points</span>. Finish with the fewest moves & best time. Tip: characters from big crews or with fewer Haki types often create more overlaps.</p>
+            </div>
+            <button
+              onClick={() => { setShowRules(false); startNewGame(); }}
+              className="w-full inline-flex justify-center items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 text-black font-semibold shadow shadow-black/40 hover:brightness-110 transition"
+            >
+              OK, Start Game
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Game Stats & Area (hidden until rules acknowledged) */}
+      {!showRules && (
+      <>
       <div className="container mx-auto px-4 py-4">
-        <div className="max-w-3xl mx-auto">
-          {/* Vista previa mensaje */}
+        <div className="mx-auto max-w-[760px]">
+      {/* Preview message */}
           {showPreview && (
             <div className="bg-amber-500/20 border border-amber-400/40 backdrop-blur-sm rounded-lg p-4 mb-4 text-center">
               <div className="flex items-center justify-center gap-2 text-amber-200">
                 <Timer className="w-5 h-5 animate-spin" />
-                <span className="font-semibold">Memoriza las cartas - Tiempo restante: {previewTimeLeft.toFixed(1)}s</span>
+        <span className="font-semibold">Memorize the cards - Preview ends in {previewTimeLeft.toFixed(1)}s</span>
               </div>
             </div>
           )}
@@ -277,25 +306,25 @@ export default function GridGamePage() {
               <div className="flex items-center gap-2">
                 <Trophy className="w-5 h-5 text-yellow-500" />
                 <div>
-                    <p className="text-xs uppercase tracking-wide text-amber-200/60">Mejor</p>
+                    <p className="text-xs uppercase tracking-wide text-amber-200/60">Best</p>
                   <p className="font-bold">{bestScore}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <Timer className="w-5 h-5 text-blue-500" />
                 <div>
-                    <p className="text-xs uppercase tracking-wide text-amber-200/60">Tiempo</p>
+                    <p className="text-xs uppercase tracking-wide text-amber-200/60">Time</p>
                   <p className="font-bold">{formatTime(time)}</p>
                 </div>
               </div>
             </div>
             <div className="flex items-center gap-8">
               <div>
-                <p className="text-xs uppercase tracking-wide text-amber-200/60">Movs</p>
+                <p className="text-xs uppercase tracking-wide text-amber-200/60">Moves</p>
                 <p className="font-bold">{moves}</p>
               </div>
               <div>
-                <p className="text-xs uppercase tracking-wide text-amber-200/60">Puntos</p>
+                <p className="text-xs uppercase tracking-wide text-amber-200/60">Score</p>
                 <p className="font-bold">{score}</p>
               </div>
             </div>
@@ -304,41 +333,38 @@ export default function GridGamePage() {
       </div>
 
       {/* Game Area */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-5xl mx-auto grid lg:grid-cols-12 gap-6 items-start">
-          {/* Grid */}
-          <div className="lg:col-span-8">
-            <div className="grid grid-cols-4 gap-4 mb-8 max-w-3xl mx-auto">
+      <div className="container mx-auto px-4 pb-12">
+        <div className="mx-auto max-w-[760px]">
+          <div className="w-full">
+            <div className="grid grid-cols-4 gap-4 mb-8 w-[760px] mx-auto">
             {characters.map((character) => (
               <div
                 key={character.id}
                 onClick={() => handleCardClick(character)}
-                className={`aspect-square rounded-xl cursor-pointer transition-transform duration-300 ${character.isMatched ? 'opacity-60' : ''} ${showPreview ? 'cursor-default' : ''}`}
+                className={`group aspect-square rounded-xl transition-transform duration-300 ${character.isMatched ? 'matched-card cursor-default' : 'cursor-pointer hover:scale-[1.02]'} ${showPreview ? 'cursor-default' : ''}`}
                 style={{ perspective: '1000px' }}
               >
-                <div className={`relative w-full h-full transition-transform duration-500 transform-style-preserve-3d ${
-                  character.isFlipped || character.isMatched || showPreview ? 'rotate-y-180' : 'rotate-y-0'
+                <div className={`card-3d-wrapper transition-transform duration-500 ${
+                  (character.isFlipped || character.isMatched || showPreview) ? 'rotate-y-180' : 'rotate-y-0'
                 }`}>
-                  {/* Back purple compass design */}
-                  <div className="absolute w-full h-full backface-hidden rounded-xl overflow-hidden card-back-purple">
+                  {/* Back */}
+                  <div className="card-face back rounded-xl overflow-hidden card-back-purple">
                     <div className="compass-ring" />
                     <div className="compass-needle" />
                     <div className="game-title">ONE PIECE</div>
                   </div>
-                  {/* Front (image) */}
-                  <div className="absolute w-full h-full backface-hidden rotate-y-180">
-                    <div className="w-full h-full card-front-frame rounded-xl overflow-hidden hover:shadow-lg shadow shadow-black/40">
-                      <div className="relative h-full">
-                        <img
-                          src={character.imageUrl}
-                          alt={character.name}
-                          className="w-full h-full object-cover"
-                          onError={(e) => { e.currentTarget.src = '/placeholder-character.jpg' }}
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
-                        <div className="absolute bottom-0 left-0 right-0 p-3">
-                          <h3 className="text-amber-100 font-semibold text-sm drop-shadow">{character.name}</h3>
-                        </div>
+                  {/* Front */}
+                  <div className="card-face front rounded-xl overflow-hidden">
+                    <div className="w-full h-full card-front-frame hover:shadow-lg shadow shadow-black/40 relative">
+                      <img
+                        src={character.imageUrl}
+                        alt={character.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => { e.currentTarget.src = '/placeholder-character.jpg' }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
+                      <div className="absolute bottom-0 left-0 right-0 p-3">
+                        <h3 className="text-amber-100 font-semibold text-sm drop-shadow">{character.name}</h3>
                       </div>
                     </div>
                   </div>
@@ -346,44 +372,26 @@ export default function GridGamePage() {
               </div>
             ))}
             {!isPlaying && characters.every(card => card.isMatched) && (
-              <div className="text-center bg-[#06394f]/70 border border-amber-700/40 rounded-xl p-8 shadow shadow-black/40">
-                <h2 className="text-2xl font-extrabold mb-4 text-amber-300 drop-shadow">¡Felicidades! 🎉</h2>
+              <div className="col-span-4 text-center bg-[#06394f]/80 backdrop-blur-sm border border-amber-700/50 rounded-xl p-8 shadow-lg shadow-black/50">
+                <h2 className="text-2xl font-extrabold mb-4 text-amber-300 drop-shadow">Congratulations! 🎉</h2>
                 <p className="text-amber-200/70 mb-4 text-sm">
-                  Tiempo {formatTime(time)} · Movimientos {moves} · Puntuación {score}
+                  Time {formatTime(time)} · Moves {moves} · Score {score}
                 </p>
                 <button
                   onClick={startNewGame}
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 text-black font-semibold shadow shadow-black/40 hover:brightness-110 transition"
                 >
                   <RotateCcw className="w-5 h-5" />
-                  Jugar otra vez
+                  Play Again
                 </button>
               </div>
             )}
             </div>
           </div>
-          {/* Instructions */}
-          <aside className="lg:col-span-4 space-y-4">
-            <div className="bg-[#06394f]/70 border border-amber-700/40 rounded-xl p-5 shadow shadow-black/40">
-              <h3 className="text-lg font-bold mb-3 text-amber-300 tracking-wide">Reglas de Emparejamiento</h3>
-              <ul className="list-disc list-inside text-sm text-amber-200/80 space-y-1">
-                <li>Da la vuelta a dos cartas cada turno.</li>
-                <li>Encuentra las 8 parejas ocultas en el tablero.</li>
-              </ul>
-              <ul className="mt-2 text-sm text-amber-100/90 space-y-1 pl-4 list-[square]">
-                <li>Mismo personaje (carta duplicada).</li>
-                <li>Misma tripulación.</li>
-                <li>Mismo lugar de origen.</li>
-                <li>Mismo conjunto de tipos de Haki.</li>
-              </ul>
-              <p className="text-xs text-amber-200/60 mt-3 leading-relaxed">Cuando dos cartas cumplen alguna de estas condiciones se quedan descubiertas y sumas puntos. Intenta completar el tablero en el menor número de movimientos.</p>
-            </div>
-            <div className="bg-[#06394f]/50 border border-amber-700/30 rounded-xl p-4 text-xs text-amber-200/60">
-              Consejo: Personajes de grandes crews o con pocos tipos de haki ofrecen más posibilidades de emparejarse.
-            </div>
-          </aside>
         </div>
       </div>
+      </>
+      )}
       </div>
     </div>
   )

@@ -2,6 +2,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import charactersData from '../data/characters.json';
 import Link from 'next/link';
+import { ArrowLeft, RotateCcw } from 'lucide-react';
 
 // ----------------- Types -----------------
 interface Character {
@@ -404,34 +405,40 @@ const ConnectionsGame: React.FC<{ difficulty?: number }> = ({ difficulty = 1 }) 
   }, [status, solvedCount, hintsUsed, lives, puzzle]);
 
   return (
-    <div className="min-h-screen text-slate-100">
+    <div className="min-h-screen text-amber-100 relative">
+      {/* Remove local gradient/SVG background to show global wallpaper; add subtle dark overlay for readability */}
+      <div className="fixed inset-0 pointer-events-none bg-gradient-to-b from-black/65 via-black/55 to-black/70 -z-10" />
+      {/* Header */}
+      <div className="border-b border-amber-700/40 bg-[#042836]/70 backdrop-blur-sm sticky top-0 z-40 shadow-lg shadow-black/40">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Link 
+                href="/"
+                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                Home
+              </Link>
+              <h1 className="text-2xl font-extrabold tracking-wide bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent drop-shadow">CONNECTIONS</h1>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={resetGame}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 text-black font-semibold shadow shadow-black/40 hover:brightness-110 transition"
+              >
+                <RotateCcw className="w-4 h-4" />
+                New Game
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Overlay for better readability */}
       <div className="min-h-screen bg-black/10 backdrop-blur-[0.5px]">
         {/* Header section */}
         <section className="max-w-7xl mx-auto px-2 sm:px-4 mb-6 pt-4">
-          <div className="flex items-center gap-2 text-white/90 text-sm mb-3">
-            <Link href="/" className="inline-flex items-center gap-1 hover:text-white transition-colors">
-              <span className="text-white/80">←</span>
-              <span>Home</span>
-            </Link>
-            <span className="opacity-40">/</span>
-            <span className="text-white">Connections</span>
-          </div>
-
-        <div className="flex items-center justify-between gap-3 mb-4">
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-wide uppercase bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-orange-300 to-red-400 drop-shadow-lg">
-            Connections
-          </h1>
-          
-          <div className="shrink-0">
-            <button
-              onClick={resetGame}
-              className="px-4 md:px-5 py-2 rounded-xl font-semibold text-white bg-black/40 backdrop-blur-md border border-white/20 shadow-lg hover:bg-black/50 transition-all duration-300"
-            >
-              New Game
-            </button>
-          </div>
-        </div>
 
         {/* Status pill */}
         <div className="mt-3 rounded-xl border border-orange-400/30 bg-black/30 backdrop-blur-md px-4 py-2 text-orange-200 text-sm shadow-lg">

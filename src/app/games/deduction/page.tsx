@@ -148,7 +148,7 @@ export default function DeductionGamePage() {
                 <ArrowLeft className="w-5 h-5" />
                 Home
               </Link>
-              <h1 className="text-2xl font-extrabold tracking-wide bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent">Character Deduction</h1>
+              <h1 className="text-2xl font-extrabold tracking-wide bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent">ADIVINA LA CREW</h1>
             </div>
             <div className="flex items-center gap-6 text-sm">
               <div className="flex items-center gap-2"><Trophy className="w-4 h-4 text-amber-300" /><span>Best: {bestAttempts ?? '—'}</span></div>

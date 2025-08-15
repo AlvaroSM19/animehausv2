@@ -13,7 +13,8 @@ interface GuessLetter {
   state: LetterState
 }
 
-const WORD_LENGTH = 5
+// Word length becomes dynamic per selected character name (sanitized)
+const DEFAULT_WORD_LENGTH = 5
 const MAX_GUESSES = 6
 
 export default function WordlePage() {
@@ -23,6 +24,7 @@ export default function WordlePage() {
   const [currentRow, setCurrentRow] = useState(0)
   const [targetCharacter, setTargetCharacter] = useState<AnimeCharacter | null>(null)
   const [targetWord, setTargetWord] = useState('')
+  const [wordLength, setWordLength] = useState(DEFAULT_WORD_LENGTH)
   const [usedLetters, setUsedLetters] = useState<Map<string, LetterState>>(new Map())
   const [showHint, setShowHint] = useState(false)
   const [score, setScore] = useState(() => {
@@ -38,11 +40,11 @@ export default function WordlePage() {
     return 0
   })
 
-  // Get characters with names of exactly 5 letters
+  // Get characters with names consisting only of letters (any length)
   const validCharacters = useMemo(() => {
     return getAllCharacters().filter(char => {
       const name = char.name.replace(/\s+/g, '').toLowerCase()
-      return name.length === WORD_LENGTH && /^[a-z]+$/.test(name)
+      return name.length > 0 && /^[a-z]+$/.test(name)
     })
   }, [])
 
@@ -50,10 +52,11 @@ export default function WordlePage() {
     if (validCharacters.length === 0) return
     
     const randomChar = validCharacters[Math.floor(Math.random() * validCharacters.length)]
-    const word = randomChar.name.replace(/\s+/g, '').toLowerCase()
+  const word = randomChar.name.replace(/\s+/g, '').toLowerCase()
     
     setTargetCharacter(randomChar)
-    setTargetWord(word)
+  setTargetWord(word)
+  setWordLength(word.length)
     setCurrentGuess('')
     setGuesses([])
     setCurrentRow(0)
@@ -68,7 +71,7 @@ export default function WordlePage() {
     const guessLetters = guess.split('')
     
     // First pass: mark correct positions
-    for (let i = 0; i < WORD_LENGTH; i++) {
+  for (let i = 0; i < wordLength; i++) {
       if (guessLetters[i] === targetLetters[i]) {
         result[i] = { letter: guessLetters[i], state: 'correct' }
         targetLetters[i] = '' // Mark as used
@@ -78,7 +81,7 @@ export default function WordlePage() {
     }
     
     // Second pass: mark present letters
-    for (let i = 0; i < WORD_LENGTH; i++) {
+  for (let i = 0; i < wordLength; i++) {
       if (result[i].state === 'absent') {
         const letterIndex = targetLetters.indexOf(guessLetters[i])
         if (letterIndex !== -1) {
@@ -92,7 +95,7 @@ export default function WordlePage() {
   }
 
   const submitGuess = () => {
-    if (currentGuess.length !== WORD_LENGTH || gameState !== 'playing') return
+  if (currentGuess.length !== wordLength || gameState !== 'playing') return
     
     const guessResult = checkGuess(currentGuess.toLowerCase())
     const newGuesses = [...guesses, guessResult]
@@ -141,7 +144,7 @@ export default function WordlePage() {
       submitGuess()
     } else if (key === 'BACKSPACE') {
       setCurrentGuess(prev => prev.slice(0, -1))
-    } else if (key.length === 1 && /^[a-zA-Z]$/.test(key) && currentGuess.length < WORD_LENGTH) {
+    } else if (key.length === 1 && /^[a-zA-Z]$/.test(key) && currentGuess.length < wordLength) {
       setCurrentGuess(prev => prev + key.toUpperCase())
     }
   }
@@ -160,7 +163,7 @@ export default function WordlePage() {
         handleKeyPress('ENTER')
       } else if (e.key === 'Backspace') {
         handleKeyPress('BACKSPACE')
-      } else if (e.key.length === 1 && /^[a-zA-Z]$/.test(e.key)) {
+  } else if (e.key.length === 1 && /^[a-zA-Z]$/.test(e.key)) {
         handleKeyPress(e.key.toUpperCase())
       }
     }
@@ -190,12 +193,11 @@ export default function WordlePage() {
   }
 
   return (
-    <div className="min-h-screen relative">
-      {/* Removed custom background: inherit global wallpaper */}
-      <div className="absolute inset-0 bg-black/60 pointer-events-none" aria-hidden="true" />
-      <div className="relative z-10">
-        {/* Header */}
-        <div className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
+    <div className="min-h-screen text-amber-100 relative">
+      {/* Remove local gradient/SVG background to show global wallpaper; add subtle dark overlay for readability */}
+      <div className="fixed inset-0 pointer-events-none bg-gradient-to-b from-black/65 via-black/55 to-black/70 -z-10" />
+      {/* Header */}
+      <div className="border-b border-amber-700/40 bg-[#042836]/70 backdrop-blur-sm sticky top-0 z-40 shadow-lg shadow-black/40">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -204,9 +206,9 @@ export default function WordlePage() {
                 className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
-                Back to Home
+                Home
               </Link>
-              <h1 className="text-2xl font-bold text-foreground">Anime Wordle</h1>
+              <h1 className="text-2xl font-extrabold tracking-wide bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent drop-shadow">ANIME WORDLE</h1>
             </div>
             <div className="flex items-center gap-6 text-sm">
               <div className="flex items-center gap-2">
@@ -224,10 +226,19 @@ export default function WordlePage() {
                 <HelpCircle className="w-4 h-4" />
                 Hint
               </button>
+              <button
+                onClick={initializeGame}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 text-black font-semibold shadow shadow-black/40 hover:brightness-110 transition"
+              >
+                <RotateCcw className="w-4 h-4" />
+                New Game
+              </button>
             </div>
           </div>
         </div>
       </div>
+
+      <div className="relative z-10">
 
       {/* Game Area */}
       <div className="container mx-auto px-4 py-8">
@@ -247,9 +258,9 @@ export default function WordlePage() {
 
           {/* Game Grid */}
           <div className="mb-8 flex flex-col items-center">
-            {Array.from({ length: MAX_GUESSES }, (_, rowIndex) => (
+      {Array.from({ length: MAX_GUESSES }, (_, rowIndex) => (
               <div key={rowIndex} className="flex gap-3 mb-3">
-                {Array.from({ length: WORD_LENGTH }, (_, colIndex) => {
+        {Array.from({ length: wordLength }, (_, colIndex) => {
                   let letter = ''
                   let state: LetterState = 'empty'
                   
@@ -265,7 +276,7 @@ export default function WordlePage() {
                   return (
                     <div
                       key={colIndex}
-                      className={`w-12 h-12 border-2 flex items-center justify-center text-lg font-bold rounded-lg transition-all duration-300 ${getLetterStateClass(state)}`}
+                      className={`${wordLength <= 8 ? 'w-12 h-12' : wordLength <= 10 ? 'w-10 h-12' : 'w-8 h-10 text-base'} border-2 flex items-center justify-center text-lg font-bold rounded-lg transition-all duration-300 ${getLetterStateClass(state)}`}
                     >
                       {letter}
                     </div>
@@ -377,7 +388,7 @@ export default function WordlePage() {
               <h3 className="text-lg font-semibold mb-2 text-foreground">How to Play</h3>
               <div className="text-sm text-muted-foreground space-y-2">
                 <p>Guess the One Piece character&apos;s name in {MAX_GUESSES} tries.</p>
-                <p>Each guess must be a valid 5-letter name.</p>
+                <p>Each guess must be a valid name with exactly {wordLength} letters (no spaces).</p>
                 <div className="flex justify-center gap-4 mt-4">
                   <div className="flex items-center gap-2">
                     <div className="w-6 h-6 bg-green-500 rounded"></div>

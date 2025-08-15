@@ -275,7 +275,7 @@ export default function CrewQuizPage() {
   return (
     <div className="min-h-screen text-amber-100 relative">
       {/* Remove local gradient/SVG background to show global wallpaper; add subtle dark overlay for readability */}
-      <div className="fixed inset-0 pointer-events-none bg-gradient-to-b from-black/65 via-black/55 to-black/70" />
+      <div className="fixed inset-0 pointer-events-none bg-gradient-to-b from-black/65 via-black/55 to-black/70 -z-10" />
       <div className="border-b border-amber-700/40 bg-[#042836]/70 backdrop-blur-sm sticky top-0 z-40 shadow shadow-black/40">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">

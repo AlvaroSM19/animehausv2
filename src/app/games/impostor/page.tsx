@@ -153,7 +153,7 @@ export default function ImpostorGamePage() {
   return (
     <div className="min-h-screen text-amber-100 relative">
       {/* Remove SVG/gradient background; rely on global wallpaper with subtle overlay for readability */}
-      <div className="fixed inset-0 pointer-events-none bg-gradient-to-b from-black/65 via-black/55 to-black/70" />
+      <div className="fixed inset-0 pointer-events-none bg-gradient-to-b from-black/65 via-black/55 to-black/70 -z-10" />
       {/* Header */}
       <div className="border-b border-amber-700/40 bg-[#042836]/70 backdrop-blur-sm sticky top-0 z-40 shadow-lg shadow-black/40">
         <div className="container mx-auto px-4 py-4">

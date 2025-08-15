@@ -230,40 +230,53 @@ export default function OnePiecedlePage() {
 
   return (
     <div className="min-h-screen text-amber-100 flex flex-col relative">
-      {/* Remove internal SVG/gradient background: allow global wallpaper to show. Add subtle readable overlay. */}
-      <div className="pointer-events-none fixed inset-0 bg-gradient-to-b from-black/65 via-black/55 to-black/70" />
-      <div className="border-b border-amber-700/40 bg-[#042836]/70 backdrop-blur-sm sticky top-0 z-40 shadow shadow-black/40">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="text-sm flex items-center gap-1 text-amber-300/80 hover:text-amber-100 transition-colors">
-              <ArrowLeft className="w-4 h-4"/> Home
-            </Link>
-            <h1 className="text-lg font-extrabold tracking-wide bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent">OnePiecedle</h1>
-          </div>
-          <div className="flex items-center gap-3 text-xs">
-            <button onClick={reset} className="px-3 py-1 rounded bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 text-black font-semibold shadow shadow-black/40 hover:brightness-110 inline-flex items-center gap-1"><RotateCcw className="w-3 h-3"/>Reset</button>
-            <button onClick={() => setShowHelp(s=>!s)} className="p-1 rounded hover:bg-amber-300/10"><HelpCircle className="w-5 h-5"/></button>
+      {/* Overlay solo para oscurecer el wallpaper. Lo mandamos detrás con -z-10 */}
+      <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-b from-black/65 via-black/55 to-black/70" />
+      {/* Header */}
+      <div className="border-b border-amber-700/40 bg-[#042836]/70 backdrop-blur-sm sticky top-0 z-40 shadow-lg shadow-black/40">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Link 
+                href="/"
+                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                Home
+              </Link>
+              <h1 className="text-2xl font-extrabold tracking-wide bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent drop-shadow">ONEPIECEDLE</h1>
+            </div>
+            <div className="flex items-center gap-3 text-xs">
+              <button onClick={() => setShowHelp(s=>!s)} className="p-1 rounded hover:bg-amber-300/10"><HelpCircle className="w-5 h-5"/></button>
+              <button 
+                onClick={reset} 
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 text-black font-semibold shadow shadow-black/40 hover:brightness-110 transition"
+              >
+                <RotateCcw className="w-4 h-4" />
+                New Game
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="w-full max-w-3xl mx-auto p-4 flex-1 flex flex-col">
+  <div className="w-full max-w-3xl mx-auto p-4 flex-1 flex flex-col relative z-10">
         {showHelp && (
           <div className="mb-6 p-4 rounded-lg bg-[#06394f]/60 border border-amber-700/40 text-sm leading-relaxed shadow shadow-black/40">
             Guess the target character in up to {MAX_ATTEMPTS} attempts. Green = attribute matches, Red = no match. For Bounty, the number shows the guessed character&apos;s bounty and the arrow shows if the target is higher (green ↑), lower (red ↓) or equal (✓). Correct character wins instantly.
           </div>
         )}
 
-  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 text-xs md:text-sm uppercase tracking-wide text-amber-200/80 font-medium">
+  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 text-sm md:text-base uppercase tracking-wide text-amber-100 font-bold">
           <div className="flex items-center gap-3 flex-wrap">
             <span>Attempts: {guesses.length} / {MAX_ATTEMPTS}</span>
             {gameState === 'won' && <span className="text-green-400 font-semibold">You Win!</span>}
             {gameState === 'lost' && target && <span className="text-red-400 font-semibold">You Lost - It was {target.name}</span>}
           </div>
-          <div className="flex items-center gap-3 flex-wrap text-[11px] md:text-xs normal-case">
-            <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-green-600 inline-block"></span><span className="text-amber-200/90">Match</span></div>
-            <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-orange-500 inline-block"></span><span className="text-amber-200/90">Partial</span></div>
-            <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-red-600 inline-block"></span><span className="text-amber-200/90">No Match</span></div>
+          <div className="flex items-center gap-4 flex-wrap text-sm md:text-base normal-case font-semibold">
+            <div className="flex items-center gap-2"><span className="w-4 h-4 rounded-sm bg-green-600 inline-block"></span><span className="text-green-300">Match</span></div>
+            <div className="flex items-center gap-2"><span className="w-4 h-4 rounded-sm bg-orange-500 inline-block"></span><span className="text-orange-300">Partial</span></div>
+            <div className="flex items-center gap-2"><span className="w-4 h-4 rounded-sm bg-red-600 inline-block"></span><span className="text-red-300">No Match</span></div>
           </div>
         </div>
 

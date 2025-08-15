@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import html2canvas from 'html2canvas';
 import Link from 'next/link';
+import { ArrowLeft, RotateCcw } from 'lucide-react';
 
 // Modelo de datos para una categoría y sus elementos
 export interface TapOneElement {
@@ -405,34 +406,39 @@ const TapOneGame: React.FC = () => {
   }, [finished, showResults, isClient]);
 
   return (
-    <div ref={gameRef}>
-      {/* Header: breadcrumb + title + actions */}
-      <section className="max-w-7xl mx-auto px-2 sm:px-4 mb-4">
-        <div className="flex items-center gap-2 text-slate-300/90 text-sm mb-2">
-          <Link href="/" className="inline-flex items-center gap-1 hover:text-white/90 transition-colors">
-            <span className="text-slate-300/80">←</span>
-            <span>Home</span>
-          </Link>
-          <span className="opacity-40">/</span>
-          <span className="text-slate-100/90">Tap One</span>
-        </div>
-
-        <div className="flex items-center justify-between gap-3">
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-wide uppercase bg-clip-text text-transparent bg-gradient-to-r from-violet-300 via-fuchsia-300 to-pink-300 drop-shadow">
-            Tap One
-          </h1>
-
-          <div className="shrink-0">
-            {finished && (
-              <button
-                onClick={handleRestart}
-                className="px-4 md:px-5 py-2 rounded-xl font-semibold text-white bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-lg hover:from-emerald-400 hover:to-emerald-600 transition-colors"
+    <div ref={gameRef} className="min-h-screen text-amber-100 relative">
+      {/* Remove local gradient/SVG background to show global wallpaper; add subtle dark overlay for readability */}
+      <div className="fixed inset-0 pointer-events-none bg-gradient-to-b from-black/65 via-black/55 to-black/70 -z-10" />
+      {/* Header */}
+      <div className="border-b border-amber-700/40 bg-[#042836]/70 backdrop-blur-sm sticky top-0 z-40 shadow-lg shadow-black/40">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Link 
+                href="/"
+                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
               >
-                New Game
-              </button>
-            )}
+                <ArrowLeft className="w-5 h-5" />
+                Home
+              </Link>
+              <h1 className="text-2xl font-extrabold tracking-wide bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent drop-shadow">TAP ONE</h1>
+            </div>
+            <div className="flex gap-2">
+              {finished && (
+                <button
+                  onClick={handleRestart}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 text-black font-semibold shadow shadow-black/40 hover:brightness-110 transition"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                  New Game
+                </button>
+              )}
+            </div>
           </div>
         </div>
+      </div>
+
+      <section className="max-w-7xl mx-auto px-2 sm:px-4 mb-4">
 
         {/* Status pill */}
         <div className="mt-3 rounded-xl border border-violet-400/20 bg-violet-600/10 px-4 py-2 text-violet-200/90 text-sm">
