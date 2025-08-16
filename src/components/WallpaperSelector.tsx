@@ -10,8 +10,8 @@ interface Wallpaper {
   file: string
 }
 
+// Removed 'default' gradient background. Only image wallpapers remain.
 const wallpapers: Wallpaper[] = [
-  { id: 'default', name: 'Océano Profundo', preview: 'default', file: 'default' },
   { id: 'barco', name: 'Barco', preview: 'barco', file: '/images/wallpapers/op-barco.webp' },
   { id: 'characters', name: 'Personajes', preview: 'characters', file: '/images/wallpapers/op-characters.webp' },
   { id: 'logo', name: 'Logo One Piece', preview: 'logo', file: '/images/wallpapers/op-logo.webp' },
@@ -24,7 +24,8 @@ const wallpapers: Wallpaper[] = [
 
 export default function WallpaperSelector() {
   const [isOpen, setIsOpen] = useState(false)
-  const [selectedWallpaper, setSelectedWallpaper] = useState('default')
+  // Start with empty, will be randomized on mount.
+  const [selectedWallpaper, setSelectedWallpaper] = useState<string>('')
   const [menuPos, setMenuPos] = useState<{ top: number; left: number }>({ top: 0, left: 0 })
   const buttonRef = useRef<HTMLButtonElement>(null)
   const portalElRef = useRef<HTMLDivElement | null>(null)
@@ -44,96 +45,61 @@ export default function WallpaperSelector() {
   }, [])
 
   useEffect(() => {
-    // Cargar wallpaper guardado del localStorage
-    const savedWallpaper = localStorage.getItem('selectedWallpaper')
-    if (savedWallpaper) {
-      setSelectedWallpaper(savedWallpaper)
-      applyWallpaper(savedWallpaper)
+    // Random wallpaper on each visit (ignores any previous selection)
+    const random = wallpapers[Math.floor(Math.random() * wallpapers.length)]
+    if (random) {
+      setSelectedWallpaper(random.id)
+      applyWallpaper(random.id)
     }
   }, [])
 
   const applyWallpaper = (wallpaperId: string) => {
     const wallpaper = wallpapers.find(w => w.id === wallpaperId)
-  const body = document.body
-  const html = document.documentElement
-    
-    if (wallpaper) {
-      if (wallpaper.file === 'default') {
-        // Aplicar el gradiente por defecto y limpiar overlay
-        body.className = body.className.replace(/bg-\[url\([^\]]+\)\]/g, '')
-  body.classList.add('bg-gradient-to-b', 'from-[#041c2c]', 'via-[#064663]', 'to-[#f2d8a7]')
-  body.classList.remove('has-custom-bg')
-    html.classList.remove('has-custom-bg')
-        
-  // Limpiar estilos inline de background
-        body.style.backgroundImage = ''
-        body.style.backgroundSize = ''
-        body.style.backgroundPosition = ''
-        body.style.backgroundAttachment = ''
-        body.style.backgroundRepeat = ''
-    html.style.backgroundImage = ''
-    html.style.backgroundSize = ''
-    html.style.backgroundPosition = ''
-    html.style.backgroundAttachment = ''
-    html.style.backgroundRepeat = ''
-  // Remover capa de fondo si existe
-  const bgLayer = document.getElementById('wallpaper-bg')
-  if (bgLayer) bgLayer.remove()
-        
-        // Remover overlay si existe
-        const overlay = document.getElementById('wallpaper-overlay')
-        if (overlay) {
-          overlay.remove()
-        }
-      } else {
-        // Aplicar imagen de fondo
-        body.className = body.className.replace(/bg-gradient-to-b|from-\[[^\]]+\]|via-\[[^\]]+\]|to-\[[^\]]+\]/g, '')
-        body.className = body.className.replace(/bg-\[url\([^\]]+\)\]/g, '')
-        // Ensure a fixed full-screen background layer exists
-        let bgLayer = document.getElementById('wallpaper-bg') as HTMLDivElement | null
-        if (!bgLayer) {
-          bgLayer = document.createElement('div')
-          bgLayer.id = 'wallpaper-bg'
-          bgLayer.className = 'fixed inset-0 pointer-events-none z-0'
-          document.body.insertBefore(bgLayer, document.body.firstChild)
-        }
-        Object.assign(bgLayer.style, {
-          backgroundImage: `url('${wallpaper.file}')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundAttachment: 'fixed',
-          backgroundRepeat: 'no-repeat'
-        } as CSSStyleDeclaration)
-        // Also mirror to body/html as fallback
-        body.style.backgroundImage = `url('${wallpaper.file}')`
-        body.style.backgroundSize = 'cover'
-        body.style.backgroundPosition = 'center'
-        body.style.backgroundAttachment = 'fixed'
-        body.style.backgroundRepeat = 'no-repeat'
+    if (!wallpaper) return
+    const body = document.body
+    const html = document.documentElement
+  // Mark that a custom wallpaper is active (used by global CSS to adjust overlays / hide default homepage bg)
   body.classList.add('has-custom-bg')
-    // Mirror on <html> to ensure background shows even if body layers are covered in some routes
+  html.classList.add('has-custom-bg')
+    // Ensure a fixed full-screen background layer exists
+    let bgLayer = document.getElementById('wallpaper-bg') as HTMLDivElement | null
+    if (!bgLayer) {
+      bgLayer = document.createElement('div')
+      bgLayer.id = 'wallpaper-bg'
+      bgLayer.className = 'fixed inset-0 pointer-events-none z-0'
+      document.body.insertBefore(bgLayer, document.body.firstChild)
+    }
+    Object.assign(bgLayer.style, {
+      backgroundImage: `url('${wallpaper.file}')`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed',
+      backgroundRepeat: 'no-repeat'
+    } as CSSStyleDeclaration)
+    // Mirror to body/html
+    body.style.backgroundImage = `url('${wallpaper.file}')`
+    body.style.backgroundSize = 'cover'
+    body.style.backgroundPosition = 'center'
+    body.style.backgroundAttachment = 'fixed'
+    body.style.backgroundRepeat = 'no-repeat'
     html.style.backgroundImage = `url('${wallpaper.file}')`
     html.style.backgroundSize = 'cover'
     html.style.backgroundPosition = 'center'
     html.style.backgroundAttachment = 'fixed'
     html.style.backgroundRepeat = 'no-repeat'
-    html.classList.add('has-custom-bg')
-        
-        // Añadir overlay para legibilidad
-        const overlay = document.getElementById('wallpaper-overlay')
-        if (!overlay) {
-          const overlayDiv = document.createElement('div')
-          overlayDiv.id = 'wallpaper-overlay'
-          overlayDiv.className = 'fixed inset-0 bg-gradient-to-b from-black/20 via-black/30 to-black/50 pointer-events-none z-0'
-          body.insertBefore(overlayDiv, body.firstChild)
-        }
-      }
+    // Overlay for readability
+    const existingOverlay = document.getElementById('wallpaper-overlay')
+    if (!existingOverlay) {
+      const overlayDiv = document.createElement('div')
+      overlayDiv.id = 'wallpaper-overlay'
+      overlayDiv.className = 'fixed inset-0 bg-gradient-to-b from-black/20 via-black/30 to-black/50 pointer-events-none z-0'
+      body.insertBefore(overlayDiv, body.firstChild)
     }
   }
 
   const handleWallpaperChange = (wallpaperId: string) => {
     setSelectedWallpaper(wallpaperId)
-    localStorage.setItem('selectedWallpaper', wallpaperId)
+  // No persistence; next visit will randomize again.
     applyWallpaper(wallpaperId)
     setIsOpen(false)
   }
@@ -231,17 +197,13 @@ export default function WallpaperSelector() {
                   role="menuitem"
                   title={wallpaper.name}
                 >
-                  {wallpaper.file === 'default' ? (
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#041c2c] via-[#064663] to-[#f2d8a7]" />
-                  ) : (
-                    <img
-                      src={`${wallpaper.file}?v=1`}
-                      alt={wallpaper.name}
-                      className="absolute inset-0 w-full h-full object-cover"
-                      loading="eager"
-                      decoding="async"
-                    />
-                  )}
+                  <img
+                    src={`${wallpaper.file}?v=1`}
+                    alt={wallpaper.name}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    loading="eager"
+                    decoding="async"
+                  />
                   <div className="absolute inset-0 bg-black/20" />
                 </button>
               ))}

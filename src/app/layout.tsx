@@ -87,7 +87,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#1e3a8a" />
         <meta name="msapplication-TileColor" content="#1e3a8a" />
       </head>
-      <body className={`${inter.variable} antialiased min-h-screen bg-gradient-to-b from-[#041c2c] via-[#064663] to-[#f2d8a7] text-amber-100 relative overflow-x-hidden wallpaper-body`}>        
+  <body className={`${inter.variable} antialiased min-h-screen bg-black text-amber-100 relative overflow-x-hidden wallpaper-body`}>
         {/* Overlays decorativos que se mantienen siempre */}
   <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(255,225,150,0.15),transparent_60%)] z-10 wallpaper-global-overlay"/>
   <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_70%,rgba(255,180,80,0.12),transparent_55%)] z-10 wallpaper-global-overlay"/>
