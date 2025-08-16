@@ -166,7 +166,7 @@ export default function ImpostorGamePage() {
                 <ArrowLeft className="w-5 h-5" />
                 Home
               </Link>
-              <h1 className="text-2xl font-extrabold tracking-wide bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent drop-shadow">Impostor</h1>
+              <h1 className="text-2xl font-extrabold tracking-wide bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent drop-shadow">IMPOSTOR</h1>
             </div>
             <div className="flex gap-2">
               <button

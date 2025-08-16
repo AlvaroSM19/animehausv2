@@ -284,9 +284,7 @@ export default function CrewQuizPage() {
                 <ArrowLeft className="w-5 h-5" />
                 Home
               </Link>
-              <h1 className="text-2xl font-extrabold tracking-wide bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent">
-                Crew Quiz
-              </h1>
+              <h1 className="text-2xl font-extrabold tracking-wide bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent drop-shadow">CREW QUIZ</h1>
             </div>
             <div className="flex items-center gap-6 text-sm">
               {gameState.gameStatus === 'playing' && (
@@ -305,10 +303,10 @@ export default function CrewQuizPage() {
               )}
               <button 
                 onClick={gameState.gameStatus === 'waiting' ? startGame : resetGame} 
-                className="flex items-center gap-2 px-3 py-1 rounded bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 text-black font-semibold shadow shadow-black/40 hover:brightness-110 text-sm"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 text-black font-semibold shadow shadow-black/40 hover:brightness-110 transition"
               >
                 <RotateCcw className="w-4 h-4" />
-                {gameState.gameStatus === 'waiting' ? 'Start' : 'New Game'}
+                New Game
               </button>
             </div>
           </div>

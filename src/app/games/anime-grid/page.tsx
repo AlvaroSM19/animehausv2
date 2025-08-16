@@ -328,10 +328,103 @@ export default function AnimeGridPage() {
     // Si por algún motivo excedimos, recortar aleatoriamente
     selection = selection.sort(()=>Math.random()-0.5).slice(0,6)
 
-    // Mezclar y asignar filas/columnas
-    const shuffled = [...selection].sort(()=>Math.random()-0.5)
-    setRowConditions(shuffled.slice(0,3))
-    setColConditions(shuffled.slice(3,6))
+    // Nueva lógica robusta: buscar combinación de 3 filas + 3 columnas (todas distintas) tal que TODAS las 9 intersecciones tengan >=1 personaje.
+    // 1) Intentar primero con 'selection' (variedad), si falla se amplía al 'pool' completo.
+    const allChars = charList
+    const candidatePools: GridCondition[][] = []
+  candidatePools.push(Array.from(new Set(selection)))
+    // Añadir un pool ampliado (pool original más selección) para mayor probabilidad si la primera falla
+  candidatePools.push(Array.from(new Set(pool)))
+
+    const intersectionCache = new Map<string, number>()
+    const countIntersection = (a: GridCondition, b: GridCondition) => {
+      const key = a.id < b.id ? a.id + '|' + b.id : b.id + '|' + a.id
+      if (intersectionCache.has(key)) return intersectionCache.get(key)!
+      const cnt = allChars.filter(ch => a.check(ch) && b.check(ch)).length
+      intersectionCache.set(key, cnt)
+      return cnt
+    }
+
+    let finalRows: GridCondition[] = []
+    let finalCols: GridCondition[] = []
+    let found = false
+
+    for (const candPool of candidatePools) {
+      if (found) break
+      // Si el pool es menor a 6 no puede haber 6 distintas; continuar.
+      if (candPool.length < 6) continue
+      // Limitar tamaño para no explotar (si >24 recortar aleatoriamente)
+      const working = candPool.length > 24 ? [...candPool].sort(()=>Math.random()-0.5).slice(0,24) : [...candPool]
+      // Enumerar combinaciones de 3 (índices i<j<k)
+      const n = working.length
+      const rowCombos: number[][] = []
+      for (let i=0;i<n;i++) for (let j=i+1;j<n;j++) for (let k=j+1;k<n;k++) rowCombos.push([i,j,k])
+      // Mezclar orden para variar
+      rowCombos.sort(()=>Math.random()-0.5)
+      for (const rc of rowCombos) {
+        if (found) break
+        const rowSet = rc.map(idx => working[idx])
+        // Column candidates are remaining conditions not used in rows
+        const remainingIndices = [] as number[]
+        for (let x=0;x<n;x++) if (!rc.includes(x)) remainingIndices.push(x)
+        // Generar combos columnas
+        for (let a=0;a<remainingIndices.length;a++) {
+          for (let b=a+1;b<remainingIndices.length;b++) {
+            for (let c=b+1;c<remainingIndices.length;c++) {
+              const colSet = [working[remainingIndices[a]], working[remainingIndices[b]], working[remainingIndices[c]]]
+              // Chequear todas intersecciones
+              let ok = true
+              outer: for (const r of rowSet) {
+                for (const co of colSet) {
+                  if (countIntersection(r,co) === 0) { ok = false; break outer }
+                }
+              }
+              if (ok) {
+                finalRows = rowSet
+                finalCols = colSet
+                found = true
+                break
+              }
+            }
+            if (found) break
+          }
+          if (found) break
+        }
+      }
+    }
+
+    // Si aún no se encontró combinación perfecta, relajamos: usar primera combinación de 6 distintas maximizando número total de intersecciones válidas.
+    if (!found) {
+  const candidates = Array.from(new Set(pool))
+      const n = candidates.length
+      let bestScore = -1
+      let bestRows: GridCondition[] = []
+      let bestCols: GridCondition[] = []
+      for (let i=0;i<n;i++) for (let j=i+1;j<n;j++) for (let k=j+1;k<n;k++) {
+        for (let a=0;a<n;a++) for (let b=a+1;b<n;b++) for (let c=b+1;c<n;c++) {
+          const used = new Set([i,j,k,a,b,c])
+          if (used.size !== 6) continue // asegurar unicidad
+          const rows = [candidates[i], candidates[j], candidates[k]]
+          const cols = [candidates[a], candidates[b], candidates[c]]
+          let zeros = 0
+            , total = 0
+          for (const r of rows) for (const co of cols) {
+            const cnt = countIntersection(r,co)
+            total += Math.min(cnt,5) // limitar aporte para que no sesgue demasiado
+            if (cnt===0) zeros++
+          }
+          // Preferir menor zeros, luego mayor total
+          const score = (9 - zeros) * 1000 + total
+          if (score > bestScore) { bestScore = score; bestRows = rows; bestCols = cols; if (zeros===0) { found = true; break } }
+        }
+        if (found) break
+      }
+      finalRows = bestRows
+      finalCols = bestCols
+    }
+
+    setRowConditions(finalRows)
+    setColConditions(finalCols)
   }, [])
 
   useEffect(() => {
@@ -474,6 +567,14 @@ export default function AnimeGridPage() {
     char.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
+  // Auto-start game when leaving menu (removes need for Start / New Game buttons)
+  useEffect(() => {
+    if (variant !== 'menu' && gameState.mode === 'setup') {
+      startNewGame()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [variant, gameState.mode])
+
   return (
     <>
       <style jsx>{`
@@ -540,60 +641,28 @@ export default function AnimeGridPage() {
             </div>
           </div>
         )}
-        {variant!=='menu' && (
-          <>
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-5xl font-bold mb-4 text-yellow-400 drop-shadow-lg">ANIME GRID</h1>
-            {variant==='single' ? (
-              <p className="text-lg text-gray-300 mb-6 font-medium">Rellena todas las casillas cumpliendo las condiciones. Sin límite de turnos.</p>
-            ) : (
-              <p className="text-lg text-gray-300 mb-6 font-medium">¡Batalla épica de conocimiento pirata! • 30 segundos por turno</p>
-            )}
-            <button onClick={()=>{setVariant('menu'); setGameState(p=>({...p, mode:'setup', winner:null})); setGrid(Array(3).fill(null).map(()=>Array(3).fill(null).map(()=>({player:null, character:null, isValid:false}))))}} className="text-xs text-gray-400 underline hover:text-gray-200">Volver al menú</button>
-          </div>
-          </>
-        )}
+  {/* Removed top navigation/buttons as requested */}
 
-        {variant!=='menu' && (
-          <div className="flex flex-col items-center gap-6 mb-8">
-            {variant==='multi' && (
-              <div className="flex items-center gap-6 bg-gray-800 px-6 py-4 rounded-xl border-2 border-yellow-600">
-                <div className="flex items-center gap-3">
-                  <Users className="w-6 h-6 text-blue-400" />
-                  <span className="text-lg font-bold">X: <span className="text-blue-400">{gameState.scores.X}</span></span>
-                </div>
-                <div className="w-px h-8 bg-gray-600" />
-                <div className="flex items-center gap-3">
-                  <Users className="w-6 h-6 text-red-400" />
-                  <span className="text-lg font-bold">O: <span className="text-red-400">{gameState.scores.O}</span></span>
-                </div>
-                {gameState.mode==='playing' && (
-                  <div className={`ml-6 flex items-center gap-2 px-4 py-2 rounded-lg border ${gameState.currentPlayer==='X' ? 'bg-blue-900 border-blue-500' : 'bg-red-900 border-red-500'}`}>
-                    <Clock className="w-5 h-5" />
-                    <span className="font-bold text-sm">Turno {gameState.currentPlayer}: {gameState.timeLeft}s</span>
-                  </div>
-                )}
+        {variant!=='menu' && variant==='multi' && (
+          <div className="flex items-center gap-6 mb-6 bg-gray-800 px-6 py-4 rounded-xl border-2 border-yellow-600 justify-center">
+            <div className="flex items-center gap-3">
+              <Users className="w-6 h-6 text-blue-400" />
+              <span className="text-lg font-bold">X: <span className="text-blue-400">{gameState.scores.X}</span></span>
+            </div>
+            <div className="w-px h-8 bg-gray-600" />
+            <div className="flex items-center gap-3">
+              <Users className="w-6 h-6 text-red-400" />
+              <span className="text-lg font-bold">O: <span className="text-red-400">{gameState.scores.O}</span></span>
+            </div>
+            {gameState.mode==='playing' && (
+              <div className={`ml-6 flex items-center gap-2 px-4 py-2 rounded-lg border ${gameState.currentPlayer==='X' ? 'bg-blue-900 border-blue-500' : 'bg-red-900 border-red-500'}`}>
+                <Clock className="w-5 h-5" />
+                <span className="font-bold text-sm">Turn {gameState.currentPlayer}: {gameState.timeLeft}s</span>
               </div>
             )}
-            <div className="flex gap-3 flex-wrap justify-center">
-              {gameState.mode === 'setup' ? (
-                <button onClick={startNewGame} className="flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors font-bold text-lg shadow-lg">
-                  <Trophy className="w-5 h-5" />
-                  {variant==='multi' ? 'Iniciar Batalla' : 'Comenzar'}
-                </button>
-              ) : (
-                <button onClick={startNewGame} className="flex items-center gap-2 px-6 py-3 bg-yellow-600 hover:bg-yellow-700 text-black rounded-lg transition-colors font-bold text-lg shadow-lg">
-                  <RotateCcw className="w-5 h-5" />
-                  Nueva Partida
-                </button>
-              )}
-              {variant==='multi' && (
-                <button onClick={resetScores} className="flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors font-bold text-lg shadow-lg">
-                  <X className="w-5 h-5" /> Reset
-                </button>
-              )}
-            </div>
+            <button onClick={resetScores} className="ml-4 flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors font-bold text-sm shadow-lg">
+              <X className="w-5 h-5" /> Reset
+            </button>
           </div>
         )}
 
@@ -828,17 +897,45 @@ export default function AnimeGridPage() {
           </div>
         )}
 
-        {/* Instructions */}
-        <div className="text-center space-y-2 bg-gray-800/50 p-6 rounded-xl border border-gray-600">
-          <h3 className="text-xl font-bold text-yellow-400 mb-3">📋 Reglas</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-gray-300 font-medium">
-            <p>🎯 Cada casilla necesita un personaje que cumpla AMBAS condiciones (fila + columna)</p>
-            {variant==='multi' && <p>⏰ Tienes 30 segundos por turno para elegir tu personaje</p>}
-            <p>🏆 Consigue 3 en línea con personajes VÁLIDOS para ganar</p>
+        {/* Instructions (English, structured) */}
+        <div className="bg-gray-800/50 p-6 rounded-xl border border-gray-600 space-y-4">
+          <h3 className="text-xl font-bold text-yellow-400 flex items-center gap-2">📋 Rules</h3>
+          <div className="space-y-3 text-gray-300 text-sm md:text-base font-medium">
+            <div>
+              <h4 className="font-bold text-yellow-300 mb-1">General</h4>
+              <ul className="list-disc list-inside space-y-1">
+                <li>Each cell must satisfy BOTH its row and column condition.</li>
+                <li>Open a cell to search and pick a character.</li>
+                <li>You can reuse a character only if it truly fits (no uniqueness rule enforced yet).</li>
+              </ul>
+            </div>
+            {variant==='single' && (
+              <div>
+                <h4 className="font-bold text-yellow-300 mb-1">Single Player</h4>
+                <ul className="list-disc list-inside space-y-1">
+                  <li>Goal: fill all 9 cells with valid characters.</li>
+                  <li>No turn limit or timer.</li>
+                </ul>
+              </div>
+            )}
+            {variant==='multi' && (
+              <div>
+                <h4 className="font-bold text-yellow-300 mb-1">Multiplayer</h4>
+                <ul className="list-disc list-inside space-y-1">
+                  <li>30 seconds per turn. If you miss or choose wrong, turn passes.</li>
+                  <li>First player to complete a valid 3-in-a-row wins.</li>
+                  <li>All 9 filled without a line = draw.</li>
+                </ul>
+              </div>
+            )}
+            <div>
+              <h4 className="font-bold text-yellow-300 mb-1">Tips</h4>
+              <ul className="list-disc list-inside space-y-1">
+                <li>Conditions refresh every game for variety.</li>
+                <li>If a combo feels impossible, start a new game—every generated board is pre-checked for solutions.</li>
+              </ul>
+            </div>
           </div>
-          <p className="text-yellow-300 font-bold mt-4">
-            💡 Las condiciones cambian en cada partida. ¡Demuestra tu conocimiento de One Piece!
-          </p>
         </div>
         </div>
       </div>

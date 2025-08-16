@@ -424,24 +424,22 @@ const TapOneGame: React.FC = () => {
               <h1 className="text-2xl font-extrabold tracking-wide bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent drop-shadow">TAP ONE</h1>
             </div>
             <div className="flex gap-2">
-              {finished && (
-                <button
-                  onClick={handleRestart}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 text-black font-semibold shadow shadow-black/40 hover:brightness-110 transition"
-                >
-                  <RotateCcw className="w-4 h-4" />
-                  New Game
-                </button>
-              )}
+              <button
+                onClick={handleRestart}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 text-black font-semibold shadow shadow-black/40 hover:brightness-110 transition"
+              >
+                <RotateCcw className="w-4 h-4" />
+                New Game
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      <section className="max-w-7xl mx-auto px-2 sm:px-4 mb-4">
-
+  {/* Restore spacing below game header; previously removed margin created cramped look */}
+  <section className="max-w-7xl mx-auto px-2 sm:px-4 mt-4">
         {/* Status pill */}
-        <div className="mt-3 rounded-xl border border-violet-400/20 bg-violet-600/10 px-4 py-2 text-violet-200/90 text-sm">
+        <div className="rounded-xl border border-violet-400/20 bg-violet-600/10 px-4 py-2 text-violet-200/90 text-sm">
           {finished ? (
             <span>Game completed — {categories.length}/{categories.length} categories selected.</span>
           ) : rotating ? (

@@ -153,8 +153,9 @@ export default function DeductionGamePage() {
             <div className="flex items-center gap-6 text-sm">
               <div className="flex items-center gap-2"><Trophy className="w-4 h-4 text-amber-300" /><span>Best: {bestAttempts ?? '—'}</span></div>
               <div className="flex items-center gap-2"><Target className="w-4 h-4 text-emerald-300" /><span>Guesses: {guesses.length}</span></div>
-              <button onClick={startNew} className="flex items-center gap-2 px-3 py-1 rounded bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 text-black font-semibold shadow shadow-black/40 hover:brightness-110 text-sm">
-                <RotateCcw className="w-4 h-4" /> Reset
+              <button onClick={startNew} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 text-black font-semibold shadow shadow-black/40 hover:brightness-110 transition">
+                <RotateCcw className="w-4 h-4" />
+                New Game
               </button>
             </div>
           </div>
